@@ -6,6 +6,7 @@
   "esnext": true, // Allow ES.next specific features such as `const` and `let`.
   "bitwise": false, // Prohibit bitwise operators (&, |, ^, etc.).
   "curly": false, // Require {} for every new block or scope.
+  "jquery": true,
   "eqeqeq": true, // Require triple equals i.e. `===`.
   "latedef": "nofunc", // Prohibit variable use before definition.
   "noarg": true, // Prohibit use of `arguments.caller` and `arguments.callee`.
@@ -15,7 +16,8 @@
   "globals": { // Globals variables.
     "angular": true,
     "io": true,
-    "ApplicationConfiguration": true
+    "ApplicationConfiguration": true,
+    "cytoscape": true
   },
   "predef": [ // Extra globals.
     "inject",

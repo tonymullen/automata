@@ -8,7 +8,7 @@
 
 module.exports = {
   db: {
-    uri: 'mongodb://localhost/local-dev',
+    uri: 'mongodb://localhost/automata-local-dev',
     options: {
       user: '',
       pass: ''

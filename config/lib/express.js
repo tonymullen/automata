@@ -219,7 +219,7 @@ module.exports.configureSocketIO = function (app, db) {
   return server;
 };
 
-/**
+/**.init
  * Initialize the Express application
  */
 module.exports.init = function (db) {
