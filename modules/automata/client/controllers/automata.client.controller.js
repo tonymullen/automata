@@ -13,6 +13,27 @@ angular.module('automata').controller('AutomataController', ['$scope', '$statePa
       { id: 'h', name: 'Hardy', weight: 110 }
     ];
 
+    $scope.elements = {
+    nodes: [
+      { data: { id: 'j', name: 'Jerry' } },
+      { data: { id: 'e', name: 'Elaine' } },
+      { data: { id: 'k', name: 'Kramer' } },
+      { data: { id: 'g', name: 'George' } }
+    ],
+    edges: [
+      { data: { source: 'j', target: 'e' } },
+      { data: { source: 'j', target: 'k' } },
+      { data: { source: 'j', target: 'g' } },
+      { data: { source: 'e', target: 'j' } },
+      { data: { source: 'e', target: 'k' } },
+      { data: { source: 'k', target: 'j' } },
+      { data: { source: 'k', target: 'e' } },
+      { data: { source: 'k', target: 'g' } },
+      { data: { source: 'g', target: 'j' } }
+    ]
+  };
+
+
     var peopleById = {};
     for( var i = 0; i < $scope.people.length; i++ ){
       var p = $scope.people[i];
@@ -127,43 +148,3 @@ angular.module('automata').controller('AutomataController', ['$scope', '$statePa
     };
   }
 ]);
-
-
-
-/*
-angular.module('automata').controller('AutomataController', [ '$scope', 'peopleGraph', function( $scope, peopleGraph ){
-  var cy; // maybe you want a ref to cy
-  // (usually better to have the srv as intermediary)
-
-  $scope.people = [
-    { id: 'l', name: 'Laurel', weight: 65 },
-    { id: 'h', name: 'Hardy', weight: 110 }
-  ];
-
-  var peopleById = {};
-  for( var i = 0; i < $scope.people.length; i++ ){
-    var p = $scope.people[i];
-
-    peopleById[ p.id ] = p;
-  }
-
-  // you would probably want some ui to prevent use of PeopleCtrl until cy is loaded
-  peopleGraph( $scope.people ).then(function( peopleCy ){
-    cy = peopleCy;
-
-    // use this variable to hide ui until cy loaded if you want
-    $scope.cyLoaded = true;
-  });
-
-  $scope.onWeightChange = function(person){
-     peopleGraph.setPersonWeight( person.id, person.weight );
-  };
-
-  peopleGraph.onWeightChange(function(id, weight){
-    peopleById[id].weight = weight;
-
-    $scope.$apply();
-  });
-
-} ]);
-*/

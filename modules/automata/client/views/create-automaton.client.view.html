@@ -36,19 +36,7 @@ body {
   font: 14px helvetica neue, helvetica, arial, sans-serif;
 }
 
-#logo {
-  position: absolute;
-  left: 0;
-  top: 0;
-  background-image: url('https://raw.githubusercontent.com/angular/angular.js/master/images/logo/AngularJS-Shield.exports/AngularJS-Shield-medium.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  width: 33%;
-  height: 33%;
-  z-index: -1;
-  opacity: 0.5;
-  pointer-events: none;
-}
+
 
 #cy {
   height: 100%;
@@ -56,6 +44,15 @@ body {
   position: absolute;
   left: 0;
   top: 0;
+}
+
+#info {
+  color: #c88;
+  font-size: 1em;
+  position: absolute;
+  z-index: -1;
+  left: 1em;
+  top: 1em;
 }
 
 #people-table {
@@ -73,7 +70,6 @@ th {
 </style>
 
 <div style="width:700px; height:700px">
-    <div id="logo"></div>
               <div id="cy"></div>
 </div>
                 <table id="people-table">
@@ -87,12 +83,12 @@ th {
             </div>
             </form></th>
           </tr>
+          <!--
           <tr ng-repeat="person in people">
             <td>{{person.name}}</td>
             <td><input type="number" min="1" ng-model="person.weight" ng-change="onWeightChange(person)" /></td>
-
-
           </tr>
+        -->
         </tbody>
       </table>
 
