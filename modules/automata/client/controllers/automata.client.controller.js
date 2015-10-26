@@ -33,7 +33,6 @@ angular.module('automata').controller('AutomataController', ['$scope', '$statePa
     ]
   };
 
-
     var peopleById = {};
     for( var i = 0; i < $scope.people.length; i++ ){
       var p = $scope.people[i];
