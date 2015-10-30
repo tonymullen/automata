@@ -116,6 +116,7 @@ module.exports = function (grunt) {
         }
       }
     },
+    clean: ['public/dist/'],
     uglify: {
       production: {
         options: {
