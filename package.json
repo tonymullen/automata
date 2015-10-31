@@ -1,4 +1,4 @@
-{ 
+{
   "name": "meanjs",
   "description": "Full-Stack JavaScript with MongoDB, Express, AngularJS, and Node.js.",
   "version": "0.4.1",
@@ -17,6 +17,7 @@
   "scripts": {
     "start": "grunt",
     "test": "grunt test",
+    "postinstall": "bower install --config.interactive=false && grunt build"
   },
   "dependencies": {
     "acl": "~0.4.4",
