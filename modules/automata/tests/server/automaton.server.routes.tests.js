@@ -73,10 +73,10 @@ describe('Automaton CRUD tests', function () {
         agent.post('/api/automata')
           .send(automaton)
           .expect(200)
-          .end(function (automataaveErr, automataaveRes) {
+          .end(function (automataSaveErr, automataSaveRes) {
             // Handle automaton save error
-            if (automataaveErr) {
-              return done(automataaveErr);
+            if (automataSaveErr) {
+              return done(automataSaveErr);
             }
 
             // Get a list of automata
@@ -105,9 +105,9 @@ describe('Automaton CRUD tests', function () {
     agent.post('/api/automata')
       .send(automaton)
       .expect(403)
-      .end(function (automataaveErr, automataaveRes) {
+      .end(function (automataSaveErr, automataSaveRes) {
         // Call the assertion callback
-        done(automataaveErr);
+        done(automataSaveErr);
       });
   });
 
@@ -131,12 +131,12 @@ describe('Automaton CRUD tests', function () {
         agent.post('/api/automata')
           .send(automaton)
           .expect(400)
-          .end(function (automataaveErr, automataaveRes) {
+          .end(function (automataSaveErr, automataSaveRes) {
             // Set message assertion
-            (automataaveRes.body.message).should.match('Title cannot be blank');
+            (automataSaveRes.body.message).should.match('Title cannot be blank');
 
             // Handle automaton save error
-            done(automataaveErr);
+            done(automataSaveErr);
           });
       });
   });
@@ -158,17 +158,17 @@ describe('Automaton CRUD tests', function () {
         agent.post('/api/automata')
           .send(automaton)
           .expect(200)
-          .end(function (automataaveErr, automataaveRes) {
+          .end(function (automataSaveErr, automataSaveRes) {
             // Handle automaton save error
-            if (automataaveErr) {
-              return done(automataaveErr);
+            if (automataSaveErr) {
+              return done(automataSaveErr);
             }
 
             // Update automaton title
             automaton.title = 'WHY YOU GOTTA BE SO MEAN?';
 
             // Update an existing automaton
-            agent.put('/api/automata/' + automataaveRes.body._id)
+            agent.put('/api/automata/' + automataSaveRes.body._id)
               .send(automaton)
               .expect(200)
               .end(function (automatonUpdateErr, automatonUpdateRes) {
@@ -178,7 +178,7 @@ describe('Automaton CRUD tests', function () {
                 }
 
                 // Set assertions
-                (automatonUpdateRes.body._id).should.equal(automataaveRes.body._id);
+                (automatonUpdateRes.body._id).should.equal(automataSaveRes.body._id);
                 (automatonUpdateRes.body.title).should.match('WHY YOU GOTTA BE SO MEAN?');
 
                 // Call the assertion callback
@@ -265,14 +265,14 @@ describe('Automaton CRUD tests', function () {
         agent.post('/api/automata')
           .send(automaton)
           .expect(200)
-          .end(function (automataaveErr, automataaveRes) {
+          .end(function (automataSaveErr, automataSaveRes) {
             // Handle automaton save error
-            if (automataaveErr) {
-              return done(automataaveErr);
+            if (automataSaveErr) {
+              return done(automataSaveErr);
             }
 
             // Delete an existing automaton
-            agent.delete('/api/automata/' + automataaveRes.body._id)
+            agent.delete('/api/automata/' + automataSaveRes.body._id)
               .send(automaton)
               .expect(200)
               .end(function (automatonDeleteErr, automatonDeleteRes) {
@@ -282,7 +282,7 @@ describe('Automaton CRUD tests', function () {
                 }
 
                 // Set assertions
-                (automatonDeleteRes.body._id).should.equal(automataaveRes.body._id);
+                (automatonDeleteRes.body._id).should.equal(automataSaveRes.body._id);
 
                 // Call the assertion callback
                 done();

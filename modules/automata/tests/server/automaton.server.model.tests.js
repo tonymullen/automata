@@ -48,7 +48,6 @@ describe('Automaton Model Unit Tests:', function () {
         done();
       });
     });
-
     it('should be able to show an error when try to save without title', function (done) {
       automaton.title = '';
 
