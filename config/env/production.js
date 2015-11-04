@@ -9,7 +9,8 @@ module.exports = {
   sessionSecret: process.env.SESSION_SECRET || 'super amazing secret',
   port: process.env.PORT || 8443,
   db: {
-    uri: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://' + (process.env.DB_1_PORT_27017_TCP_ADDR || 'localhost') + '/automata',
+//    uri: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://' + (process.env.DB_1_PORT_27017_TCP_ADDR || 'localhost') + '/automata',
+    uri: 'mongodb://tony:mongo*pass@ec2-54-152-150-143.compute-1.amazonaws.com:27017/dummyDB',
     options: {
       user: '',
       pass: ''
