@@ -189,6 +189,11 @@ angular.module('automata').factory('Automata', ['$resource',
           }
         });
 
+        cy.on('cxttap', function(e){
+          console.log('rightclick');
+          console.log(e);
+        });
+
         // the default values of each option are outlined below:
       var defaults = {
         preview: true, // whether to show added edges preview before releasing selection
