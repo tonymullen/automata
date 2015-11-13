@@ -19,6 +19,7 @@ body {
   top: 1em;
 }
 
+
 #people-table {
   position: absolute;
   bottom: 0;
@@ -27,6 +28,7 @@ body {
   z-index: 999;
   background: rgba(255, 200, 200, 0.5);
 }
+
 
 th {
   text-align: left;

@@ -2,18 +2,19 @@
 
 // Automata controller
 
-angular.module('automata').controller('AutomataController', ['$scope', '$stateParams', '$location', 'Authentication', 'Automata', 'peopleGraph',
-  function ($scope, $stateParams, $location, Authentication, Automata, peopleGraph) {
+angular.module('automata').controller('AutomataController', ['$scope', '$stateParams', '$location', 'Authentication', 'Automata', 'peopleGraph','automatonGraph',
+  function ($scope, $stateParams, $location, Authentication, Automata, peopleGraph, automatonGraph) {
     $scope.authentication = Authentication;
 
 /* CYTOSCAPE */
     var cy; // maybe you want a ref to cy
+    /*
     $scope.people = [
       { id: 'l', name: 'Laurel', weight: 65 },
       { id: 'h', name: 'Hardy', weight: 110 }
     ];
-
-    $scope.elements = {
+*/
+    $scope.eles = {
     nodes: [
       { data: { id: 'j', name: 'Jerry' } },
       { data: { id: 'e', name: 'Elaine' } },
@@ -33,6 +34,7 @@ angular.module('automata').controller('AutomataController', ['$scope', '$statePa
     ]
   };
 
+/*
     var peopleById = {};
     for( var i = 0; i < $scope.people.length; i++ ){
       var p = $scope.people[i];
@@ -46,6 +48,12 @@ angular.module('automata').controller('AutomataController', ['$scope', '$statePa
       // use this variable to hide ui until cy loaded if you want
       $scope.cyLoaded = true;
     });
+*/
+    automatonGraph( $scope.eles ).then(function (automatonCy){
+      cy = automatonCy;
+      $scope.cyLoaded = true;
+    });
+/*
     $scope.onWeightChange = function(person){
        peopleGraph.setPersonWeight( person.id, person.weight );
     };
@@ -55,7 +63,7 @@ angular.module('automata').controller('AutomataController', ['$scope', '$statePa
 
       $scope.$apply();
     });
-
+*/
 
 /* END CYTOSCAPE */
 
