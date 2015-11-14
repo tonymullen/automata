@@ -2,8 +2,8 @@
 
 // Automata controller
 
-angular.module('automata').controller('AutomataController', ['$scope', '$stateParams', '$location', 'Authentication', 'Automata', 'peopleGraph','automatonGraph',
-  function ($scope, $stateParams, $location, Authentication, Automata, peopleGraph, automatonGraph) {
+angular.module('automata').controller('AutomataController', ['$scope', '$stateParams', '$location', 'Authentication', 'Automata', 'automatonGraph',
+  function ($scope, $stateParams, $location, Authentication, Automata, automatonGraph) {
     $scope.authentication = Authentication;
 
 /* CYTOSCAPE */
@@ -15,24 +15,24 @@ angular.module('automata').controller('AutomataController', ['$scope', '$statePa
     ];
 */
     $scope.eles = {
-    nodes: [
-      { data: { id: '1' } },
-      { data: { id: '2' } },
-      { data: { id: '3' } },
-      { data: { id: '4' } }
-    ],
-    edges: [
-      { data: { source: '1', target: '2' } },
-      { data: { source: '1', target: '3' } },
-      { data: { source: '1', target: '4' } },
-      { data: { source: '3', target: '4' } },
-      { data: { source: '3', target: '3' } },
-      { data: { source: '4', target: '1' } },
-      { data: { source: '4', target: '3' } },
-      { data: { source: '2', target: '3' } },
-      { data: { source: '2', target: '1' } }
-    ]
-  };
+      nodes: [
+        { data: { id: '1' } },
+        { data: { id: '2' } },
+        { data: { id: '3' } },
+        { data: { id: '4' } }
+      ],
+      edges: [
+        { data: { source: '1', target: '2' } },
+        { data: { source: '1', target: '3' } },
+        { data: { source: '1', target: '4' } },
+        { data: { source: '3', target: '4' } },
+        { data: { source: '3', target: '3' } },
+        { data: { source: '4', target: '1' } },
+        { data: { source: '4', target: '3' } },
+        { data: { source: '2', target: '3' } },
+        { data: { source: '2', target: '1' } }
+      ]
+    };
 
 /*
     var peopleById = {};
@@ -49,7 +49,7 @@ angular.module('automata').controller('AutomataController', ['$scope', '$statePa
       $scope.cyLoaded = true;
     });
 */
-    automatonGraph( $scope.eles ).then(function (automatonCy){
+    automatonGraph($scope.eles).then(function(automatonCy){
       cy = automatonCy;
       $scope.cyLoaded = true;
     });

@@ -12,7 +12,9 @@ angular.module('automata').factory('Automata', ['$resource',
       }
     });
   }
-]).factory('peopleGraph', [ '$q', function( $q ){
+])
+/*
+.factory('peopleGraph', [ '$q', function( $q ){
 // use a factory instead of a directive, because cy.js is not just for visualisation; you need access to the graph model and events etc
 //angular.module('automata')
   var cy;
@@ -121,10 +123,11 @@ angular.module('automata').factory('Automata', ['$resource',
 
 
 } ])
-.factory('automatonGraph', [ '$q', function( $q ){
+*/
+.factory('automatonGraph', [ '$q', function($q){
   var cy;
 
-  var automatonGraph = function( eles ){
+  var automatonGraph = function(eles){
 
     var deferred = $q.defer();
 
@@ -167,32 +170,32 @@ angular.module('automata').factory('Automata', ['$resource',
               'opacity': 0.25,
               'text-opacity': 0
             }),
-          elements: eles
-        }); //cy =
-        cy.on('tap', 'node', function(e){
+        elements: eles
+      }); //cy =
+      cy.on('tap', 'node', function(e){
         var node = e.cyTarget;
         var neighborhood = node.neighborhood().add(node);
 
         cy.elements().addClass('faded');
         neighborhood.removeClass('faded');
-        });
+      });
 
-        cy.on('tap', function(e){
-          if( e.cyTarget === cy ){
-            console.log(cy);
-            cy.add({
-                group: "nodes",
-                data: { weight: 75 },
-                position: { x: e.cyPosition.x, y: e.cyPosition.y }
-            });
-            cy.elements().removeClass('faded');
-          }
-        });
+      cy.on('tap', function(e){
+        if(e.cyTarget === cy){
+          console.log(cy);
+          cy.add({
+            group: 'nodes',
+            data: { weight: 75 },
+            position: { x: e.cyPosition.x, y: e.cyPosition.y }
+          });
+          cy.elements().removeClass('faded');
+        }
+      });
 
-        cy.on('cxttap', function(e){
-          console.log('rightclick');
-          console.log(e);
-        });
+      cy.on('cxttap', function(e){
+        console.log('rightclick');
+        console.log(e);
+      });
 
         // the default values of each option are outlined below:
       var defaults = {
@@ -207,39 +210,39 @@ angular.module('automata').factory('Automata', ['$resource',
         cxt: false, // whether cxt events trigger edgehandles (useful on touch)
         enabled: true, // whether to start the plugin in the enabled state
         toggleOffOnLeave: false, // whether an edge is cancelled by leaving a node (true), or whether you need to go over again to cancel (false; allows multiple edges in one pass)
-        edgeType: function( sourceNode, targetNode ) {
+        edgeType: function(sourceNode, targetNode) {
           // can return 'flat' for flat edges between nodes or 'node' for intermediate node between them
           // returning null/undefined means an edge can't be added between the two nodes
           return 'flat';
         },
-        loopAllowed: function( node ) {
+        loopAllowed: function(node) {
           // for the specified node, return whether edges from itself to itself are allowed
           return false;
         },
         nodeLoopOffset: -50, // offset for edgeType: 'node' loops
-        nodeParams: function( sourceNode, targetNode ) {
+        nodeParams: function(sourceNode, targetNode) {
           // for edges between the specified source and target
           // return element object to be passed to cy.add() for intermediary node
           return {};
         },
-        edgeParams: function( sourceNode, targetNode, i ) {
+        edgeParams: function(sourceNode, targetNode, i) {
           // for edges between the specified source and target
           // return element object to be passed to cy.add() for edge
           // NB: i indicates edge index in case of edgeType: 'node'
           return {};
         },
-        start: function( sourceNode ) {
+        start: function(sourceNode) {
           // fired when edgehandles interaction starts (drag on handle)
         },
-        complete: function( sourceNode, targetNodes, addedEntities ) {
+        complete: function(sourceNode, targetNodes, addedEntities) {
           // fired when edgehandles is done and entities are added
         },
-        stop: function( sourceNode ) {
+        stop: function(sourceNode) {
           // fired when edgehandles interaction is stopped (either complete with added edges or incomplete)
         }
       };
 
-      cy.edgehandles( defaults );
+      cy.edgehandles(defaults);
 
     });
 
