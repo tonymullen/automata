@@ -16,9 +16,9 @@ var _ = require('lodash'),
   }),
   path = require('path'),
   endOfLine = require('os').EOL,
-  protractor = require("gulp-protractor").protractor,
-  webdriver_update = require("gulp-protractor").webdriver_update,
-  webdriver_standalone = require("gulp-protractor").webdriver_standalone;
+  protractor = require('gulp-protractor').protractor,
+  webdriver_update = require('gulp-protractor').webdriver_update,
+  webdriver_standalone = require('gulp-protractor').webdriver_standalone;
 
 // Set NODE_ENV to 'test'
 gulp.task('env:test', function () {
@@ -94,6 +94,22 @@ gulp.task('jshint', function () {
     .pipe(plugins.jshint())
     .pipe(plugins.jshint.reporter('default'))
     .pipe(plugins.jshint.reporter('fail'));
+});
+
+// ESLint JS linting task
+gulp.task('eslint', function () {
+  var assets = _.union(
+    defaultAssets.server.gulpConfig,
+    defaultAssets.server.allJS,
+    defaultAssets.client.js,
+    testAssets.tests.server,
+    testAssets.tests.client,
+    testAssets.tests.e2e
+  );
+
+  return gulp.src(assets)
+    .pipe(plugins.eslint())
+    .pipe(plugins.eslint.format());
 });
 
 // JS minifying task
@@ -172,7 +188,8 @@ gulp.task('mocha', function (done) {
     // Run the tests
     gulp.src(testAssets.tests.server)
       .pipe(plugins.mocha({
-        reporter: 'spec'
+        reporter: 'spec',
+        timeout: 10000
       }))
       .on('error', function (err) {
         // If an error occurs, save it
@@ -196,6 +213,23 @@ gulp.task('karma', function (done) {
       action: 'run',
       singleRun: true
     }));
+});
+
+// Drops the MongoDB database, used in e2e testing
+gulp.task('dropdb', function (done) {
+  // Use mongoose configuration
+  var mongoose = require('./config/lib/mongoose.js');
+
+  mongoose.connect(function (db) {
+    db.connection.db.dropDatabase(function (err) {
+      if(err) {
+        console.log(err);
+      } else {
+        console.log('Successfully dropped db: ', db.connection.db.databaseName);
+      }
+      db.connection.db.close(done);
+    });
+  });
 });
 
 // Downloads the selenium webdriver
@@ -225,7 +259,7 @@ gulp.task('protractor', ['webdriver_update'], function () {
 
 // Lint CSS and JavaScript files.
 gulp.task('lint', function (done) {
-  runSequence('less', 'sass', ['csslint', 'jshint'], done);
+  runSequence('less', 'sass', ['csslint', 'eslint', 'jshint'], done);
 });
 
 // Lint project files and minify them into two production files.
@@ -247,7 +281,7 @@ gulp.task('test:client', function (done) {
 });
 
 gulp.task('test:e2e', function (done) {
-  runSequence('env:test', 'lint', 'nodemon', 'protractor', done);
+  runSequence('env:test', 'lint', 'dropdb', 'nodemon', 'protractor', done);
 });
 
 // Run the project in development mode

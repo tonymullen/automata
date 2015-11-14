@@ -145,7 +145,7 @@ angular.module('automata').factory('Automata', ['$resource',
         style: cytoscape.stylesheet()
           .selector('node')
             .css({
-              'content': 'data(name)',
+              'content': 'data(id)',
               'text-valign': 'center',
               'color': 'white',
               'text-outline-width': 2,
@@ -178,13 +178,13 @@ angular.module('automata').factory('Automata', ['$resource',
         });
 
         cy.on('tap', function(e){
-          cy.add({
-              group: "nodes",
-              data: { weight: 75 },
-              position: { x: e.cyPosition.x, y: e.cyPosition.y }
-          });
-          console.log(e);
           if( e.cyTarget === cy ){
+            console.log(cy);
+            cy.add({
+                group: "nodes",
+                data: { weight: 75 },
+                position: { x: e.cyPosition.x, y: e.cyPosition.y }
+            });
             cy.elements().removeClass('faded');
           }
         });

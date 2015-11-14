@@ -16,21 +16,21 @@ angular.module('automata').controller('AutomataController', ['$scope', '$statePa
 */
     $scope.eles = {
     nodes: [
-      { data: { id: 'j', name: 'Jerry' } },
-      { data: { id: 'e', name: 'Elaine' } },
-      { data: { id: 'k', name: 'Kramer' } },
-      { data: { id: 'g', name: 'George' } }
+      { data: { id: '1' } },
+      { data: { id: '2' } },
+      { data: { id: '3' } },
+      { data: { id: '4' } }
     ],
     edges: [
-      { data: { source: 'j', target: 'e' } },
-      { data: { source: 'j', target: 'k' } },
-      { data: { source: 'j', target: 'g' } },
-      { data: { source: 'e', target: 'j' } },
-      { data: { source: 'e', target: 'k' } },
-      { data: { source: 'k', target: 'j' } },
-      { data: { source: 'k', target: 'e' } },
-      { data: { source: 'k', target: 'g' } },
-      { data: { source: 'g', target: 'j' } }
+      { data: { source: '1', target: '2' } },
+      { data: { source: '1', target: '3' } },
+      { data: { source: '1', target: '4' } },
+      { data: { source: '3', target: '4' } },
+      { data: { source: '3', target: '3' } },
+      { data: { source: '4', target: '1' } },
+      { data: { source: '4', target: '3' } },
+      { data: { source: '2', target: '3' } },
+      { data: { source: '2', target: '1' } }
     ]
   };
 
