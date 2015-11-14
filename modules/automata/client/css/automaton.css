@@ -2,7 +2,7 @@ body {
   font: 14px helvetica neue, helvetica, arial, sans-serif;
 }
 
-#cy {
+.cy {
   height: 100%;
   width: 100%;
   position: absolute;
@@ -10,6 +10,7 @@ body {
   top: 0;
 }
 
+/*
 #info {
   color: #c88;
   font-size: 1em;
@@ -19,7 +20,6 @@ body {
   top: 1em;
 }
 
-
 #people-table {
   position: absolute;
   bottom: 0;
@@ -28,7 +28,17 @@ body {
   z-index: 999;
   background: rgba(255, 200, 200, 0.5);
 }
+*/
 
+
+.panel {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 999;
+  background: rgba(255, 200, 200, 0.5);
+}
 
 th {
   text-align: left;

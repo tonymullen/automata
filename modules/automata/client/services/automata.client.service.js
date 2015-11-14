@@ -182,7 +182,6 @@ angular.module('automata').factory('Automata', ['$resource',
 
       cy.on('tap', function(e){
         if(e.cyTarget === cy){
-          console.log(cy);
           cy.add({
             group: 'nodes',
             data: { weight: 75 },

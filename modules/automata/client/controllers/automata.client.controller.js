@@ -30,7 +30,8 @@ angular.module('automata').controller('AutomataController', ['$scope', '$statePa
         { data: { source: '4', target: '1' } },
         { data: { source: '4', target: '3' } },
         { data: { source: '2', target: '3' } },
-        { data: { source: '2', target: '1' } }
+        { data: { source: '2', target: '1' } },
+        { data: { source: '1', target: '1' } }
       ]
     };
 
