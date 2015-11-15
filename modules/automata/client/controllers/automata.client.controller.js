@@ -22,16 +22,16 @@ angular.module('automata').controller('AutomataController', ['$scope', '$statePa
         { data: { id: '3', name: 's3' } }
       ],
       edges: [
-        { data: { source: '0', target: '1' } },
-        { data: { source: '0', target: '3' } },
-        { data: { source: '0', target: '3' } },
-        { data: { source: '2', target: '3' } },
-        { data: { source: '2', target: '2' } },
-        { data: { source: '3', target: '0' } },
-        { data: { source: '3', target: '2' } },
-        { data: { source: '1', target: '2' } },
-        { data: { source: '1', target: '0' } },
-        { data: { source: '0', target: '0' } }
+        { data: { source: '0', target: '1', label: 'A : >' } },
+        { data: { source: '0', target: '3', label: 'B : _' } },
+        { data: { source: '0', target: '3', label: '_ : B' } },
+        { data: { source: '2', target: '3', label: '_ : B' } },
+        { data: { source: '2', target: '2', label: 'A : B' } },
+        { data: { source: '3', target: '0', label: 'A : B' } },
+        { data: { source: '3', target: '2', label: 'A : B' } },
+        { data: { source: '1', target: '2', label: 'A : B' } },
+        { data: { source: '1', target: '0', label: 'A : B' } },
+        { data: { source: '0', target: '0', label: 'A : B' } }
       ]
     };
 
@@ -82,7 +82,7 @@ angular.module('automata').controller('AutomataController', ['$scope', '$statePa
       }
 
       // Create new Automaton object
-      /*
+
       var automaton = new Automata({
         title: this.title,
         states: [{
@@ -95,7 +95,7 @@ angular.module('automata').controller('AutomataController', ['$scope', '$statePa
           end: true
         }]
       });
-      */
+
 
       // Redirect after save
       automaton.$save(function (response) {

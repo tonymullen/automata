@@ -141,22 +141,37 @@ angular.module('automata').factory('Automata', ['$resource',
           name: 'circle',
 //          fit: true,
 //          boundingBox: { x1:50, y1:0, x2:250, y2:300 },
-//          avoidOverlap: true, // prevents node overlap, may overflow boundingBox if not enough space
+          avoidOverlap: true, // prevents node overlap, may overflow boundingBox if not enough space
 //          avoidOverlapPadding: 10, // extra spacing around nodes when avoidOverlap: true
 //          condense: true,
         },
         style: cytoscape.stylesheet()
           .selector('node')
             .css({
-              'content': 'data(name)',
+              'content': 'data(id)',
               'text-valign': 'center',
-              'color': 'white',
-              'text-outline-width': 2,
-              'text-outline-color': '#888'
+              'color': 'black',
+              'background-color': 'white',
+              'border-width': '2px'
             })
           .selector('edge')
             .css({
-              'target-arrow-shape': 'triangle'
+              'content': 'data(label)',
+              'edge-text-rotation': 'autorotate',
+              'curve-style': 'bezier',
+              'control-point-step-size' : '70px',
+              'target-arrow-shape': 'triangle',
+              'line-color': 'black',
+              'target-arrow-color': 'black',
+              'color': 'white',
+              'text-outline-width': 2,
+              'text-outline-color': '#555'
+          //    'text-background-opacity': 1,
+          //    'text-background-color': 'white',
+          //    'text-background-shape': 'roundrectangle',
+          //    'text-border-color': '#000',
+          //    'text-border-width': 1,
+          //    'text-border-opacity': 1
             })
           .selector(':selected')
             .css({
@@ -165,19 +180,23 @@ angular.module('automata').factory('Automata', ['$resource',
               'target-arrow-color': 'black',
               'source-arrow-color': 'black'
             })
-          .selector('.faded')
-            .css({
-              'opacity': 0.25,
-              'text-opacity': 0
-            }),
+            .selector('.autorotate')
+              .css({
+                'edge-text-rotation': 'autorotate'
+              }),
+        //  .selector('.faded')
+        //    .css({
+        //      'opacity': 1,
+        //      'text-opacity': 0
+        //    })
         elements: eles
       }); //cy =
       cy.on('tap', 'node', function(e){
         var node = e.cyTarget;
         var neighborhood = node.neighborhood().add(node);
 
-        cy.elements().addClass('faded');
-        neighborhood.removeClass('faded');
+      //  cy.elements().addClass('faded');
+      //  neighborhood.removeClass('faded');
       });
 
       cy.on('tap', function(e){
@@ -186,18 +205,16 @@ angular.module('automata').factory('Automata', ['$resource',
           cy.add({
             group: 'nodes',
             data: { id: ind,
-                    name: 's'+String(ind),
                     weight: 75 },
             position: { x: e.cyPosition.x, y: e.cyPosition.y }
           });
-          console.log(cy.nodes());
-          cy.elements().removeClass('faded');
+        //  cy.elements().removeClass('faded');
         }
       });
 
-      cy.on('cxttap', function(e){
-        console.log('rightclick');
-        console.log(e);
+      cy.on('cxttap', 'node', function(e){
+        var node = e.cyTarget;
+        console.log('right tapped node '+node.id());
       });
 
         // the default values of each option are outlined below:
@@ -220,7 +237,7 @@ angular.module('automata').factory('Automata', ['$resource',
         },
         loopAllowed: function(node) {
           // for the specified node, return whether edges from itself to itself are allowed
-          return false;
+          return true;
         },
         nodeLoopOffset: -50, // offset for edgeType: 'node' loops
         nodeParams: function(sourceNode, targetNode) {
