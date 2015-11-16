@@ -152,7 +152,8 @@ angular.module('automata').factory('Automata', ['$resource',
               'text-valign': 'center',
               'color': 'black',
               'background-color': 'white',
-              'border-width': '2px'
+              'border-style': 'double',
+              'border-width': '6px'
             })
           .selector('edge')
             .css({
@@ -183,6 +184,14 @@ angular.module('automata').factory('Automata', ['$resource',
             .selector('.autorotate')
               .css({
                 'edge-text-rotation': 'autorotate'
+              })
+            .selector('.start-marker')
+              .css({
+                //'visibility': 'hidden'
+              })
+            .selector('.start-marker-arrow')
+              .css({
+                'target-arrow-color': 'red',
               }),
         //  .selector('.faded')
         //    .css({

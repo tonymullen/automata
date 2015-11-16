@@ -16,12 +16,14 @@ angular.module('automata').controller('AutomataController', ['$scope', '$statePa
 */
     $scope.eles = {
       nodes: [
+      //  { data: { id: 'start'}, classes: "start-marker" },
         { data: { id: '0', name: 's0' } },
         { data: { id: '1', name: 's1' } },
         { data: { id: '2', name: 's2' } },
         { data: { id: '3', name: 's3' } }
       ],
       edges: [
+      //  { data: { source: 'start', target: '0'}, classes: "start-marker-arrow"  },
         { data: { source: '0', target: '1', label: 'A : >' } },
         { data: { source: '0', target: '3', label: 'B : _' } },
         { data: { source: '0', target: '3', label: '_ : B' } },
