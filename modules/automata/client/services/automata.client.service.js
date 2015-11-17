@@ -138,7 +138,7 @@ angular.module('automata').factory('Automata', ['$resource',
         autounselectify: true,
         layout: {
           //name: 'cose',
-          name: 'circle',
+          name: 'preset',
 //          fit: true,
 //          boundingBox: { x1:50, y1:0, x2:250, y2:300 },
           avoidOverlap: true, // prevents node overlap, may overflow boundingBox if not enough space
@@ -185,13 +185,19 @@ angular.module('automata').factory('Automata', ['$resource',
               .css({
                 'edge-text-rotation': 'autorotate'
               })
-            .selector('.start-marker')
+            .selector('.startparent')
               .css({
-                //'visibility': 'hidden'
+                'border-width': '0',
+                'background-opacity': '0',
+                'content' : ''
               })
-            .selector('.start-marker-arrow')
+            .selector('.startmarker')
               .css({
-                'target-arrow-color': 'red',
+                'border-style': 'solid',
+                'border-width': '2px',
+                'content': '',
+                'shape': 'polygon',
+                'shape-polygon-points': '1 0 0 -1 0 1'
               }),
         //  .selector('.faded')
         //    .css({
@@ -270,7 +276,15 @@ angular.module('automata').factory('Automata', ['$resource',
           // fired when edgehandles interaction is stopped (either complete with added edges or incomplete)
         }
       };
+      console.log(cy);
 
+      cy.$('#start').relativePosition({
+        x: cy.$('#0').relativePosition('x') - 50,
+        y: cy.$('#0').relativePosition('y')
+      });
+
+      console.log(cy.$('#0').relativePosition('x'));
+      console.log(cy.$('#start').relativePosition('x'));
       cy.edgehandles(defaults);
 
     });
