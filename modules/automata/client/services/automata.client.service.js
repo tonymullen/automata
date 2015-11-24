@@ -197,7 +197,7 @@ angular.module('automata').factory('Automata', ['$resource',
                 'border-width': '2px',
                 'content': '',
                 'shape': 'polygon',
-                'shape-polygon-points': '1 0 0 -1 0 1'
+                'shape-polygon-points': '1 0 0.25 -0.65 0.25 0.65'
               }),
         //  .selector('.faded')
         //    .css({
@@ -230,6 +230,18 @@ angular.module('automata').factory('Automata', ['$resource',
       cy.on('cxttap', 'node', function(e){
         var node = e.cyTarget;
         console.log('right tapped node '+node.id());
+      });
+
+      cy.on('drag', '#0', function(e){
+        cy.$('#start').position({
+          x: cy.$('#0').position('x') - 35,
+          y: cy.$('#0').position('y')
+        });
+      });
+      
+      cy.$('#start').position({
+        x: cy.$('#0').position('x') - 35,
+        y: cy.$('#0').position('y')
       });
 
         // the default values of each option are outlined below:
@@ -278,13 +290,6 @@ angular.module('automata').factory('Automata', ['$resource',
       };
       console.log(cy);
 
-      cy.$('#start').relativePosition({
-        x: cy.$('#0').relativePosition('x') - 50,
-        y: cy.$('#0').relativePosition('y')
-      });
-
-      console.log(cy.$('#0').relativePosition('x'));
-      console.log(cy.$('#start').relativePosition('x'));
       cy.edgehandles(defaults);
 
     });
