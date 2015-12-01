@@ -20,15 +20,19 @@ var AutomatonSchema = new Schema({
     trim: true,
     required: 'Title cannot be blank'
   },
-//  content: {
-//    type: String,
-//    default: '',
-//    trim: true
-//  },
   states: [{
-    statename: { type: String, default: 's' },
+    stateName: { type: String, default: 's' },
+    stateID: Number,
+    position: { x: Number, y: Number },
     start: Boolean,
-    end: Boolean
+    accept: Boolean
+  }],
+  edges: [{
+    source: Number,
+    target: Number,
+    read: { type: String, default: '_' },
+    action: { type: String, default: '' },
+    label: String
   }],
   user: {
     type: Schema.ObjectId,

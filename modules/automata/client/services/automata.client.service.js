@@ -167,12 +167,6 @@ angular.module('automata').factory('Automata', ['$resource',
               'color': 'white',
               'text-outline-width': 2,
               'text-outline-color': '#555'
-          //    'text-background-opacity': 1,
-          //    'text-background-color': 'white',
-          //    'text-background-shape': 'roundrectangle',
-          //    'text-border-color': '#000',
-          //    'text-border-width': 1,
-          //    'text-border-opacity': 1
             })
           .selector(':selected')
             .css({
@@ -199,11 +193,6 @@ angular.module('automata').factory('Automata', ['$resource',
                 'shape': 'polygon',
                 'shape-polygon-points': '1 0 0.25 -0.65 0.25 0.65'
               }),
-        //  .selector('.faded')
-        //    .css({
-        //      'opacity': 1,
-        //      'text-opacity': 0
-        //    })
         elements: eles
       }); //cy =
       cy.on('tap', 'node', function(e){
@@ -238,7 +227,7 @@ angular.module('automata').factory('Automata', ['$resource',
           y: cy.$('#0').position('y')
         });
       });
-      
+
       cy.$('#start').position({
         x: cy.$('#0').position('x') - 35,
         y: cy.$('#0').position('y')

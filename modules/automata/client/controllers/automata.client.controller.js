@@ -8,12 +8,7 @@ angular.module('automata').controller('AutomataController', ['$scope', '$statePa
 
 /* CYTOSCAPE */
     var cy; // maybe you want a ref to cy
-    /*
-    $scope.people = [
-      { id: 'l', name: 'Laurel', weight: 65 },
-      { id: 'h', name: 'Hardy', weight: 110 }
-    ];
-*/
+
     $scope.eles = {
       nodes: [
       //  { data: { id: 'startparent' }, position: { x: -500, y: -50 }, classes: 'startparent' },
@@ -25,16 +20,16 @@ angular.module('automata').controller('AutomataController', ['$scope', '$statePa
       ],
       edges: [
       //  { data: { source: 'start', target: '0'}, classes: "start-marker-arrow"  },
-        { data: { source: '0', target: '1', label: 'A : >' } },
-        { data: { source: '0', target: '3', label: 'B : _' } },
-        { data: { source: '0', target: '3', label: '_ : B' } },
-        { data: { source: '2', target: '3', label: '_ : B' } },
-        { data: { source: '2', target: '2', label: 'A : B' } },
-        { data: { source: '3', target: '0', label: 'A : B' } },
-        { data: { source: '3', target: '2', label: 'A : B' } },
-        { data: { source: '1', target: '2', label: 'A : B' } },
-        { data: { source: '1', target: '0', label: 'A : B' } },
-        { data: { source: '0', target: '0', label: 'A : B' } }
+        { data: { source: '0', target: '1', read: 'A', action: '>', label: 'A : >' } },
+        { data: { source: '0', target: '3', read: 'B', action: '_', label: 'B : _' } },
+        { data: { source: '0', target: '3', read: '_', action: 'B', label: '_ : B' } },
+        { data: { source: '2', target: '3', read: '_', action: 'B', label: '_ : B' } },
+        { data: { source: '2', target: '2', read: 'A', action: 'B', label: 'A : B' } },
+        { data: { source: '3', target: '0', read: 'A', action: 'B', label: 'A : B' } },
+        { data: { source: '3', target: '2', read: 'A', action: 'B', label: 'A : B' } },
+        { data: { source: '1', target: '2', read: 'A', action: 'B', label: 'A : B' } },
+        { data: { source: '1', target: '0', read: 'A', action: 'B', label: 'A : B' } },
+        { data: { source: '0', target: '0', read: 'A', action: 'B', label: 'A : B' } }
       ]
     };
 
@@ -72,10 +67,10 @@ angular.module('automata').controller('AutomataController', ['$scope', '$statePa
 /* END CYTOSCAPE */
 
 
+
     // Create new Automaton
     $scope.create = function (isValid) {
 
-      console.log('creating');
       $scope.error = null;
 
       if (!isValid) {
@@ -89,13 +84,24 @@ angular.module('automata').controller('AutomataController', ['$scope', '$statePa
       var automaton = new Automata({
         title: this.title,
         states: [{
-          statename: 's1',
+          stateName: 's1',
+          stateID: 0,
+          position: {x: 100, y: 100},
           start: true,
           end: false
         },{
-          statename: 's2',
+          stateName: 's2',
+          stateID: 1,
+          position: {x: 100, y: 100},
           start: false,
           end: true
+        }],
+        edges: [{
+          source: 0,
+          target: 1,
+          read: 'A',
+          action: 'B',
+          label: 'A'+':'+'B'
         }]
       });
 

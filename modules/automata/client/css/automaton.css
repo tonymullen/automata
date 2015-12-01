@@ -6,7 +6,8 @@ body {
   height: 100%;
   width: 100%;
   position: absolute;
-  background-color: LightGray;
+  background: url('http://localhost:3000/images/GySvQ50pctTrans.png');
+  background-color: #EFEEE5;
   left: 0;
   top: 0;
 }
