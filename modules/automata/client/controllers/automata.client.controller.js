@@ -86,13 +86,13 @@ angular.module('automata').controller('AutomataController', ['$scope', '$statePa
         states: [{
           stateName: 's1',
           stateID: 0,
-          position: {x: 100, y: 100},
+          position: { x: 100, y: 100 },
           start: true,
           end: false
         },{
           stateName: 's2',
           stateID: 1,
-          position: {x: 100, y: 100},
+          position: { x: 100, y: 100 },
           start: false,
           end: true
         }],
