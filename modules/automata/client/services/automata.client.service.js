@@ -152,6 +152,11 @@ angular.module('automata').factory('Automata', ['$resource',
               'text-valign': 'center',
               'color': 'black',
               'background-color': 'white',
+              'border-style': 'solid',
+              'border-width': '2px'
+            })
+          .selector('.accept')
+            .css({
               'border-style': 'double',
               'border-width': '6px'
             })

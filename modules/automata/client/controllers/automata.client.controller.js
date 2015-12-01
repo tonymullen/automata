@@ -13,9 +13,9 @@ angular.module('automata').controller('AutomataController', ['$scope', '$statePa
       nodes: [
       //  { data: { id: 'startparent' }, position: { x: -500, y: -50 }, classes: 'startparent' },
         { data: { id: 'start' }, classes: 'startmarker' },
-        { data: { id: '0', name: 's0' }, position: { x: -120, y: -10 } },
+        { data: { id: '0', name: 's0', start: true, accept: true }, position: { x: -120, y: -10 }, classes: 'accept' },
         { data: { id: '1', name: 's1' }, position: { x: -100, y: 100 } },
-        { data: { id: '2', name: 's2' }, position: { x: 200, y: 100 } },
+        { data: { id: '2', name: 's2' }, position: { x: 200, y: 100 }, classes: 'accept' },
         { data: { id: '3', name: 's3' }, position: { x: 300, y: -50 } }
       ],
       edges: [
@@ -88,13 +88,13 @@ angular.module('automata').controller('AutomataController', ['$scope', '$statePa
           stateID: 0,
           position: { x: 100, y: 100 },
           start: true,
-          end: false
+          accept: false
         },{
           stateName: 's2',
           stateID: 1,
           position: { x: 100, y: 100 },
           start: false,
-          end: true
+          accept: true
         }],
         edges: [{
           source: 0,

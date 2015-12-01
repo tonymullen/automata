@@ -20,6 +20,11 @@ var AutomatonSchema = new Schema({
     trim: true,
     required: 'Title cannot be blank'
   },
+  machine: {
+    type: String,
+    enum: ['tm','fsa','pda']
+  },
+  deterministic: { type: Boolean, default: true },
   states: [{
     stateName: { type: String, default: 's' },
     stateID: Number,
