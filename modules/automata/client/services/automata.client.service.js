@@ -202,9 +202,26 @@ angular.module('automata').factory('Automata', ['$resource',
       }); //cy =
       cy.on('tap', 'node', function(e){
         var node = e.cyTarget;
-        var neighborhood = node.neighborhood().add(node);
+        if (!node.data().accept){
+          node.data().accept = true;
+          node.addClass('accept');
+          if (node.data().start){
+            cy.$('#start').position({
+              x: cy.$('#start').position('x') - 2,
+            });
+          }
+        }else{
+          node.data().accept = false;
+          node.removeClass('accept');
+          if (node.data().start){
+            cy.$('#start').position({
+              x: cy.$('#start').position('x') + 2,
+            });
+          }
+        }
+        //var neighborhood = node.neighborhood().add(node);
 
-      //  cy.elements().addClass('faded');
+        //cy.elements().addClass('accept');
       //  neighborhood.removeClass('faded');
       });
 
@@ -228,13 +245,13 @@ angular.module('automata').factory('Automata', ['$resource',
 
       cy.on('drag', '#0', function(e){
         cy.$('#start').position({
-          x: cy.$('#0').position('x') - 35,
+          x: cy.$('#0').position('x') - (e.cyTarget.data().accept ? 34 : 32),
           y: cy.$('#0').position('y')
         });
       });
 
       cy.$('#start').position({
-        x: cy.$('#0').position('x') - 35,
+        x: cy.$('#0').position('x') - 32,
         y: cy.$('#0').position('y')
       });
 

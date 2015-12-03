@@ -13,8 +13,16 @@
       <li ng-repeat="item in menu.items | orderBy: 'position'" ng-if="item.shouldRender(authentication.user);" ng-switch="item.type" ng-class="{ active: $state.includes(item.state), dropdown: item.type === 'dropdown' }" class="{{item.class}}" dropdown="item.type === 'dropdown'">
         <a ng-switch-when="dropdown" class="dropdown-toggle" dropdown-toggle role="button">{{::item.title}}&nbsp;<span class="caret"></span></a>
         <ul ng-switch-when="dropdown" class="dropdown-menu">
+          <!--
           <li ng-repeat="subitem in item.items | orderBy: 'position'" ng-if="subitem.shouldRender(authentication.user);" ui-sref-active="active">
             <a ui-sref="{{subitem.state}}" ng-bind="subitem.title"></a>
+          </li>
+        -->
+          <li ng-if="item.items[0].shouldRender(authentication.user);" ui-sref-active="active">
+            <a ui-sref="{{item.items[0].state}}" ng-bind="item.items[0].title"></a>
+          </li>
+          <li ng-if="item.items[1].shouldRender(authentication.user);" ui-sref-active="active">
+            <a ng-click="createNewAutomaton()" ng-bind="item.items[1].title"></a>
           </li>
         </ul>
         <a ng-switch-default ui-sref="{{item.state}}" ng-bind="item.title"></a>

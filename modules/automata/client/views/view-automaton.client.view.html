@@ -1,22 +1,61 @@
-<section ng-controller="AutomataController" ng-init="findOne()">
+<section ng-controller="AutomataController">
+  <!--
   <div class="page-header">
-    <h1 ng-bind="automaton.title"></h1>
+    <h1>New Automaton</h1>
   </div>
-  <div class="pull-right" ng-show="authentication.user._id == automaton.user._id">
-    <a class="btn btn-primary" ui-sref="articles.edit({automatonId: automaton._id})">
-      <i class="glyphicon glyphicon-edit"></i>
-    </a>
-    <a class="btn btn-primary" ng-click="remove();">
-      <i class="glyphicon glyphicon-trash"></i>
-    </a>
-  </div>
-  <small>
-    <em class="text-muted">
-      Posted on
-      <span ng-bind="automaton.created | date:'mediumDate'"></span>
-      by
-      <span ng-bind="automaton.user.displayName"></span>
-    </em>
-  </small>
-  <p class="lead" ng-bind="automaton.content"></p>
+  <div class="col-md-12">
+
+    <form name="automatonForm" class="form-horizontal" ng-submit="create(automatonForm.$valid)" novalidate>
+      <fieldset>
+        <div class="form-group" show-errors>
+          <label for="title">Title</label>
+          <input name="title" type="text" ng-model="title" id="title" class="form-control" placeholder="Title" required>
+          <div ng-messages="automatonForm.title.$error" role="alert">
+            <p class="help-block error-text" ng-message="required">Automaton title is required.</p>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="content">Content</label>
+
+          <textarea name="content" ng-model="content" id="content" class="form-control" cols="30" rows="10" placeholder="Content"></textarea>
+
+        </div>
+        <div class="form-group">
+          <input type="submit" class="btn btn-default">
+        </div>
+        <div ng-show="error" class="text-danger">
+          <strong ng-bind="error"></strong>
+        </div>
+      </fieldset>
+    </form>
+      </div>
+-->
+
+<div style="width:700px; height:700px">
+              <div id="cy" class="cy"></div>
+</div>
+
+                <table id="panel" class="panel">
+        <tbody>
+          <tr>
+            <th>Name</th>
+            <th><form name="automatonForm" class="form-horizontal"
+            ng-submit="create(automatonForm.$valid)" novalidate>
+            <div class="form-group">
+              <input type="submit" name="Save" value="Save" class="btn btn-default">
+            </div>
+            </form></th>
+          </tr>
+
+          <!--
+          <tr ng-repeat="person in people">
+            <td>{{person.name}}</td>
+            <td><input type="number" min="1" ng-model="person.weight" ng-change="onWeightChange(person)" /></td>
+          </tr>
+        -->
+    <!--
+        </tbody>
+      </table>
+    -->
+
 </section>
