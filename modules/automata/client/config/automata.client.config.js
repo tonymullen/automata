@@ -20,7 +20,7 @@ angular.module('automata').run(['Menus',
     // Add the dropdown create item
     Menus.addSubMenuItem('topbar', 'automata', {
       title: 'Create Automata',
-      state: 'automata.create',
+//      state: 'automata.create',
       roles: ['user']
     });
   }
