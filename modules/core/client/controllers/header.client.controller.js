@@ -23,13 +23,17 @@ angular.module('core').controller('HeaderController', ['$scope', '$state', 'Auth
     $scope.items = ['item1', 'item2', 'item3'];
     $scope.animationsEnabled = true;
 
+    $scope.example = {
+        text: 'word',
+        word: /^\s*\w*\s*$/
+      };
     $scope.createNewAutomaton = function(){
 
       var modalInstance = $uibModal.open({
         animation: $scope.animationsEnabled,
-        templateUrl: 'myModalContent.html',
+        templateUrl: 'createNewModal.html',
         controller: 'ModalInstanceCtrl',
-        //  size: size,
+        size: 'sm',
         resolve: {
           items: function () {
             return $scope.items;

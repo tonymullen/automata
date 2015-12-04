@@ -65,22 +65,43 @@
     </ul>
   </nav>
 
-  <script type="text/ng-template" id="myModalContent.html">
+  <script type="text/ng-template" id="createNewModal.html">
         <div class="modal-header">
-            <h3 class="modal-title">Im a modal!</h3>
+            <h3 class="modal-title">New automaton</h3>
         </div>
         <div class="modal-body">
+
+<form name="createNewForm">
+  <label>Automaton name:
+    <input type="text" name="input" ng-model="example.text"
+    ng-pattern="example.word" required ng-trim="false">
+  </label>
+  <div role="alert">
+    <span class="error" ng-show="createNewForm.input.$error.required">
+      Required!</span>
+    <span class="error" ng-show="createNewForm.input.$error.pattern">
+      Single word only!</span>
+  </div>
+    <tt>text = {{example.text}}</tt><br/>
+  <tt>createNewForm.input.$valid = {{createNewForm.input.$valid}}</tt><br/>
+  <tt>createNewForm.input.$error = {{createNewForm.input.$error}}</tt><br/>
+  <tt>createNewForm.$valid = {{createNewForm.$valid}}</tt><br/>
+  <tt>createNewForm.$error.required = {{!!createNewForm.$error.required}}</tt><br/>
+ </form>
+
+        <!--
             <ul>
                 <li ng-repeat="item in items">
                     <a href="#" ng-click="$event.preventDefault(); selected.item = item">{{ item }}</a>
                 </li>
             </ul>
             Selected: <b>{{ selected.item }}</b>
+            -->
         </div>
         <div class="modal-footer">
             <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
             <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
         </div>
     </script>
-    
+
 </div>
