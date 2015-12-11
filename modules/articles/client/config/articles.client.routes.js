@@ -25,12 +25,15 @@ angular.module('articles').config(['$stateProvider',
         url: '/:articleId',
         templateUrl: 'modules/articles/client/views/view-article.client.view.html'
       })
+      /*
       .state('articles.edit', {
         url: '/:articleId/edit',
         templateUrl: 'modules/articles/client/views/edit-article.client.view.html',
         data: {
           roles: ['user', 'admin']
         }
-      });
+      })
+      */
+      ;
   }
 ]);

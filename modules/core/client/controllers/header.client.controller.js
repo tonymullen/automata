@@ -20,44 +20,49 @@ angular.module('core').controller('HeaderController', ['$scope', '$state', 'Auth
       $scope.isCollapsed = false;
     });
 
-    $scope.items = ['item1', 'item2', 'item3'];
+  //  $scope.items = ['item1', 'item2', 'item3'];
     $scope.animationsEnabled = true;
 
     $scope.example = {
-        text: 'word',
-        word: /^\s*\w*\s*$/
-      };
-    $scope.createNewAutomaton = function(){
+      text: 'word',
+      word: /^\s*\w*\s*$/
+    };
 
+    $scope.createNewAutomaton = function(){
       var modalInstance = $uibModal.open({
         animation: $scope.animationsEnabled,
         templateUrl: 'createNewModal.html',
         controller: 'ModalInstanceCtrl',
-        size: 'sm',
-        resolve: {
-          items: function () {
-            return $scope.items;
-          }
-        }
+        size: 'sm' //,
+      //  resolve: {
+      //    items: function () {
+      //      return $scope.items;
+      //    }
+      //  }
       });
 
-      modalInstance.result.then(function (selectedItem) {
-        $scope.selected = selectedItem;
+
+      //modalInstance.result.then(function (selectedItem) {
+      modalInstance.result.then(function () {
+        console.log('result no selection 11');
+        //$scope.selected = selectedItem;
       }, function () {
         $log.info('Modal dismissed at: ' + new Date());
       });
       console.log('create new');
     };
   }
-]).controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, items) {
+//]).controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, items) {
+]).controller('ModalInstanceCtrl', function ($scope, $uibModalInstance) {
 
-  $scope.items = items;
-  $scope.selected = {
-    item: $scope.items[0]
-  };
+//  $scope.items = items;
+//  $scope.selected = {
+//    item: $scope.items[0]
+//  };
 
   $scope.ok = function () {
-    $uibModalInstance.close($scope.selected.item);
+    //$uibModalInstance.close($scope.selected.item);
+    $uibModalInstance.close();
   };
 
   $scope.cancel = function () {

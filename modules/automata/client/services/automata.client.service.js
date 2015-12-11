@@ -13,118 +13,9 @@ angular.module('automata').factory('Automata', ['$resource',
     });
   }
 ])
-/*
-.factory('peopleGraph', [ '$q', function( $q ){
-// use a factory instead of a directive, because cy.js is not just for visualisation; you need access to the graph model and events etc
-//angular.module('automata')
-  var cy;
-
-  var peopleGraph = function(people){
-    var deferred = $q.defer();
-
-    // put people model in cy.js
-    var eles = [];
-
-    for( var i = 0; i < people.length; i++ ){
-      eles.push({
-        group: 'nodes',
-        data: {
-          id: people[i].id,
-          weight: people[i].weight,
-          name: people[i].name
-        }
-      });
-    }
-
-    $(function(){ // on dom ready
-
-
-      cy = cytoscape({
-        container: $('#cy')[0],
-
-        style: cytoscape.stylesheet()
-          .selector('node')
-            .css({
-              'content': 'data(name)',
-              'height': 80,
-              'width': 'mapData(weight, 1, 200, 1, 200)',
-               'text-valign': 'center',
-                'color': 'white',
-                'text-outline-width': 2,
-                'text-outline-color': '#888'
-             })
-          .selector('edge')
-            .css({
-              'target-arrow-shape': 'triangle'
-            })
-          .selector(':selected')
-            .css({
-              'background-color': 'black',
-              'line-color': 'black',
-              'target-arrow-color': 'black',
-              'source-arrow-color': 'black',
-              'text-outline-color': 'black'
-          }),
-
-        layout: {
-          name: 'cose',
-          padding: 10
-        },
-
-        elements: eles,
-
-        ready: function(){
-          deferred.resolve( this );
-
-          cy.on('cxtdrag', 'node', function(e){
-            var node = this;
-            var dy = Math.abs( e.cyPosition.x - node.position().x );
-            var weight = Math.round( dy*2 );
-
-            node.data('weight', weight);
-
-            fire('onWeightChange', [ node.id(), node.data('weight') ]);
-          });
-        }
-      });
-
-    }); // on dom ready
-
-    return deferred.promise;
-  };
-
-  peopleGraph.listeners = {};
-
-  function fire(e, args){
-    var listeners = peopleGraph.listeners[e];
-
-    for( var i = 0; listeners && i < listeners.length; i++ ){
-      var fn = listeners[i];
-
-      fn.apply( fn, args );
-    }
-  }
-
-  function listen(e, fn){
-    var listeners = peopleGraph.listeners[e] = peopleGraph.listeners[e] || [];
-
-    listeners.push(fn);
-  }
-
-  peopleGraph.setPersonWeight = function(id, weight){
-    cy.$('#' + id).data('weight', weight);
-  };
-
-  peopleGraph.onWeightChange = function(fn){
-    listen('onWeightChange', fn);
-  };
-
-  return peopleGraph;
-
-
-} ])
-*/
 .factory('automatonGraph', [ '$q', function($q){
+  // use a factory instead of a directive, because cy.js is not just for visualisation; you need access to the graph model and events etc
+  //angular.module('automata')
   var cy;
 
   var automatonGraph = function(eles){
@@ -196,7 +87,7 @@ angular.module('automata').factory('Automata', ['$resource',
                 'border-width': '2px',
                 'content': '',
                 'shape': 'polygon',
-                'shape-polygon-points': '1 0 0.25 -0.65 0.25 0.65'
+                'shape-polygon-points': '1 0 0.5 -0.4 0.5 0.4'
               }),
         elements: eles
       }); //cy =
@@ -250,6 +141,8 @@ angular.module('automata').factory('Automata', ['$resource',
         });
       });
 
+      cy.$('#start').ungrabify();
+      cy.$('#start').unselectify();
       cy.$('#start').position({
         x: cy.$('#0').position('x') - 32,
         y: cy.$('#0').position('y')
@@ -265,7 +158,7 @@ angular.module('automata').factory('Automata', ['$resource',
         handleLineWidth: 1, // width of handle line in pixels
         handleNodes: 'node', // selector/filter function for whether edges can be made from a given node
         hoverDelay: 150, // time spend over a target node before it is considered a target selection
-        cxt: false, // whether cxt events trigger edgehandles (useful on touch)
+        cxt: true, // whether cxt events trigger edgehandles (useful on touch)
         enabled: true, // whether to start the plugin in the enabled state
         toggleOffOnLeave: false, // whether an edge is cancelled by leaving a node (true), or whether you need to go over again to cancel (false; allows multiple edges in one pass)
         edgeType: function(sourceNode, targetNode) {
@@ -299,12 +192,11 @@ angular.module('automata').factory('Automata', ['$resource',
           // fired when edgehandles interaction is stopped (either complete with added edges or incomplete)
         }
       };
-      console.log(cy);
+      //console.log(cy);
 
       cy.edgehandles(defaults);
 
     });
-
     return deferred.promise;
   };
   return automatonGraph;

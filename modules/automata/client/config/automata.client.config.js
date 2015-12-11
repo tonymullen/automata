@@ -19,8 +19,22 @@ angular.module('automata').run(['Menus',
 
     // Add the dropdown create item
     Menus.addSubMenuItem('topbar', 'automata', {
-      title: 'Create Automata',
-//      state: 'automata.create',
+      title: 'Create New Turing Machine',
+      state: 'automata.create-tm',
+      roles: ['user']
+    });
+
+    // Add the dropdown create item
+    Menus.addSubMenuItem('topbar', 'automata', {
+      title: 'Create New Finite State Automaton',
+      state: 'automata.create-fsa',
+      roles: ['user']
+    });
+
+      // Add the dropdown create item
+    Menus.addSubMenuItem('topbar', 'automata', {
+      title: 'Create New Pushdown Automaton',
+      state: 'automata.create-pda',
       roles: ['user']
     });
   }
