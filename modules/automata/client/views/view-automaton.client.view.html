@@ -1,4 +1,4 @@
-<section ng-controller="AutomataController">
+<section ng-controller="AutomataController" ng-init="findOne()">
   <!--
   <div class="page-header">
     <h1>New Automaton</h1>
@@ -31,14 +31,14 @@
       </div>
 -->
 
-<div style="width:700px; height:700px">
+        <div style="width:700px; height:700px">
               <div id="cy" class="cy"></div>
-</div>
+        </div>
 
-                <table id="panel" class="panel">
+        <table id="panel" class="panel">
         <tbody>
           <tr>
-            <th>Name</th>
+            <th>Name {{automaton.machine}}</th>
             <th><form name="automatonForm" class="form-horizontal"
             ng-submit="create(automatonForm.$valid)" novalidate>
             <div class="form-group">
@@ -53,9 +53,9 @@
             <td><input type="number" min="1" ng-model="person.weight" ng-change="onWeightChange(person)" /></td>
           </tr>
         -->
-    <!--
+
         </tbody>
       </table>
-    -->
+
 
 </section>

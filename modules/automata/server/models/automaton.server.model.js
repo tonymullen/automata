@@ -14,6 +14,10 @@ var AutomatonSchema = new Schema({
     type: Date,
     default: Date.now
   },
+  user: {
+    type: Schema.ObjectId,
+    ref: 'User'
+  },
   title: {
     type: String,
     default: 'Untitled automaton',
@@ -24,10 +28,27 @@ var AutomatonSchema = new Schema({
     type: String,
     enum: ['tm','fsa','pda']
   },
-  deterministic: { type: Boolean, default: true },
-  states: [{
-    stateName: { type: String, default: 's' },
-    stateID: Number,
+  determ: { type: Boolean, default: true },
+  eles: {
+    nodes: [
+      {
+        data: { id: String },
+        position: { x: Number, y: Number },
+        classes: String
+      }],
+    edges: [
+      { data:
+        { source: String,
+          target: String,
+          read: String,
+          action: String,
+          label: String
+        }
+      }]
+  }/*,
+  nodes: [{
+    //stateName: { type: String, default: 's' },
+    id: String,
     position: { x: Number, y: Number },
     start: Boolean,
     accept: Boolean
@@ -38,11 +59,7 @@ var AutomatonSchema = new Schema({
     read: { type: String, default: '_' },
     action: { type: String, default: '' },
     label: String
-  }],
-  user: {
-    type: Schema.ObjectId,
-    ref: 'User'
-  }
+  }]*/
 });
 
 mongoose.model('Automaton', AutomatonSchema);

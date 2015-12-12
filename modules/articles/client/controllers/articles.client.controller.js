@@ -5,6 +5,7 @@ angular.module('articles').controller('ArticlesController', ['$scope', '$statePa
   function ($scope, $stateParams, $location, Authentication, Articles) {
     $scope.authentication = Authentication;
 
+
     // Create new Article
     $scope.create = function (isValid) {
       $scope.error = null;
@@ -76,6 +77,7 @@ angular.module('articles').controller('ArticlesController', ['$scope', '$statePa
 
     // Find existing Article
     $scope.findOne = function () {
+      console.log('ng-init runs findOne for articles');
       $scope.article = Articles.get({
         articleId: $stateParams.articleId
       });

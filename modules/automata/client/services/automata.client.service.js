@@ -5,7 +5,7 @@
 angular.module('automata').factory('Automata', ['$resource',
   function ($resource) {
     return $resource('api/automata/:automatonId', {
-      articleId: '@_id'
+      automatonId: '@_id'
     }, {
       update: {
         method: 'PUT'
