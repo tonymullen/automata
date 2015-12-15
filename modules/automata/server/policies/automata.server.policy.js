@@ -28,7 +28,7 @@ exports.invokeRolesPolicies = function () {
       permissions: ['get', 'post']
     }, {
       resources: '/api/automata/:automatonId',
-      permissions: ['get']
+      permissions: ['get','post']
     }]
   }, {
     roles: ['guest'],

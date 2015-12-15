@@ -2,31 +2,30 @@
 
 // Automata controller
 
-angular.module('automata').controller('AutomataController', ['$scope', '$state', '$stateParams', '$location', 'Authentication', 'Automata', 'automatonGraph',
-  function ($scope, $state, $stateParams, $location, Authentication, Automata, automatonGraph) {
+angular.module('automata').controller('AutomataController', ['$scope', '$state', '$stateParams', '$location', '$timeout', 'Authentication', 'Automata', 'automatonGraph',
+  function ($scope, $state, $stateParams, $location, $timeout, Authentication, Automata, automatonGraph) {
+    var cy; //ref to cy
     $scope.authentication = Authentication;
 
     // Create new Automaton in the database
     $scope.create = function (isValid) {
       //var automaton;
       $scope.error = null;
-
       if (!isValid) {
         console.log('not valid');
         $scope.$broadcast('show-errors-check-validity', 'automatonForm');
-
         return false;
       }
 
-      // Redirect after save
+      $scope.automaton.eles.nodes = cy.nodes().jsons();
+      $scope.automaton.eles.edges = cy.edges().jsons();
       var automaton = $scope.automaton;
+
       automaton.$save(function (response) {
         console.log('saved');
         $location.path('automata/' + response._id);
-
         // Clear form fields
         $scope.title = '';
-      //  $scope.content = '';
       }, function (errorResponse) {
         $scope.error = errorResponse.data.message;
       });
@@ -55,11 +54,12 @@ angular.module('automata').controller('AutomataController', ['$scope', '$state',
 
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'automatonForm');
-
         return false;
       }
 
-      var automaton= $scope.automaton;
+      $scope.automaton.eles.nodes = cy.nodes().jsons();
+      $scope.automaton.eles.edges = cy.edges().jsons();
+      var automaton = $scope.automaton;
 
       automaton.$update(function () {
         $location.path('automata/' + automaton._id);
@@ -78,12 +78,12 @@ angular.module('automata').controller('AutomataController', ['$scope', '$state',
       $scope.automaton = Automata.get({
         automatonId: $stateParams.automatonId
       },function(){
+
         setUpGraph();
       });
     };
 
     if($state.current.data && $state.current.data.type){
-      // Create new Automaton object
       $scope.automaton = new Automata({
         title: 'untitled automaton',
         machine: $state.current.data.type,
@@ -99,7 +99,6 @@ angular.module('automata').controller('AutomataController', ['$scope', '$state',
 
     function setUpGraph(){
       /* CYTOSCAPE */
-      var cy; //ref to cy
       automatonGraph($scope.automaton.eles).then(function(automatonCy){
         cy = automatonCy;
         $scope.cyLoaded = true;

@@ -40,17 +40,10 @@ angular.module('automata').config(['$stateProvider',
       })
       .state('automata.view', {
         url: '/:automatonId',
-        templateUrl: 'modules/automata/client/views/view-automaton.client.view.html'
-      })
-      /*
-      .state('automata.edit', {
-        url: '/:automatonId/edit',
-        templateUrl: 'modules/automata/client/views/edit-utomaton.client.view.html',
+        templateUrl: 'modules/automata/client/views/view-automaton.client.view.html',
         data: {
           roles: ['user', 'admin']
         }
-      })
-      */
-      ;
+      });
   }
 ]);

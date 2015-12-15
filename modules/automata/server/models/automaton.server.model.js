@@ -6,6 +6,42 @@
 var mongoose = require('mongoose'),
   Schema = mongoose.Schema;
 
+/*
+*Node Schema
+
+var StateNodeSchema = new Schema({
+  data: {
+    id: String,
+    start: Boolean,
+    accept: Boolean
+  },
+  position: {
+    x: Number,
+    y: Number
+  },
+  classes: String
+});
+*/
+/*
+*Edge Schema
+
+var EdgeSchema = new Schema({
+  data: {
+    source: {
+      type: Schema.ObjectId,
+      ref: 'Node'
+    },
+    target: {
+      type: Schema.ObjectId,
+      ref: 'Node'
+    },
+    read: String,
+    action: String,
+    label: String
+  },
+  classes: String
+});
+*/
 /**
  * Automaton Schema
  */
@@ -31,12 +67,30 @@ var AutomatonSchema = new Schema({
   determ: { type: Boolean, default: true },
   eles: {
     nodes: [
+    /*  {
+        type: Schema.ObjectId,
+        ref: 'StateNode'
+      }*/
       {
-        data: { id: String },
-        position: { x: Number, y: Number },
+        data: {
+          id: String,
+          start: Boolean,
+          accept: Boolean
+        },
+        position: {
+          x: Number,
+          y: Number
+        },
         classes: String
-      }],
+      }
+    ],
     edges: [
+      /*
+      {
+        type: Schema.ObjectId,
+        ref: 'Edge'
+      }
+      */
       { data:
         { source: String,
           target: String,
@@ -44,7 +98,8 @@ var AutomatonSchema = new Schema({
           action: String,
           label: String
         }
-      }]
+      }
+    ]
   }/*,
   nodes: [{
     //stateName: { type: String, default: 's' },
@@ -62,4 +117,6 @@ var AutomatonSchema = new Schema({
   }]*/
 });
 
+//mongoose.model('StateNode', StateNodeSchema);
+//mongoose.model('Edge', EdgeSchema);
 mongoose.model('Automaton', AutomatonSchema);

@@ -3,25 +3,28 @@
 /**
  * Module dependencies.
  */
+//console.log(Node);
 var path = require('path'),
   mongoose = require('mongoose'),
-  Automaton = mongoose.model('Automaton'),
+  StateNode = mongoose.model('StateNode'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
+
+//console.log(Node);
 
 /**
  * Create a article
  */
 exports.create = function (req, res) {
-  var automaton = new Automaton(req.body);
-  automaton.user = req.user;
+  var node = new StateNode(req.body);
+  //automaton.user = req.user;
 
-  automaton.save(function (err) {
+  node.save(function (err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(automaton);
+      res.json(node);
     }
   });
 };
@@ -30,22 +33,25 @@ exports.create = function (req, res) {
  * Show the current automaton
  */
 exports.read = function (req, res) {
-  res.json(req.automaton);
+  res.json(req.node);
 };
 
 /**
  * Update a automaton
  */
 exports.update = function (req, res) {
-  var automaton = req.automaton;
-  automaton.eles = req.body.eles;
-  automaton.save(function (err) {
+  var node = req.node;
+  console.log(node);
+  //automaton.title = req.body.title;
+  //automaton.content = req.body.content;
+
+  node.save(function (err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(automaton);
+      res.json(node);
     }
   });
 };
@@ -54,22 +60,22 @@ exports.update = function (req, res) {
  * Delete an article
  */
 exports.delete = function (req, res) {
-  var automaton = req.automaton;
+  var node = req.node;
 
-  automaton.remove(function (err) {
+  node.remove(function (err) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(automaton);
+      res.json(node);
     }
   });
 };
 
 /**
  * List of Automata
- */
+
 exports.list = function (req, res) {
   Automaton.find().sort('-created').populate('user', 'displayName').exec(function (err, automata) {
     if (err) {
@@ -81,27 +87,28 @@ exports.list = function (req, res) {
     }
   });
 };
+*/
 
 /**
  * Automaton middleware
  */
-exports.automatonByID = function (req, res, next, id) {
+exports.nodeByID = function (req, res, next, id) {
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).send({
-      message: 'Automaton is invalid'
+      message: 'Node is invalid'
     });
   }
 
-  Automaton.findById(id).populate('user', 'displayName').exec(function (err, automaton) {
+  Node.findById(id).populate('user', 'displayName').exec(function (err, node) {
     if (err) {
       return next(err);
-    } else if (!automaton) {
+    } else if (!node) {
       return res.status(404).send({
-        message: 'No automaton with that identifier has been found'
+        message: 'No node with that identifier has been found'
       });
     }
-    req.automaton = automaton;
+    req.node = node;
     next();
   });
 };
