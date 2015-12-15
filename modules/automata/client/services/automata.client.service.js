@@ -120,6 +120,7 @@ angular.module('automata').factory('Automata', ['$resource',
                 group: 'nodes',
                 data: { id: ind,
                         weight: 75 },
+                classes: 'enode',
                 position: { x: e.cyPosition.x, y: e.cyPosition.y }
               });
             //  cy.elements().removeClass('faded');
@@ -153,7 +154,7 @@ angular.module('automata').factory('Automata', ['$resource',
             handleColor: '#ff0000', // the colour of the handle and the line drawn from it
             handleLineType: 'ghost', // can be 'ghost' for real edge, 'straight' for a straight line, or 'draw' for a draw-as-you-go line
             handleLineWidth: 1, // width of handle line in pixels
-            handleNodes: 'node', // selector/filter function for whether edges can be made from a given node
+            handleNodes: '.enode', // selector/filter function for whether edges can be made from a given node
             hoverDelay: 150, // time spend over a target node before it is considered a target selection
             cxt: true, // whether cxt events trigger edgehandles (useful on touch)
             enabled: true, // whether to start the plugin in the enabled state
@@ -184,6 +185,8 @@ angular.module('automata').factory('Automata', ['$resource',
             },
             complete: function(sourceNode, targetNodes, addedEntities) {
               // fired when edgehandles is done and entities are added
+              console.log(addedEntities);
+              console.log(this);
             },
             stop: function(sourceNode) {
               // fired when edgehandles interaction is stopped (either complete with added edges or incomplete)
