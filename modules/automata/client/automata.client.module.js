@@ -1,4 +1,4 @@
 'use strict';
 
 // Use Applicaion configuration module to register a new module
-ApplicationConfiguration.registerModule('automata');
+ApplicationConfiguration.registerModule('automata',['windows','ui.bootstrap']);

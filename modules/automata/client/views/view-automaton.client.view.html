@@ -30,15 +30,29 @@
     </form>
       </div>
 -->
+          <div style="height:300px; width:700px">
+              <div id="cy" class="cy">
+              </div>
+            </div>
 
-        <div style="width:700px; height:700px">
-              <div id="cy" class="cy"></div>
-        </div>
+  <window id="adminMenu" title="Administrative Menu">
+            <accordion>
+              <accordion-group heading="Manage Users">
+                <ul class="list-group">
+                  <li class="list-group-item" draggable="{opacity: .75,helper: 'clone'}">Mike</li>
+                  <li class="list-group-item">Mary</li>
+                  <li class="list-group-item">Mary</li>
+                  <li class="list-group-item">Mary</li>
+                  <li class="list-group-item">Mary</li>
+                </ul>
+              </accordion-group>
+            </accordion>
+   </window>
 
         <table id="panel" class="panel">
         <tbody>
           <tr>
-            <th>Name {{automaton.machine}}</th>
+            <th>{{automaton.title}}</th>
             <th><form name="automatonForm" class="form-horizontal"
             ng-submit="update(automatonForm.$valid)" novalidate>
             <div class="form-group">
@@ -56,6 +70,5 @@
 
         </tbody>
       </table>
-
 
 </section>
