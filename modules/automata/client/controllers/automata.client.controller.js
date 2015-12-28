@@ -6,6 +6,8 @@ angular.module('automata').controller('AutomataController', ['$scope', '$state',
   function ($scope, $state, $stateParams, $location, $timeout, Authentication, Automata, automatonGraph) {
     var cy; //ref to cy
     $scope.authentication = Authentication;
+    $scope.tape = { position: 2,
+                    contents: ["A","B","C","D"] };
 
     // Create new Automaton in the database
     $scope.create = function (isValid) {

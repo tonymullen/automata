@@ -2,18 +2,21 @@
   -webkit-box-sizing: content-box; /* Safari/Chrome, other WebKit */
 	-moz-box-sizing: content-box;    /* Firefox, other Gecko */
 	box-sizing: content-box;         /* Opera/IE 8+ */
+  /*height: 100px;*/
+  z-index: 50;
 }
 
 .floating-window > .panel {
-  min-height: 135px;
-  min-width: 250px;
+  min-height: 60px;
+  min-width: 200px;
 }
 div#windowBodyContent {
-  min-height: 18px;
+/*  min-height: 18px; */
   min-width: 220px;
+  padding: 5px;
 }
 .floating-window > .panel {
-  width: 300px;
+  width: 80%;
 }
 
 /** Appropriate mouse cursors **/
@@ -24,7 +27,19 @@ accordion .panel-heading a { cursor: pointer; }
 .panel { overflow: hidden; }
 
 /** Scroll window content when necessary **/
-div#windowBodyContent { overflow: scroll; }
+div#windowBodyContent {
+  overflow: auto;
+  height: 25px;
+  margin-left: 5px;
+  margin-top: 5px;
+  margin-bottom: 0;
+  margin-right: 15px;
+  border: solid 1.5px lightGray;
+ }
+
+div#windowBody {
+  overflow: auto;
+}
 
 /** Window minimize and expansion transition **/
 .floating-window {
@@ -42,4 +57,27 @@ div#windowBodyContent { overflow: scroll; }
 
 .floating-window.minimize-add, .floating-window.minimize-remove.minimize-remove-active {
   max-height: 1000px;
+}
+
+.panel-heading.tape-window-heading {
+    background-color: #080808;
+    background-image: linear-gradient(to bottom, #353535 0%, #080808 100%);
+    border-color: #080808;
+    padding: 0;
+    height: 12px;
+}
+
+.panel.tape-window {
+    border-color: #080808;
+    background-color: rgba(255,255,255,0.75);
+}
+
+tr.tape-content > td{
+  background-color: white;
+  border: solid 0.5pt black;
+}
+
+tr.tape-content > td > div.tape-cell{
+  height:20px;
+  width:15px;
 }

@@ -82,7 +82,6 @@ angular.module('itsADrag',[])
 }]); // end itsADrag.run
 
 angular.module('resizeIt',[])
-
 /**
   jQuery UI resizable adds exact pixel width and heights to the element via a style tag.
 **/
@@ -122,7 +121,7 @@ angular.module('resizeIt',[])
           scope.$apply(function(){
             scope.$emit('resizeable.stop',{ 'ui': ui });
             scope.obj.size = angular.copy(ui.size);
-            console.log(scope.obj.size);
+            //console.log(scope.obj.size);
           });
         }, // end stop
 
@@ -138,20 +137,20 @@ angular.module('resizeIt',[])
 
       /*** Listeners ***/
 
-      scope.$on('resizeable.set.height',function(evt,params){
-        if(angular.isDefined(params.height))
-          el.css('height',parseInt(params.height) + 'px');
-      }); // end on(resizeable.set.height)
+//      scope.$on('resizeable.set.height',function(evt,params){
+//        if(angular.isDefined(params.height))
+//          el.css('height',parseInt(params.height) + 'px');
+//      }); // end on(resizeable.set.height)
 
       scope.$on('resizeable.set.width',function(evt,params){
         if(angular.isDefined(params.width))
           el.css('width',parseInt(params.width) + 'px');
       }); // end on(resizeable.set.width
 
-      scope.$on('resizeable.reset.height',function(evt){
-        if(angular.isDefined(scope.obj.size))
-          el.css('height',scope.obj.size.height + 'px');
-      }); // end on(resizeable.reset.height)
+//      scope.$on('resizeable.reset.height',function(evt){
+//        if(angular.isDefined(scope.obj.size))
+//          el.css('height',scope.obj.size.height + 'px');
+//      }); // end on(resizeable.reset.height)
 
       scope.$on('resizeable.reset.width',function(evt){
         if(angular.isDefined(scope.obj.size))
@@ -168,7 +167,8 @@ angular.module('windows',['ngAnimate','itsADrag','resizeIt'])
     restrict : 'E',
     transclude : true,
     replace : true,
-    templateUrl : '/tmpls/window',
+    //template: '<div class="floating-window" id="{{id}}" draggable="{handle: \'div.panel-heading\',opacity: 0.5}"><div class="panel panel-primary" resizeable="{handles: \'se\', alsoResize: \'#windowBodyContent\'}"><div class="panel-heading cursor-move" id="windowHeading"><span class="pull-right"><a type="button" id="windowMinimizeBtn" class="btn btn-primary btn-xs" ng-click="minimize()"><span class="glyphicon" ng-class="{false: \'glyphicon-chevron-up\',true: \'glyphicon-chevron-down\'}[minimized]"></span></a></span><span><big>{{title}}</big></span></div><div id="windowBody"><div class="panel-body" id="windowBodyContent" ng-transclude></div><div class="panel-footer"><small>&nbsp;</small><span class="pull-right glyphicon glyphicon-resize-full ui-resizable-handle ui-resizable-se"></span></div></div></div></div>',
+    templateUrl : 'modules/automata/client/directives/tape.html',
     scope : {
       id : '@id',
       title : '@title'
@@ -191,9 +191,12 @@ angular.module('windows',['ngAnimate','itsADrag','resizeIt'])
   }; // end return
 }]) // end window
 
-.run(['$templateCache',function($templateCache){
-  $templateCache.put('/tmpls/window', '<div class="floating-window" id="{{id}}" draggable="{handle: \'div.panel-heading\',opacity: 0.5}"><div class="panel panel-primary" resizeable="{handles: \'se\', alsoResize: \'#windowBodyContent\'}"><div class="panel-heading cursor-move" id="windowHeading"><span class="pull-right"><a type="button" id="windowMinimizeBtn" class="btn btn-primary btn-xs" ng-click="minimize()"><span class="glyphicon" ng-class="{false: \'glyphicon-chevron-up\',true: \'glyphicon-chevron-down\'}[minimized]"></span></a></span><span><big>{{title}}</big></span></div><div id="windowBody"><div class="panel-body" id="windowBodyContent" ng-transclude></div><div class="panel-footer"><small>&nbsp;</small><span class="pull-right glyphicon glyphicon-resize-full ui-resizable-handle ui-resizable-se"></span></div></div></div></div>');
+
+.run(['$templateCache', '$http', function($templateCache, $http){
+  //$templateCache.put('/tmpls/window', '<div class="floating-window" id="{{id}}" draggable="{handle: \'div.panel-heading\',opacity: 0.5}"><div class="panel panel-primary" resizeable="{handles: \'se\', alsoResize: \'#windowBodyContent\'}"><div class="panel-heading cursor-move" id="windowHeading"><span class="pull-right"><a type="button" id="windowMinimizeBtn" class="btn btn-primary btn-xs" ng-click="minimize()"><span class="glyphicon" ng-class="{false: \'glyphicon-chevron-up\',true: \'glyphicon-chevron-down\'}[minimized]"></span></a></span><span><big>{{title}}</big></span></div><div id="windowBody"><div class="panel-body" id="windowBodyContent" ng-transclude></div><div class="panel-footer"><small>&nbsp;</small><span class="pull-right glyphicon glyphicon-resize-full ui-resizable-handle ui-resizable-se"></span></div></div></div></div>');
+  $http.get('modules/automata/client/directives/tape.html', { cache:$templateCache });
 }]); // end windows
+
 
 /***** Application *****/
 /*
