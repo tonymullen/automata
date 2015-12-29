@@ -4,6 +4,7 @@ module.exports = {
   client: {
     lib: {
       css: [
+        'https://fonts.googleapis.com/css?family=Francois+One',
         'public/lib/bootstrap/dist/css/bootstrap.css',
         'public/lib/bootstrap/dist/css/bootstrap-theme.css'
       ],

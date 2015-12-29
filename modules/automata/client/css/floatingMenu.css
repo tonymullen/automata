@@ -13,7 +13,7 @@
 div#windowBodyContent {
 /*  min-height: 18px; */
   min-width: 220px;
-  padding: 5px;
+  padding: 2px;
 }
 .floating-window > .panel {
   width: 80%;
@@ -28,12 +28,12 @@ accordion .panel-heading a { cursor: pointer; }
 
 /** Scroll window content when necessary **/
 div#windowBodyContent {
-  overflow: auto;
-  height: 25px;
+  overflow-y: hidden;
+  height: 40px;
   margin-left: 5px;
   margin-top: 5px;
-  margin-bottom: 0;
-  margin-right: 15px;
+  margin-bottom: 2px;
+  margin-right: 5px;
   border: solid 1.5px lightGray;
  }
 
@@ -69,7 +69,7 @@ div#windowBody {
 
 .panel.tape-window {
     border-color: #080808;
-    background-color: rgba(255,255,255,0.75);
+    background-color: rgba(255,255,255,0.5);
 }
 
 tr.tape-content > td{
@@ -78,6 +78,32 @@ tr.tape-content > td{
 }
 
 tr.tape-content > td > div.tape-cell{
+  font-family: 'Francois One', sans-serif;
+  text-align: center;
   height:20px;
   width:15px;
+}
+
+tr.tape-content > td.active{
+  background-color: black;
+  color: white;
+}
+
+tr.rw-head > td{
+  padding: 0;
+  padding-bottom: 2px;
+}
+
+tr.rw-head > td > div.rw-head-cell{
+  border-radius: 5px;
+  height: 5px;
+  width: 16px;
+}
+
+tr.rw-head > td > div.rw-head-cell.inactive{
+  background-color: none;
+}
+
+tr.rw-head > td > div.rw-head-cell.active{
+  background-color: black;
 }

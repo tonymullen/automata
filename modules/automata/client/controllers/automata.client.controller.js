@@ -5,9 +5,18 @@
 angular.module('automata').controller('AutomataController', ['$scope', '$state', '$stateParams', '$location', '$timeout', 'Authentication', 'Automata', 'automatonGraph',
   function ($scope, $state, $stateParams, $location, $timeout, Authentication, Automata, automatonGraph) {
     var cy; //ref to cy
+    var empty_tape = [];
+    for(var i = 0; i < 50; i++){
+      empty_tape.push(' ');
+    }
+
     $scope.authentication = Authentication;
-    $scope.tape = { position: 2,
-                    contents: ["A","B","C","D"] };
+    $scope.tape = {
+      position: 3,
+      contents: []
+    };
+    $scope.tape.contents = ['A','B','C','D'].concat(empty_tape);
+    //console.log($scope.tape.contents);
 
     // Create new Automaton in the database
     $scope.create = function (isValid) {

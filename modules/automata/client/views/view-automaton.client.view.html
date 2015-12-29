@@ -38,84 +38,50 @@
   <window id="tape">
     <table>
       <tr class="rw-head">
+        <td><div class="rw-head-cell inactive"></div></td>
+        <td><div class="rw-head-cell inactive"></div></td>
+        <td><div class="rw-head-cell inactive"></div></td>
+        <td><div class="rw-head-cell active"></div></td>
+        <td><div class="rw-head-cell inactive"></div></td>
+        <td><div class="rw-head-cell inactive"></div></td>
+        <td><div class="rw-head-cell inactive"></div></td>
       </tr>
       <tr class="tape-content">
-        <td>
-        <div class="tape-cell">
-        </div>
+        <td ng-repeat="item in tape.contents track by $index">
+          <div class="tape-cell">{{item}}</div>
         </td>
-          <td>
-          <div class="tape-cell">
-          </div>
-          </td>
-            <td>
-            <div class="tape-cell">
-            </div>
-            </td>
-              <td>
-              <div class="tape-cell">
-              </div>
-              </td>
-                <td>
-                <div class="tape-cell">
-                </div>
-                </td>
-                  <td>
-                  <div class="tape-cell">
-                  </div>
-                  </td>
-                    <td>
-                    <div class="tape-cell">
-                    </div>
-                    </td>
-                      <td>
-                      <div class="tape-cell">
-                      </div>
-                      </td>
-                        <td>
-                        <div class="tape-cell">
-                        </div>
-                        </td>
-                          <td>
-                          <div class="tape-cell">
-                          </div>
-                          </td>
-                            <td>
-                            <div class="tape-cell">
-                            </div>
-                            </td>
-                              <td>
-                              <div class="tape-cell">
-                              </div>
-                              </td>
-                                <td>
-                                <div class="tape-cell">
-                                </div>
-                                </td>
-                                  <td>
-                                  <div class="tape-cell">
-                                  </div>
-                                  </td>
-                                    <td>
-                                    <div class="tape-cell">
-                                    </div>
-                                    </td>
-                                      <td>
-                                      <div class="tape-cell">
-                                      </div>
-                                      </td>
-                                        <td>
-                                        <div class="tape-cell">
-                                        </div>
-                                        </td>
-                                        <td>
-                                          <div class="tape-cell">
-                                          </div>
-                                          </td>
-                                            <td>
-                                            <div class="tape-cell">
-                                            </div>
-                                            </td>
+        <!--
+        <td>A</div></td>
+        <td><div class="tape-cell">B</td>
+        <td><div class="tape-cell">A</div></td>
+        <td class="active"><div class="tape-cell">C</div></td>
+        <td><div class="tape-cell">A</div></td>
+        <td><div class="tape-cell">A</div></td>
+        <td><div class="tape-cell">B</div></td>
+        <td><div class="tape-cell">A</div></td>
+        <td><div class="tape-cell">C</div></td>
+        <td><div class="tape-cell">A</div></td>
+        <td><div class="tape-cell">A</div></td>
+        <td><div class="tape-cell">B</div></td>
+        <td><div class="tape-cell">A</div></td>
+        <td><div class="tape-cell">C</div></td>
+        <td><div class="tape-cell">A</div></td>
+        <td><div class="tape-cell">A</div></td>
+        <td><div class="tape-cell">B</div></td>
+        <td><div class="tape-cell">A</div></td>
+        <td><div class="tape-cell">C</div></td>
+        <td><div class="tape-cell">A</div></td>
+        <td><div class="tape-cell">A</div></td>
+        <td><div class="tape-cell">B</div></td>
+        <td><div class="tape-cell">A</div></td>
+        <td><div class="tape-cell">C</div></td>
+        <td><div class="tape-cell">A</div></td>
+        <td><div class="tape-cell">A</div></td>
+        <td><div class="tape-cell">B</div></td>
+        <td><div class="tape-cell">A</div></td>
+        <td><div class="tape-cell">C</div></td>
+        <td><div class="tape-cell">A</div></td>
+      -->
       </tr>
     </table>
 
