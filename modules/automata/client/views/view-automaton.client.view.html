@@ -38,66 +38,18 @@
   <window id="tape">
     <table>
       <tr class="rw-head">
-        <td><div class="rw-head-cell inactive"></div></td>
-        <td><div class="rw-head-cell inactive"></div></td>
-        <td><div class="rw-head-cell inactive"></div></td>
-        <td><div class="rw-head-cell active"></div></td>
-        <td><div class="rw-head-cell inactive"></div></td>
-        <td><div class="rw-head-cell inactive"></div></td>
-        <td><div class="rw-head-cell inactive"></div></td>
+        <td ng-repeat="item in tape.contents track by $index" ng-click="tape.position = $index">
+          <div class="rw-head-cell" ng-class="{active: $index === tape.position}"></div>
+        </td>
       </tr>
       <tr class="tape-content">
-        <td ng-repeat="item in tape.contents track by $index">
+        <td ng-repeat="item in tape.contents track by $index" ng-class="{active: $index === tape.position}">
           <div class="tape-cell">{{item}}</div>
         </td>
-        <!--
-        <td>A</div></td>
-        <td><div class="tape-cell">B</td>
-        <td><div class="tape-cell">A</div></td>
-        <td class="active"><div class="tape-cell">C</div></td>
-        <td><div class="tape-cell">A</div></td>
-        <td><div class="tape-cell">A</div></td>
-        <td><div class="tape-cell">B</div></td>
-        <td><div class="tape-cell">A</div></td>
-        <td><div class="tape-cell">C</div></td>
-        <td><div class="tape-cell">A</div></td>
-        <td><div class="tape-cell">A</div></td>
-        <td><div class="tape-cell">B</div></td>
-        <td><div class="tape-cell">A</div></td>
-        <td><div class="tape-cell">C</div></td>
-        <td><div class="tape-cell">A</div></td>
-        <td><div class="tape-cell">A</div></td>
-        <td><div class="tape-cell">B</div></td>
-        <td><div class="tape-cell">A</div></td>
-        <td><div class="tape-cell">C</div></td>
-        <td><div class="tape-cell">A</div></td>
-        <td><div class="tape-cell">A</div></td>
-        <td><div class="tape-cell">B</div></td>
-        <td><div class="tape-cell">A</div></td>
-        <td><div class="tape-cell">C</div></td>
-        <td><div class="tape-cell">A</div></td>
-        <td><div class="tape-cell">A</div></td>
-        <td><div class="tape-cell">B</div></td>
-        <td><div class="tape-cell">A</div></td>
-        <td><div class="tape-cell">C</div></td>
-        <td><div class="tape-cell">A</div></td>
-      -->
+
       </tr>
     </table>
 
-    <!--
-            <accordion>
-              <accordion-group heading="Manage Users">
-                <ul class="list-group">
-                  <li class="list-group-item" draggable="{opacity: .75,helper: 'clone'}">Mike</li>
-                  <li class="list-group-item">Mary</li>
-                  <li class="list-group-item">Mary</li>
-                  <li class="list-group-item">Mary</li>
-                  <li class="list-group-item">Mary</li>
-                </ul>
-              </accordion-group>
-            </accordion>
-          -->
    </window>
 
         <table id="panel" class="panel">
@@ -111,14 +63,6 @@
             </div>
             </form></th>
           </tr>
-
-          <!--
-          <tr ng-repeat="person in people">
-            <td>{{person.name}}</td>
-            <td><input type="number" min="1" ng-model="person.weight" ng-change="onWeightChange(person)" /></td>
-          </tr>
-        -->
-
         </tbody>
       </table>
 
