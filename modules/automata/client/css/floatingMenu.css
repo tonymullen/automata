@@ -45,7 +45,7 @@ div#windowBody {
 .floating-window {
   max-height: 1000px;
   overflow: hidden;
-  webkit-transition: max-height .4s ease;
+  -webkit-transition: max-height .4s ease;
   -moz-transition: max-height .4s ease;
   -o-transition: height .4s ease;
   transition: max-height .4s ease;
@@ -77,8 +77,11 @@ tr.tape-content > td{
   border: solid 0.5pt black;
 }
 
-tr.tape-content > td > div.tape-cell{
+
+tr.tape-content > td > input.tape-cell{
+  border: none;
   font-family: 'Francois One', sans-serif;
+  text-transform: uppercase;
   text-align: center;
   height:20px;
   width:15px;
@@ -86,7 +89,21 @@ tr.tape-content > td > div.tape-cell{
 
 tr.tape-content > td.active{
   background-color: black;
+}
+
+tr.tape-content > td.active > input.tape-cell{
+  background-color: black;
   color: white;
+}
+
+tr.tape-content > td.active > input.tape-cell:focus{
+  background-color: #404040;
+  color: lightgray;
+}
+
+input:focus {
+    outline: none;
+    background-color: lightgray;
 }
 
 tr.rw-head > td{
@@ -106,4 +123,11 @@ tr.rw-head > td > div.rw-head-cell.inactive{
 
 tr.rw-head > td > div.rw-head-cell.active{
   background-color: black;
+}
+
+input.tape-cell::selection {
+  background: none; /* WebKit/Blink Browsers */
+}
+input.tape-cell::-moz-selection {
+  background: none; /* Gecko Browsers */
 }

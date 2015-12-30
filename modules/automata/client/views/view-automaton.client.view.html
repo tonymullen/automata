@@ -44,7 +44,9 @@
       </tr>
       <tr class="tape-content">
         <td ng-repeat="item in tape.contents track by $index" ng-class="{active: $index === tape.position}">
-          <div class="tape-cell">{{item}}</div>
+           <input id="{{'cell-'+$index}}" class="tape-cell" type="text" name="input"
+                  ng-model="item" maxlength="1" onfocus="this.select()"
+                  ng-keyup="focusNext($event, $index)">
         </td>
 
       </tr>

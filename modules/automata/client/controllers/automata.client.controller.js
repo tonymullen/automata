@@ -94,6 +94,13 @@ angular.module('automata').controller('AutomataController', ['$scope', '$state',
       });
     };
 
+    $scope.focusNext = function(event, index){
+      //changes focus to the next tape cell when a key is pressed
+      console.log(event.keyCode);
+      var nextInd = event.keyCode ===  8 || event.keyCode === 37 ? index - 1 : index + 1;
+      angular.element(document.querySelector('#cell-'+nextInd))[0].focus();
+    };
+
     if($state.current.data && $state.current.data.type){
       $scope.automaton = new Automata({
         title: 'untitled automaton',
