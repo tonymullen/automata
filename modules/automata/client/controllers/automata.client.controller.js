@@ -6,8 +6,8 @@ angular.module('automata').controller('AutomataController', ['$scope', '$state',
   function ($scope, $state, $stateParams, $location, $timeout, Authentication, Automata, automatonGraph) {
     var cy; //ref to cy
     var empty_tape = [];
-    for(var i = 0; i < 50; i++){
-      empty_tape.push(' ');
+    for(var i = 0; i < 5; i++){
+      empty_tape.push({ content: ' ' });
     }
 
     $scope.authentication = Authentication;
@@ -15,7 +15,10 @@ angular.module('automata').controller('AutomataController', ['$scope', '$state',
       position: 3,
       contents: []
     };
-    $scope.tape.contents = ['A','B','C','D'].concat(empty_tape);
+    $scope.tape.contents = [{ content: 'A'},
+                            { content: 'B'},
+                            { content: 'C'},
+                            { content: 'D'},].concat(empty_tape);
     //console.log($scope.tape.contents);
 
     // Create new Automaton in the database
@@ -96,9 +99,31 @@ angular.module('automata').controller('AutomataController', ['$scope', '$state',
 
     $scope.focusNext = function(event, index){
       //changes focus to the next tape cell when a key is pressed
-      console.log(event.keyCode);
-      var nextInd = event.keyCode ===  8 || event.keyCode === 37 ? index - 1 : index + 1;
-      angular.element(document.querySelector('#cell-'+nextInd))[0].focus();
+      var nextInd;
+      if(event.keyCode === 8){
+        if(index > 0){
+          nextInd = index - 1;
+        }else{
+          nextInd = index;
+        }
+      }else if(event.keyCode === 37){
+        if(index > 0){
+          nextInd = index - 1;
+        }else{
+          $scope.tape.contents.unshift({ content: ' ' });
+          nextInd = 0;
+          console.log('adding new first cell');
+        }
+      }else{
+          nextInd = index + 1;
+          if($scope.tape.contents.length === nextInd){
+            $scope.tape.contents.push({ content: ' ' });
+          }
+        }
+      $timeout(function(){
+        console.log('setting focus on '+nextInd);
+        angular.element(document.querySelector('#cell-'+nextInd))[0].focus();
+      }, 0);
     };
 
     if($state.current.data && $state.current.data.type){

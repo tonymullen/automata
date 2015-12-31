@@ -1,32 +1,15 @@
+
+
 <div class="floating-window" id="{{id}}" draggable="{ handle: 'div.panel-heading',opacity: 0.5 }">
   <div class="panel panel-primary tape-window" resizeable="{ handles: 'ew' }">
     <div class="panel-heading cursor-move tape-window-heading"></div>
     <span style="background-color:lightGray; width: 10px; height: 40px; float: right" class="pull-right  ui-resizable-handle ui-resizable-ew">
     </span>
 
-<!--
-        <span class="pull-right">
-          <a type="button" id="windowMinimizeBtn"
-          class="btn btn-primary btn-xs"
-          ng-click="minimize()">
-            <span class="glyphicon"
-              ng-class="{false: 'glyphicon-chevron-up',true: 'glyphicon-chevron-down'}[minimized]">
-            </span>
-          </a>
-        </span>
-      -->
-
     <div id="windowBody">
       <div class="panel-body" id="windowBodyContent" ng-transclude>
 
       </div>
-
-        <!--
-      <div class="panel-footer">
-        <small>&nbsp;</small>
-        </span>
-      </div>
-    -->
     </div>
   </div>
 </div>

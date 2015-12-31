@@ -125,6 +125,7 @@ tr.rw-head > td > div.rw-head-cell.active{
   background-color: black;
 }
 
+
 input.tape-cell::selection {
   background: none; /* WebKit/Blink Browsers */
 }
