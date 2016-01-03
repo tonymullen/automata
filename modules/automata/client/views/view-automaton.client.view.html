@@ -1,39 +1,10 @@
 <section ng-controller="AutomataController" ng-init="findOne()">
-  <!--
-  <div class="page-header">
-    <h1>New Automaton</h1>
-  </div>
-  <div class="col-md-12">
-
-    <form name="automatonForm" class="form-horizontal" ng-submit="create(automatonForm.$valid)" novalidate>
-      <fieldset>
-        <div class="form-group" show-errors>
-          <label for="title">Title</label>
-          <input name="title" type="text" ng-model="title" id="title" class="form-control" placeholder="Title" required>
-          <div ng-messages="automatonForm.title.$error" role="alert">
-            <p class="help-block error-text" ng-message="required">Automaton title is required.</p>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="content">Content</label>
-
-          <textarea name="content" ng-model="content" id="content" class="form-control" cols="30" rows="10" placeholder="Content"></textarea>
-
-        </div>
-        <div class="form-group">
-          <input type="submit" class="btn btn-default">
-        </div>
-        <div ng-show="error" class="text-danger">
-          <strong ng-bind="error"></strong>
-        </div>
-      </fieldset>
-    </form>
-      </div>
--->
           <div style="height:300px; width:700px">
               <div id="cy" class="cy">
               </div>
             </div>
+
+
 
   <window id="tape">
     <table>
@@ -46,26 +17,24 @@
         <td ng-repeat="item in tape.contents track by $index" ng-class="{active: $index === tape.position}">
            <input class="{{'cell-'+$index}} tape-cell" type="text" name="input"
                   ng-model="item.content" maxlength="1" onfocus="this.select()"
-                  ng-keyup="focusNext($event, $index)">
+                  ng-keyup="focusNext($event, $index)" ng-click="onTextClick($event)">
         </td>
-
       </tr>
     </table>
-
    </window>
 
-        <table id="panel" class="panel">
-        <tbody>
-          <tr>
-            <th>{{automaton.title}}</th>
-            <th><form name="automatonForm" class="form-horizontal"
-            ng-submit="update(automatonForm.$valid)" novalidate>
-            <div class="form-group">
-              <input type="submit" name="Save" value="Save" class="btn btn-default">
-            </div>
-            </form></th>
-          </tr>
-        </tbody>
-      </table>
+<table id="panel" class="panel">
+<tbody>
+  <tr>
+    <th>Name</th>
+    <th><form name="automatonForm" class="form-horizontal"
+    ng-submit="create(automatonForm.$valid)" novalidate>
+    <div class="form-group">
+    <input type="submit" name="Save" value="Save" class="btn btn-default">
+    </div>
+  </form></th>
+</tr>
+</tbody>
+</table>
 
 </section>

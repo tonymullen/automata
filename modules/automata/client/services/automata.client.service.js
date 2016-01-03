@@ -53,7 +53,7 @@ angular.module('automata').factory('Automata', ['$resource',
             })
           .selector('edge')
             .css({
-              'content': 'data(label)',
+              'label': 'data(label)',
               'edge-text-rotation': 'autorotate',
               'curve-style': 'bezier',
               'control-point-step-size' : '70px',
@@ -185,8 +185,11 @@ angular.module('automata').factory('Automata', ['$resource',
             },
             complete: function(sourceNode, targetNodes, addedEntities) {
               // fired when edgehandles is done and entities are added
-              console.log(addedEntities);
-              console.log(this);
+              var read = 'read';
+              var act = 'act';
+              addedEntities.data('read', read);
+              addedEntities.data('action', act);
+              addedEntities.data('label', read +':'+ act);
             },
             stop: function(sourceNode) {
               // fired when edgehandles interaction is stopped (either complete with added edges or incomplete)

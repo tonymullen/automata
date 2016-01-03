@@ -1,7 +1,23 @@
 <section ng-controller="AutomataController">
-<div style="width:700px; height:700px">
+<div style="width:700px; height:300px">
 <div id="cy" class="cy"></div>
 </div>
+  <window id="tape">
+    <table>
+      <tr class="rw-head">
+        <td ng-repeat="item in tape.contents track by $index" ng-click="tape.position = $index">
+          <div class="rw-head-cell" ng-class="{active: $index === tape.position}"></div>
+        </td>
+      </tr>
+      <tr class="tape-content">
+        <td ng-repeat="item in tape.contents track by $index" ng-class="{active: $index === tape.position}">
+           <input class="{{'cell-'+$index}} tape-cell" type="text" name="input"
+                  ng-model="item.content" maxlength="1" onfocus="this.select()"
+                  ng-keyup="focusNext($event, $index)" ng-click="onTextClick($event)">
+        </td>
+      </tr>
+    </table>
+   </window>
 <table id="panel" class="panel">
 <tbody>
   <tr>
@@ -13,4 +29,6 @@
     </div>
   </form></th>
 </tr>
+</tbody>
+</table>
 </section>
