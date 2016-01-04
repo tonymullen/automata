@@ -157,7 +157,7 @@ angular.module('windows',['ngAnimate','itsADrag','resizeIt'])
     restrict : 'E',
     transclude : true,
     replace : true,
-    templateUrl : 'modules/automata/client/directives/tape.html',
+    templateUrl : 'modules/automata/client/partials/tape.html',
     scope : {
       id : '@id',
       title : '@title'
@@ -182,5 +182,5 @@ angular.module('windows',['ngAnimate','itsADrag','resizeIt'])
 
 
 .run(['$templateCache', '$http', function($templateCache, $http){
-  $http.get('modules/automata/client/directives/tape.html', { cache:$templateCache });
+  $http.get('modules/automata/client/partials/tape.html', { cache:$templateCache });
 }]); // end windows

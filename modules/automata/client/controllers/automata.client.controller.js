@@ -2,8 +2,8 @@
 
 // Automata controller
 
-angular.module('automata').controller('AutomataController', ['$scope', '$state', '$stateParams', '$location', '$timeout', '$window', 'Authentication', 'Automata', 'automatonGraph',
-  function ($scope, $state, $stateParams, $location, $timeout, $window, Authentication, Automata, automatonGraph) {
+angular.module('automata').controller('AutomataController', ['$scope', '$state', '$stateParams', '$location', '$timeout', '$window', '$uibModal', 'Authentication', 'Automata', 'automatonGraph',
+  function ($scope, $state, $stateParams, $location, $timeout, $window, $uibModal, Authentication, Automata, automatonGraph) {
     var cy; //ref to cy
     var empty_tape = [];
     for(var i = 0; i < 50; i++){
@@ -98,8 +98,8 @@ angular.module('automata').controller('AutomataController', ['$scope', '$state',
     };
 
     $scope.onTextClick = function ($event) {
-        $event.target.blur();
-        $event.target.focus();
+      $event.target.blur();
+      $event.target.focus();
     };
 
     $scope.focusNext = function(event, index){

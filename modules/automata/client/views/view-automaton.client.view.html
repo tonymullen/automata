@@ -36,5 +36,35 @@
 </tr>
 </tbody>
 </table>
-
 </section>
+
+<div ng-controller="AddEdgeModalController">
+  <script type="text/ng-template" id="myModalContent.html">
+  <div class="modal-body">
+     <form role="form">
+     <table class="edgeLabels">
+     <tr>
+     <td>
+      <div class="form-group">
+        <label for="read">Read symbol</label>
+        <input type="text" maxlength="1" class="form-control edgeLabelSymbolInput" id="read"/>
+      </div>
+      </td>
+      <td>
+      <div class="form-group">
+        <label for="action">Action</label>
+        <input type="text" maxlength="1" class="form-control edgeLabelSymbolInput" id="action"/>
+      </div>
+      </td>
+      </tr>
+      </table>
+
+      </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+    </form>
+
+    </script>
+</div>
