@@ -5,6 +5,8 @@ module.exports = {
     lib: {
       css: [
         'https://fonts.googleapis.com/css?family=Francois+One',
+        'public/fonts/automaton-icons/fonts',
+        'public/fonts/automaton-icons/styles.css',
         'public/lib/bootstrap/dist/css/bootstrap.css',
         'public/lib/bootstrap/dist/css/bootstrap-theme.css'
       ],

@@ -2,8 +2,8 @@
 
 // Automata controller
 
-angular.module('automata').controller('AutomataController', ['$scope', '$state', '$stateParams', '$location', '$timeout', '$window', '$uibModal', 'Authentication', 'Automata', 'automatonGraph',
-  function ($scope, $state, $stateParams, $location, $timeout, $window, $uibModal, Authentication, Automata, automatonGraph) {
+angular.module('automata').controller('AutomataController', ['$scope', '$state', '$stateParams', '$location', '$timeout', '$window', 'Authentication', 'Automata', 'automatonGraph',
+  function ($scope, $state, $stateParams, $location, $timeout, $window, Authentication, Automata, automatonGraph) {
     var cy; //ref to cy
     var empty_tape = [];
     for(var i = 0; i < 50; i++){
@@ -20,6 +20,7 @@ angular.module('automata').controller('AutomataController', ['$scope', '$state',
                             { content: 'C' },
                             { content: 'D' },].concat(empty_tape);
     //console.log($scope.tape.contents);
+    $scope.labels = { read: '', act: '' };
 
     // Create new Automaton in the database
     $scope.create = function (isValid) {

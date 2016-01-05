@@ -192,7 +192,6 @@ angular.module('automata').factory('Automata', ['$resource',
                 //addedEntities.data('action', act);
                 //addedEntities.data('label', read +':'+ act);
                 //openModal('sm');
-                console.log(addedEntities);
                 angular.element('[ng-controller=AddEdgeModalController]').scope().open('sm', addedEntities);
 
               },

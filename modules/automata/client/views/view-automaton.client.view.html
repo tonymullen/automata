@@ -1,7 +1,22 @@
+<div class="playIcons">
+  <span class="playIcons">
+    <!--
+    <span class="auticon-arrow-bold-left"></span>
+    <span class="auticon-arrow-bold-right"></span>
+    <span class="auticon-circle-with-cross"></span>
+  -->
+    <span class="auticon-controller-play"></span>
+    <span class="auticon-controller-step"></span>
+    <span class="auticon-controller-pause"></span>
+    <span class="auticon-controller-fast-forward"></span>
+    <span class="auticon-controller-jump-to-start"></span>
+    <span class="auticon-controller-next"></span>
+  </span>
+</div>
+
 <section ng-controller="AutomataController" ng-init="findOne()">
           <div style="height:300px; width:700px">
-              <div id="cy" class="cy">
-              </div>
+              <div id="cy" class="cy"></div>
             </div>
 
 
@@ -36,24 +51,24 @@
 </tr>
 </tbody>
 </table>
-</section>
+
 
 <div ng-controller="AddEdgeModalController">
-  <script type="text/ng-template" id="myModalContent.html">
+  <script type="text/ng-template" id="addEdgeModalContent.html">
   <div class="modal-body">
-     <form role="form">
+     <form name="edgeModal" role="form">
      <table class="edgeLabels">
      <tr>
      <td>
       <div class="form-group">
         <label for="read">Read symbol</label>
-        <input type="text" maxlength="1" class="form-control edgeLabelSymbolInput" id="read"/>
+        <input type="text" ng-model="labels.read" maxlength="1" class="form-control edgeLabelSymbolInput" id="read" required/>
       </div>
       </td>
       <td>
       <div class="form-group">
         <label for="action">Action</label>
-        <input type="text" maxlength="1" class="form-control edgeLabelSymbolInput" id="action"/>
+        <input type="text" ng-model="labels.act" maxlength="1" class="form-control edgeLabelSymbolInput" id="action" required/>
       </div>
       </td>
       </tr>
@@ -68,3 +83,5 @@
 
     </script>
 </div>
+
+</section>

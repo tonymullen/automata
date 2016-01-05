@@ -32,7 +32,7 @@ angular.module('core').controller('HeaderController', ['$scope', '$state', 'Auth
       var modalInstance = $uibModal.open({
         animation: $scope.animationsEnabled,
         templateUrl: 'createNewModal.html',
-        controller: 'ModalInstanceCtrl',
+        controller: 'CreateNewModalInstanceCtrl',
         size: 'sm' //,
       //  resolve: {
       //    items: function () {
@@ -53,7 +53,7 @@ angular.module('core').controller('HeaderController', ['$scope', '$state', 'Auth
     };
   }
 //]).controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, items) {
-]).controller('ModalInstanceCtrl', function ($scope, $uibModalInstance) {
+]).controller('CreateNewModalInstanceCtrl', function ($scope, $uibModalInstance) {
 
 //  $scope.items = items;
 //  $scope.selected = {
