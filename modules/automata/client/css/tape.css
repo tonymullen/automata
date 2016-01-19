@@ -6,6 +6,10 @@
   z-index: 50;
 }
 
+.tape-window.ui-resizeable-ew {
+  
+}
+
 .floating-window > .panel {
   min-height: 60px;
   min-width: 200px;
@@ -29,7 +33,7 @@ accordion .panel-heading a { cursor: pointer; }
 /** Scroll window content when necessary **/
 div#windowBodyContent {
   overflow-y: hidden;
-  height: 40px;
+  height: 70px;
   margin-left: 5px;
   margin-top: 5px;
   margin-bottom: 2px;
@@ -52,7 +56,7 @@ div#windowBody {
 }
 
 .floating-window.minimize, .floating-window.minimize-add.minimize-add-active, .floating-window.minimize-remove{
-  max-height: 46px;
+  max-height: 92px;
 }
 
 .floating-window.minimize-add, .floating-window.minimize-remove.minimize-remove-active {
@@ -64,7 +68,7 @@ div#windowBody {
     background-image: linear-gradient(to bottom, #353535 0%, #080808 100%);
     border-color: #080808;
     padding: 0;
-    height: 12px;
+    height: 24px;
 }
 
 .panel.tape-window {
@@ -74,17 +78,18 @@ div#windowBody {
 
 tr.tape-content > td{
   background-color: white;
-  border: solid 0.5pt black;
+  border: solid 1pt black;
 }
 
 
 tr.tape-content > td > input.tape-cell{
   border: none;
   font-family: 'Francois One', sans-serif;
+  font-size: 2em;
   text-transform: uppercase;
   text-align: center;
-  height:20px;
-  width:15px;
+  height:40px;
+  width:30px;
 }
 
 tr.tape-content > td.active{
@@ -112,9 +117,9 @@ tr.rw-head > td{
 }
 
 tr.rw-head > td > div.rw-head-cell{
-  border-radius: 5px;
-  height: 5px;
-  width: 16px;
+  border-radius: 10px;
+  height: 10px;
+  width: 32px;
 }
 
 tr.rw-head > td > div.rw-head-cell.inactive{
