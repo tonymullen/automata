@@ -1,4 +1,5 @@
-<div class="playIcons">
+<div ng-controller="AutomataController">
+<div class="playIcons" >
   <span class="playIcons">
     <!--
     <span class="auticon-arrow-bold-left"></span>
@@ -14,10 +15,10 @@
   </span>
 </div>
 <div class="saveIcon">
-  <span class="saveIcon glyphicon glyphicon-cloud-upload"></span>
+  <span class="saveIcon glyphicon glyphicon-cloud-upload" ng-click="update(true)"></span>
 </div>
 
-<section ng-controller="AutomataController" ng-init="findOne()">
+<section ng-init="findOne()">
           <div style="height:300px; width:700px">
               <div id="cy" class="cy"></div>
             </div>
@@ -89,3 +90,4 @@
 </div>
 
 </section>
+</div>

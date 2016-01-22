@@ -27,7 +27,6 @@ angular.module('automata').controller('AutomataController', ['$scope', '$state',
       //var automaton;
       $scope.error = null;
       if (!isValid) {
-        console.log('not valid');
         $scope.$broadcast('show-errors-check-validity', 'automatonForm');
         return false;
       }
@@ -65,6 +64,7 @@ angular.module('automata').controller('AutomataController', ['$scope', '$state',
 
     // Update existing Automaton
     $scope.update = function (isValid) {
+
       $scope.error = null;
 
       if (!isValid) {
@@ -75,9 +75,9 @@ angular.module('automata').controller('AutomataController', ['$scope', '$state',
       $scope.automaton.eles.nodes = cy.nodes().jsons();
       $scope.automaton.eles.edges = cy.edges().jsons();
       var automaton = $scope.automaton;
-
       automaton.$update(function () {
-        $location.path('automata/' + automaton._id);
+  //      $location.path('automata/' + automaton._id);
+        console.log("updating " + automaton._id);
       }, function (errorResponse) {
         $scope.error = errorResponse.data.message;
       });
@@ -93,7 +93,6 @@ angular.module('automata').controller('AutomataController', ['$scope', '$state',
       $scope.automaton = Automata.get({
         automatonId: $stateParams.automatonId
       },function(){
-
         setUpGraph();
       });
     };
