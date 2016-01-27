@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * Module dependencies.
+ * Module dependencies
  */
 var acl = require('acl');
 
@@ -50,13 +50,14 @@ exports.isAllowed = function (req, res, next) {
 
   // If an automaton is being processed and the current user created it then allow any manipulation
   if (req.automaton && req.user && req.automaton.user.id === req.user.id) {
+
     return next();
   }
 
   // Check for user roles
   acl.areAnyRolesAllowed(roles, req.route.path, req.method.toLowerCase(), function (err, isAllowed) {
     if (err) {
-      // An authorization error occurred.
+      // An authorization error occurred
       return res.status(500).send('Unexpected authorization error');
     } else {
       if (isAllowed) {

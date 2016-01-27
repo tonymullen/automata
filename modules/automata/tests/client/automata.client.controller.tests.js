@@ -1,17 +1,16 @@
-'use strict';
-
 (function () {
-  // Automata Controller Spec
+  'use strict';
+
   describe('Automata Controller Tests', function () {
     // Initialize global variables
     var AutomataController,
-      scope,
+      $scope,
       $httpBackend,
-      $stateParams,
-      $location,
+      $state,
       Authentication,
-      Automata,
+      AutomataService,
       mockAutomaton;
+
 
     // The $resource service augments the response object with methods for updating and deleting the resource.
     // If we were to use the standard toEqual matcher, our tests would fail because the test values would not match
@@ -38,19 +37,21 @@
     // The injector ignores leading and trailing underscores here (i.e. _$httpBackend_).
     // This allows us to inject a service but then attach it to a variable
     // with the same name as the service.
-    beforeEach(inject(function ($controller, $rootScope, _$location_, _$stateParams_, _$httpBackend_, _Authentication_, _Automata_) {
+
+    beforeEach(inject(function ($controller, $rootScope, _$location_, _$stateParams_, _$httpBackend_, _$state_, _Authentication_, _AutomataService_) {
+
       // Set a new global scope
-      scope = $rootScope.$new();
+      $scope = $rootScope.$new();
 
       // Point global variables to injected services
-      $stateParams = _$stateParams_;
       $httpBackend = _$httpBackend_;
-      $location = _$location_;
+      $state = _$state_;
       Authentication = _Authentication_;
-      Automata = _Automata_;
+      AutomataService = _AutomataService_;
 
       // create mock automaton
-      mockAutomaton = new Automata({
+      mockAutomaton = new AutomataService({
+
         _id: '525a8422f6d0f87f0e407a33',
         title: 'An Automaton about MEAN',
         content: 'MEAN rocks!'
@@ -62,149 +63,120 @@
       };
 
       // Initialize the Automata controller.
-      AutomataController = $controller('AutomataController', {
-        $scope: scope
+      AutomataController = $controller('AutomataController as vm', {
+        $scope: $scope,
+        automatonResolve: {}
       });
+
+      //Spy on state go
+      spyOn($state, 'go');
     }));
 
-    it('$scope.find() should create an array with at least one automaton object fetched from XHR', inject(function (Automata) {
-      // Create a sample automata array that includes the new automaton
-      var sampleAutomata = [mockAutomaton];
-
-      // Set GET response
-      $httpBackend.expectGET('api/automata').respond(sampleAutomata);
-
-      // Run controller functionality
-      scope.find();
-      $httpBackend.flush();
-
-      // Test scope value
-      expect(scope.automata).toEqualData(sampleAutomata);
-    }));
-
-    it('$scope.findOne() should create an array with one automaton object fetched from XHR using a automatonId URL parameter', inject(function (Automata) {
-      // Set the URL parameter
-      $stateParams.automatonId = mockAutomaton._id;
-
-      // Set GET response
-      $httpBackend.expectGET(/api\/automata\/([0-9a-fA-F]{24})$/).respond(mockAutomaton);
-
-      // Run controller functionality
-      scope.findOne();
-      $httpBackend.flush();
-
-      // Test scope value
-      expect(scope.automaton).toEqualData(mockAutomaton);
-    }));
-
-    describe('$scope.create()', function () {
+    describe('vm.save() as create', function () {
       var sampleAutomatonPostData;
 
       beforeEach(function () {
-        // Create a sample automaton object
-        sampleAutomatonPostData = new Automata({
+        // Create a sample automaton object TODO
+        sampleAutomatonPostData = new AutomataService({
           title: 'An Automaton about MEAN',
           content: 'MEAN rocks!'
         });
 
-        // Fixture mock form input values
-        scope.title = 'An Automaton about MEAN';
-        scope.content = 'MEAN rocks!';
-
-        spyOn($location, 'path');
+        $scope.vm.automaton = sampleAutomatonPostData;
       });
 
-      it('should send a POST request with the form input values and then locate to new object URL', inject(function (Automata) {
+      it('should send a POST request with the form input values and then locate to new object URL', inject(function (ArticlesService) {
+
         // Set POST response
         $httpBackend.expectPOST('api/automata', sampleAutomatonPostData).respond(mockAutomaton);
 
         // Run controller functionality
-        scope.create(true);
+        $scope.vm.save(true);
         $httpBackend.flush();
 
-        // Test form inputs are reset
-        expect(scope.title).toEqual('');
-        expect(scope.content).toEqual('');
 
-        // Test URL redirection after the automaton was created
-        expect($location.path.calls.mostRecent().args[0]).toBe('automata/' + mockAutomaton._id);
+        // Test URL redirection after the article was created
+        expect($state.go).toHaveBeenCalledWith('automata.view', {
+          articleId: mockAutomaton._id
+        });
       }));
 
-      it('should set scope.error if save error', function () {
+      it('should set $scope.vm.error if error', function () {
         var errorMessage = 'this is an error message';
         $httpBackend.expectPOST('api/automata', sampleAutomatonPostData).respond(400, {
           message: errorMessage
         });
 
-        scope.create(true);
+        $scope.vm.save(true);
         $httpBackend.flush();
 
-        expect(scope.error).toBe(errorMessage);
+        expect($scope.vm.error).toBe(errorMessage);
       });
     });
 
-    describe('$scope.update()', function () {
+    describe('vm.save() as update', function () {
       beforeEach(function () {
-        // Mock automaton in scope
-        scope.automaton = mockAutomaton;
+
+        // Mock automaton in $scope
+        $scope.vm.automaton = mockAutomaton;
       });
 
-      it('should update a valid automaton', inject(function (Automata) {
+      it('should update a valid automaton', inject(function (AutomataService) {
+
         // Set PUT response
         $httpBackend.expectPUT(/api\/automata\/([0-9a-fA-F]{24})$/).respond();
 
         // Run controller functionality
-        scope.update(true);
+        $scope.vm.save(true);
         $httpBackend.flush();
 
         // Test URL location to new object
-        expect($location.path()).toBe('/automata/' + mockAutomaton._id);
+
+        expect($state.go).toHaveBeenCalledWith('automata.view', {
+          automatonId: mockAutomaton._id
+        });
       }));
 
-      it('should set scope.error to error response message', inject(function (Automata) {
+      it('should set $scope.vm.error if error', inject(function (AutomataService) {
         var errorMessage = 'error';
         $httpBackend.expectPUT(/api\/automata\/([0-9a-fA-F]{24})$/).respond(400, {
           message: errorMessage
         });
 
-        scope.update(true);
+        $scope.vm.save(true);
         $httpBackend.flush();
 
-        expect(scope.error).toBe(errorMessage);
+        expect($scope.vm.error).toBe(errorMessage);
       }));
     });
 
-    describe('$scope.remove(automaton)', function () {
+    describe('vm.remove()', function () {
       beforeEach(function () {
-        // Create new automata array and include the automaton
-        scope.automata = [mockAutomaton, {}];
-
-        // Set expected DELETE response
-        $httpBackend.expectDELETE(/api\/automata\/([0-9a-fA-F]{24})$/).respond(204);
-
-        // Run controller functionality
-        scope.remove(mockAutomaton);
+        //Setup articles
+        $scope.vm.automaton = mockAutomaton;
       });
 
-      it('should send a DELETE request with a valid automatonId and remove the automaton from the scope', inject(function (Automata) {
-        expect(scope.automata.length).toBe(1);
-      }));
-    });
-
-    describe('scope.remove()', function () {
-      beforeEach(function () {
-        spyOn($location, 'path');
-        scope.automaton = mockAutomaton;
+      it('should delete the automaton and redirect to automata', function () {
+        //Return true on confirm message
+        spyOn(window, 'confirm').and.returnValue(true);
 
         $httpBackend.expectDELETE(/api\/automata\/([0-9a-fA-F]{24})$/).respond(204);
 
-        scope.remove();
+        $scope.vm.remove();
         $httpBackend.flush();
+
+        expect($state.go).toHaveBeenCalledWith('articles.list');
       });
 
-      it('should redirect to automata', function () {
-        expect($location.path).toHaveBeenCalledWith('automata');
+
+      it('should should not delete the automaton and not redirect', function () {
+        //Return false on confirm message
+        spyOn(window, 'confirm').and.returnValue(false);
+
+        $scope.vm.remove();
+
+        expect($state.go).not.toHaveBeenCalled();
       });
     });
   });
-}());
+})();

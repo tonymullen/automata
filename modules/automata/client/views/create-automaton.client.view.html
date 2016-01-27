@@ -1,7 +1,30 @@
-<section ng-controller="AutomataController">
-<div style="width:700px; height:300px">
-<div id="cy" class="cy"></div>
+<div ng-controller="AutomataController">
+<div class="playIcons" >
+  <span class="playIcons">
+    <!--
+    <span class="auticon-arrow-bold-left"></span>
+    <span class="auticon-arrow-bold-right"></span>
+    <span class="auticon-circle-with-cross"></span>
+  -->
+    <span class="auticon-controller-play"></span>
+    <span class="auticon-controller-step"></span>
+    <span class="auticon-controller-pause"></span>
+    <span class="auticon-controller-fast-forward"></span>
+    <span class="auticon-controller-jump-to-start"></span>
+    <span class="auticon-controller-next"></span>
+  </span>
 </div>
+<div class="saveIcon">
+  <span class="saveIcon glyphicon glyphicon-cloud-upload" ng-click="createOrUpdate(true)"></span>
+</div>
+
+<section>
+          <div style="height:300px; width:700px">
+              <div id="cy" class="cy"></div>
+            </div>
+
+
+
   <window id="tape">
     <table>
       <tr class="rw-head">
@@ -18,6 +41,7 @@
       </tr>
     </table>
    </window>
+<!--
 <table id="panel" class="panel">
 <tbody>
   <tr>
@@ -31,4 +55,39 @@
 </tr>
 </tbody>
 </table>
+-->
+
+
+<div ng-controller="AddEdgeModalController">
+  <script type="text/ng-template" id="addEdgeModalContent.html">
+  <div class="modal-body">
+     <form name="edgeModal" role="form">
+     <table class="edgeLabels">
+     <tr>
+     <td>
+      <div class="form-group">
+        <label for="read">Read symbol</label>
+        <input type="text" ng-model="labels.read" maxlength="1" class="form-control edgeLabelSymbolInput" id="read" required/>
+      </div>
+      </td>
+      <td>
+      <div class="form-group">
+        <label for="action">Action</label>
+        <input type="text" ng-model="labels.act" maxlength="1" class="form-control edgeLabelSymbolInput" id="action" required/>
+      </div>
+      </td>
+      </tr>
+      </table>
+
+      </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+    </form>
+
+    </script>
+</div>
+
 </section>
+</div>

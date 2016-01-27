@@ -29,7 +29,13 @@ var AutomatonSchema = new Schema({
     enum: ['tm','fsa','pda']
   },
   determ: { type: Boolean, default: true },
-  tape: [String],
+  tape: {
+    position: {
+      x: Number,
+      y: Number
+    },
+    contents: [String]
+  },
   eles: {
     nodes: [
       {

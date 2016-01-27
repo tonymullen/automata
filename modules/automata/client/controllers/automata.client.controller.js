@@ -22,6 +22,14 @@ angular.module('automata').controller('AutomataController', ['$scope', '$state',
     //console.log($scope.tape.contents);
     $scope.labels = { read: '', act: '' };
 
+    $scope.createOrUpdate = function(isValid){
+      if ($scope.automaton._id){
+        $scope.update(isValid);
+      } else {
+        $scope.create(isValid);
+      }
+    };
+
     // Create new Automaton in the database
     $scope.create = function (isValid) {
       //var automaton;
@@ -33,13 +41,23 @@ angular.module('automata').controller('AutomataController', ['$scope', '$state',
 
       $scope.automaton.eles.nodes = cy.nodes().jsons();
       $scope.automaton.eles.edges = cy.edges().jsons();
+      $scope.automaton.tape.position = { x: 300, y: 300 };
+      $scope.automaton.tape.contents = [];
+      $scope.tape.contents.forEach(function(element){
+        $scope.automaton.tape.contents.push(element.content);
+      });
+
       var automaton = $scope.automaton;
 
       automaton.$save(function (response) {
-        console.log('saved');
-        $location.path('automata/' + response._id);
         // Clear form fields
-        $scope.title = '';
+        //$scope.title = '';
+        $scope.automaton = Automata.get({
+          automatonId: response._id
+        },function(){
+
+        });
+
       }, function (errorResponse) {
         $scope.error = errorResponse.data.message;
       });
@@ -74,10 +92,16 @@ angular.module('automata').controller('AutomataController', ['$scope', '$state',
 
       $scope.automaton.eles.nodes = cy.nodes().jsons();
       $scope.automaton.eles.edges = cy.edges().jsons();
+      $scope.automaton.tape.position = { x: 300, y: 300 };
+      $scope.automaton.tape.contents = [];
+      $scope.tape.contents.forEach(function(element){
+        $scope.automaton.tape.contents.push(element.content);
+      });
+
       var automaton = $scope.automaton;
+
       automaton.$update(function () {
-  //      $location.path('automata/' + automaton._id);
-        console.log("updating " + automaton._id);
+
       }, function (errorResponse) {
         $scope.error = errorResponse.data.message;
       });
@@ -133,6 +157,7 @@ angular.module('automata').controller('AutomataController', ['$scope', '$state',
 
     if($state.current.data && $state.current.data.type){
       $scope.automaton = new Automata({
+        saved: false,
         title: 'untitled automaton',
         machine: $state.current.data.type,
         eles: {
@@ -140,6 +165,13 @@ angular.module('automata').controller('AutomataController', ['$scope', '$state',
             { data: { id: 'start' }, classes: 'startmarker' },
             { data: { id: '0', start: true }, classes: 'enode', position: { x: 0, y: 0 } }],
           edges: []
+        },
+        tape: {
+          position: {
+            x: 200,
+            y: 200
+          },
+          contents: []
         }
       });
       setUpGraph();

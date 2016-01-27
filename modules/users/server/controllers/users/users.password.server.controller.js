@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * Module dependencies.
+ * Module dependencies
  */
 var path = require('path'),
   config = require(path.resolve('./config/config')),
@@ -122,7 +122,6 @@ exports.validateResetToken = function (req, res) {
 exports.reset = function (req, res, next) {
   // Init Variables
   var passwordDetails = req.body;
-  var message = null;
 
   async.waterfall([
 
