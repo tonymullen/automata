@@ -12,13 +12,17 @@ angular.module('automata').controller('AutomataController', ['$scope', '$state',
 
     $scope.authentication = Authentication;
     $scope.tape = {
-      position: 3,
-      contents: []
+      position: 0,
+      contents: empty_tape
     };
+
+
+/*
     $scope.tape.contents = [{ content: 'A' },
                             { content: 'B' },
                             { content: 'C' },
                             { content: 'D' },].concat(empty_tape);
+                            */
     //console.log($scope.tape.contents);
     $scope.labels = { read: '', act: '' };
 
@@ -41,7 +45,7 @@ angular.module('automata').controller('AutomataController', ['$scope', '$state',
 
       $scope.automaton.eles.nodes = cy.nodes().jsons();
       $scope.automaton.eles.edges = cy.edges().jsons();
-      $scope.automaton.tape.position = { x: 300, y: 300 };
+      $scope.automaton.tape.position = 0;
       $scope.automaton.tape.contents = [];
       $scope.tape.contents.forEach(function(element){
         $scope.automaton.tape.contents.push(element.content);
@@ -92,7 +96,7 @@ angular.module('automata').controller('AutomataController', ['$scope', '$state',
 
       $scope.automaton.eles.nodes = cy.nodes().jsons();
       $scope.automaton.eles.edges = cy.edges().jsons();
-      $scope.automaton.tape.position = { x: 300, y: 300 };
+      $scope.automaton.tape.position = 0;
       $scope.automaton.tape.contents = [];
       $scope.tape.contents.forEach(function(element){
         $scope.automaton.tape.contents.push(element.content);
@@ -167,10 +171,7 @@ angular.module('automata').controller('AutomataController', ['$scope', '$state',
           edges: []
         },
         tape: {
-          position: {
-            x: 200,
-            y: 200
-          },
+          position: 0,
           contents: []
         }
       });
@@ -181,6 +182,12 @@ angular.module('automata').controller('AutomataController', ['$scope', '$state',
       /* CYTOSCAPE */
       automatonGraph($scope.automaton.eles).then(function(automatonCy){
         cy = automatonCy;
+        if($scope.automaton.tape.contents.length){
+          $scope.tape.contents = [];
+          $scope.automaton.tape.contents.forEach(function(element){
+            $scope.tape.contents.push({ content: element});
+          });
+        }
         $scope.cyLoaded = true;
       });
     }

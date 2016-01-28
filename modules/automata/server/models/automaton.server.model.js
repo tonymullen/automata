@@ -30,10 +30,7 @@ var AutomatonSchema = new Schema({
   },
   determ: { type: Boolean, default: true },
   tape: {
-    position: {
-      x: Number,
-      y: Number
-    },
+    position: Number,
     contents: [String]
   },
   eles: {

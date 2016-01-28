@@ -2,12 +2,8 @@
 
 angular.module('automata').controller('AddEdgeModalController', ['$scope', '$uibModal', '$log',
 function ($scope, $uibModal, $log) {
-  //$scope.items = ['item1', 'item2', 'item3'];
-  //$scope.labels = {'read':'','act':''};
-
 
   $scope.open = function (size, addedEntities) {
-    console.log('open modal');
     var modalInstance = $uibModal.open({
       animation: true,
       templateUrl: 'addEdgeModalContent.html',
@@ -20,13 +16,8 @@ function ($scope, $uibModal, $log) {
         }
       }
     });
-
-//    modalInstance.result.then(function (selectedItem) {
-//      $scope.selected = selectedItem;
     modalInstance.result.then(function () {
 //      console.log('OK Clicked');
-//      console.log(result);
-//      console.log(labels.act);
   //    $scope.selected = selectedItem;
     }, function () {
       $log.info('Modal dismissed at: ' + new Date());
