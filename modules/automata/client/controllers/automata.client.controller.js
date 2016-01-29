@@ -185,7 +185,7 @@ angular.module('automata').controller('AutomataController', ['$scope', '$state',
         if($scope.automaton.tape.contents.length){
           $scope.tape.contents = [];
           $scope.automaton.tape.contents.forEach(function(element){
-            $scope.tape.contents.push({ content: element});
+            $scope.tape.contents.push({ content: element });
           });
         }
         $scope.cyLoaded = true;

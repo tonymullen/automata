@@ -19,10 +19,12 @@ body {
 
 
 .cy > canvas::selection {
+  background: rgb(255,255,255);
   background: rgba(255,255,255,0.0) /* WebKit/Blink Browsers */
 }
 
 .cy > div > canvas::selection {
+  background: rgb(255,255,255); 
   background: rgba(255,255,255,0.0) /* WebKit/Blink Browsers */
 }
 

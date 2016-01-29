@@ -1,4 +1,4 @@
-.floating-window, div#windowBodyContent, div#windowBody, .floating-window > .panel  { /* fix for sudden margins when using resizeable with bootstrap */
+.floating-window, div.tapeWindowBodyContent, div.tapeWindowBody, .floating-window > .panel  { /* fix for sudden margins when using resizeable with bootstrap */
   -webkit-box-sizing: content-box; /* Safari/Chrome, other WebKit */
 	-moz-box-sizing: content-box;    /* Firefox, other Gecko */
 	box-sizing: content-box;         /* Opera/IE 8+ */
@@ -6,15 +6,17 @@
   z-index: 50;
 }
 
+/*
 .tape-window.ui-resizeable-ew {
-  
+
 }
+*/
 
 .floating-window > .panel {
   min-height: 60px;
   min-width: 200px;
 }
-div#windowBodyContent {
+div.tapeWindowBodyContent {
 /*  min-height: 18px; */
   min-width: 220px;
   padding: 2px;
@@ -31,17 +33,14 @@ accordion .panel-heading a { cursor: pointer; }
 .panel { overflow: hidden; }
 
 /** Scroll window content when necessary **/
-div#windowBodyContent {
+div.tapeWindowBodyContent {
   overflow-y: hidden;
   height: 70px;
-  margin-left: 5px;
-  margin-top: 5px;
-  margin-bottom: 2px;
-  margin-right: 5px;
+  margin: 5px 5px 2px 5px;
   border: solid 1.5px lightGray;
  }
 
-div#windowBody {
+div.tapeWindowBody {
   overflow: auto;
 }
 
@@ -73,6 +72,7 @@ div#windowBody {
 
 .panel.tape-window {
     border-color: #080808;
+    background-color: rgb(255,255,255);
     background-color: rgba(255,255,255,0.5);
 }
 
