@@ -17,8 +17,7 @@ function ($scope, $uibModal, $log) {
       }
     });
     modalInstance.result.then(function () {
-//      console.log('OK Clicked');
-  //    $scope.selected = selectedItem;
+
     }, function () {
       $log.info('Modal dismissed at: ' + new Date());
     });
@@ -33,10 +32,6 @@ angular.module('automata').controller('AddEdgeModalInstanceCtrl',
 ['$scope', '$uibModalInstance', 'addedEntities',
 function ($scope, $uibModalInstance, addedEntities) {
   $scope.addedEntities = addedEntities;
-
-  //$scope.selected = {
-    //item: $scope.items[0]
-  //};
 
   $scope.ok = function () {
     var read = $scope.labels.read.toUpperCase();
