@@ -43,7 +43,7 @@ angular.module(ApplicationConfiguration.applicationModuleName).run(["$rootScope"
     if (toState.data && toState.data.roles && toState.data.roles.length > 0) {
       var allowed = false;
       toState.data.roles.forEach(function (role) {
-        if (Authentication.user.roles !== undefined && Authentication.user.roles.indexOf(role) !== -1) {
+        if ((role === 'guest') || (Authentication.user && Authentication.user.roles !== undefined && Authentication.user.roles.indexOf(role) !== -1)) {
           allowed = true;
           return true;
         }
@@ -106,196 +106,28 @@ angular.element(document).ready(function () {
 'use strict';
 
 // Use Applicaion configuration module to register a new module
-ApplicationConfiguration.registerModule('articles');
+ApplicationConfiguration.registerModule('automata',['windows','ui.bootstrap']);
 
 'use strict';
 
 // Use Applicaion configuration module to register a new module
-ApplicationConfiguration.registerModule('automata');
+ApplicationConfiguration.registerModule('itsADrag');
+ApplicationConfiguration.registerModule('resizeIt');
+ApplicationConfiguration.registerModule('windows',['itsADrag','resizeIt']);
 
 'use strict';
 
-// Use Applicaion configuration module to register a new module
-ApplicationConfiguration.registerModule('chat');
-
-'use strict';
-
-// Use Applicaion configuration module to register a new module
+// Use Application configuration module to register a new module
 ApplicationConfiguration.registerModule('core');
 ApplicationConfiguration.registerModule('core.admin', ['core']);
 ApplicationConfiguration.registerModule('core.admin.routes', ['ui.router']);
 
 'use strict';
 
-// Use Applicaion configuration module to register a new module
+// Use Application configuration module to register a new module
 ApplicationConfiguration.registerModule('users', ['core']);
 ApplicationConfiguration.registerModule('users.admin', ['core.admin']);
 ApplicationConfiguration.registerModule('users.admin.routes', ['core.admin.routes']);
-
-'use strict';
-
-// Configuring the Articles module
-angular.module('articles').run(['Menus',
-  function (Menus) {
-    // Add the articles dropdown item
-    Menus.addMenuItem('topbar', {
-      title: 'Articles',
-      state: 'articles',
-      type: 'dropdown',
-      roles: ['*']
-    });
-
-    // Add the dropdown list item
-    Menus.addSubMenuItem('topbar', 'articles', {
-      title: 'List Articles',
-      state: 'articles.list'
-    });
-
-    // Add the dropdown create item
-    Menus.addSubMenuItem('topbar', 'articles', {
-      title: 'Create Articles',
-      state: 'articles.create',
-      roles: ['user']
-    });
-  }
-]);
-
-'use strict';
-
-// Setting up route
-angular.module('articles').config(['$stateProvider',
-  function ($stateProvider) {
-    // Articles state routing
-    $stateProvider
-      .state('articles', {
-        abstract: true,
-        url: '/articles',
-        template: '<ui-view/>'
-      })
-      .state('articles.list', {
-        url: '',
-        templateUrl: 'modules/articles/client/views/list-articles.client.view.html'
-      })
-      .state('articles.create', {
-        url: '/create',
-        templateUrl: 'modules/articles/client/views/create-article.client.view.html',
-        data: {
-          roles: ['user', 'admin']
-        }
-      })
-      .state('articles.view', {
-        url: '/:articleId',
-        templateUrl: 'modules/articles/client/views/view-article.client.view.html'
-      })
-      .state('articles.edit', {
-        url: '/:articleId/edit',
-        templateUrl: 'modules/articles/client/views/edit-article.client.view.html',
-        data: {
-          roles: ['user', 'admin']
-        }
-      });
-  }
-]);
-
-'use strict';
-
-// Articles controller
-angular.module('articles').controller('ArticlesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Articles',
-  function ($scope, $stateParams, $location, Authentication, Articles) {
-    $scope.authentication = Authentication;
-
-    // Create new Article
-    $scope.create = function (isValid) {
-      $scope.error = null;
-
-      if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'articleForm');
-
-        return false;
-      }
-
-      // Create new Article object
-      var article = new Articles({
-        title: this.title,
-        content: this.content
-      });
-
-      // Redirect after save
-      article.$save(function (response) {
-        $location.path('articles/' + response._id);
-
-        // Clear form fields
-        $scope.title = '';
-        $scope.content = '';
-      }, function (errorResponse) {
-        $scope.error = errorResponse.data.message;
-      });
-    };
-
-    // Remove existing Article
-    $scope.remove = function (article) {
-      if (article) {
-        article.$remove();
-
-        for (var i in $scope.articles) {
-          if ($scope.articles[i] === article) {
-            $scope.articles.splice(i, 1);
-          }
-        }
-      } else {
-        $scope.article.$remove(function () {
-          $location.path('articles');
-        });
-      }
-    };
-
-    // Update existing Article
-    $scope.update = function (isValid) {
-      $scope.error = null;
-
-      if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'articleForm');
-
-        return false;
-      }
-
-      var article = $scope.article;
-
-      article.$update(function () {
-        $location.path('articles/' + article._id);
-      }, function (errorResponse) {
-        $scope.error = errorResponse.data.message;
-      });
-    };
-
-    // Find a list of Articles
-    $scope.find = function () {
-      $scope.articles = Articles.query();
-    };
-
-    // Find existing Article
-    $scope.findOne = function () {
-      $scope.article = Articles.get({
-        articleId: $stateParams.articleId
-      });
-    };
-  }
-]);
-
-'use strict';
-
-//Articles service used for communicating with the articles REST endpoints
-angular.module('articles').factory('Articles', ['$resource',
-  function ($resource) {
-    return $resource('api/articles/:articleId', {
-      articleId: '@_id'
-    }, {
-      update: {
-        method: 'PUT'
-      }
-    });
-  }
-]);
 
 'use strict';
 
@@ -318,8 +150,22 @@ angular.module('automata').run(['Menus',
 
     // Add the dropdown create item
     Menus.addSubMenuItem('topbar', 'automata', {
-      title: 'Create Automata',
-      state: 'automata.create',
+      title: 'Create New Turing Machine',
+      state: 'automata.create-tm',
+      roles: ['user']
+    });
+
+    // Add the dropdown create item
+    Menus.addSubMenuItem('topbar', 'automata', {
+      title: 'Create New Finite State Automaton',
+      state: 'automata.create-fsa',
+      roles: ['user']
+    });
+
+      // Add the dropdown create item
+    Menus.addSubMenuItem('topbar', 'automata', {
+      title: 'Create New Pushdown Automaton',
+      state: 'automata.create-pda',
       roles: ['user']
     });
   }
@@ -341,20 +187,33 @@ angular.module('automata').config(['$stateProvider',
         url: '',
         templateUrl: 'modules/automata/client/views/list-automata.client.view.html'
       })
-      .state('automata.create', {
-        url: '/create',
+      .state('automata.create-tm', {
+        url: '/create-tm',
         templateUrl: 'modules/automata/client/views/create-automaton.client.view.html',
         data: {
-          roles: ['user', 'admin']
+          roles: ['user', 'admin'],
+          type: 'tm'
+        }
+      })
+      .state('automata.create-fsa', {
+        url: '/create-fsa',
+        templateUrl: 'modules/automata/client/views/create-automaton.client.view.html',
+        data: {
+          roles: ['user', 'admin'],
+          type: 'fsa'
+        }
+      })
+      .state('automata.create-pda', {
+        url: '/create-pda',
+        templateUrl: 'modules/automata/client/views/create-automaton.client.view.html',
+        data: {
+          roles: ['user', 'admin'],
+          type: 'pda'
         }
       })
       .state('automata.view', {
         url: '/:automatonId',
-        templateUrl: 'modules/automata/client/views/view-automaton.client.view.html'
-      })
-      .state('automata.edit', {
-        url: '/:automatonId/edit',
-        templateUrl: 'modules/automata/client/views/edit-utomaton.client.view.html',
+        templateUrl: 'modules/automata/client/views/view-automaton.client.view.html',
         data: {
           roles: ['user', 'admin']
         }
@@ -364,153 +223,405 @@ angular.module('automata').config(['$stateProvider',
 
 'use strict';
 
-// Automata controller
+angular.module('automata').controller('AddEdgeModalController', ['$scope', '$uibModal', '$log',
+function ($scope, $uibModal, $log) {
 
-angular.module('automata').controller('AutomataController', ['$scope', '$stateParams', '$location', 'Authentication', 'Automata', 'peopleGraph',
-  function ($scope, $stateParams, $location, Authentication, Automata, peopleGraph) {
-    $scope.authentication = Authentication;
+  $scope.open = function (size, addedEntities) {
+    var modalInstance = $uibModal.open({
+      animation: true,
+      templateUrl: 'addEdgeModalContent.html',
+      controller: 'AddEdgeModalInstanceCtrl',
+      backdrop: 'static',
+      size: size,
+      resolve: {
+        addedEntities: function () {
+          return addedEntities;
+        }
+      }
+    });
+    modalInstance.result.then(function () {
 
-/* CYTOSCAPE */
-    var cy; // maybe you want a ref to cy
-    $scope.people = [
-      { id: 'l', name: 'Laurel', weight: 65 },
-      { id: 'h', name: 'Hardy', weight: 110 }
-    ];
-
-    $scope.elements = {
-    nodes: [
-      { data: { id: 'j', name: 'Jerry' } },
-      { data: { id: 'e', name: 'Elaine' } },
-      { data: { id: 'k', name: 'Kramer' } },
-      { data: { id: 'g', name: 'George' } }
-    ],
-    edges: [
-      { data: { source: 'j', target: 'e' } },
-      { data: { source: 'j', target: 'k' } },
-      { data: { source: 'j', target: 'g' } },
-      { data: { source: 'e', target: 'j' } },
-      { data: { source: 'e', target: 'k' } },
-      { data: { source: 'k', target: 'j' } },
-      { data: { source: 'k', target: 'e' } },
-      { data: { source: 'k', target: 'g' } },
-      { data: { source: 'g', target: 'j' } }
-    ]
+    }, function () {
+      $log.info('Modal dismissed at: ' + new Date());
+    });
   };
 
-    var peopleById = {};
-    for( var i = 0; i < $scope.people.length; i++ ){
-      var p = $scope.people[i];
+}]);
 
-      peopleById[ p.id ] = p;
+// Please note that $modalInstance represents a modal window (instance) dependency.
+// It is not the same as the $uibModal service used above.
+
+angular.module('automata').controller('AddEdgeModalInstanceCtrl',
+['$scope', '$uibModalInstance', 'addedEntities',
+function ($scope, $uibModalInstance, addedEntities) {
+  $scope.addedEntities = addedEntities;
+
+  $scope.ok = function () {
+    var read = $scope.labels.read.toUpperCase();
+    var act = $scope.labels.act.toUpperCase();
+    addedEntities.data('read', read);
+    addedEntities.data('action', act);
+    addedEntities.data('label', read +':'+ act);
+    $uibModalInstance.close();
+  };
+
+  $scope.cancel = function () {
+    $uibModalInstance.dismiss('cancel');
+  };
+
+}]);
+
+'use strict';
+
+// Automata controller
+
+angular.module('automata').controller('AutomataController', ['$scope', '$state', '$stateParams', '$location', '$timeout', '$window', 'Authentication', 'Automata', 'automatonGraph',
+function ($scope, $state, $stateParams, $location, $timeout, $window, Authentication, Automata, automatonGraph) {
+  var cy; //ref to cy
+
+  var empty_tape = [];
+  for(var i = 0; i < 50; i++){
+    empty_tape.push(' ');
+  }
+
+  $scope.authentication = Authentication;
+
+  $scope.labels = { read: '', act: '' };
+
+  $scope.createOrUpdate = function(isValid){
+    if ($scope.automaton._id){
+      $scope.update(isValid);
+    } else {
+      $scope.create(isValid);
+    }
+  };
+
+  // Create new Automaton in the database
+  $scope.create = function (isValid) {
+    //var automaton;
+    $scope.error = null;
+    if (!isValid) {
+      $scope.$broadcast('show-errors-check-validity', 'automatonForm');
+      return false;
     }
 
-    peopleGraph( $scope.people ).then(function( peopleCy ){
-      cy = peopleCy;
+    $scope.automaton.eles.nodes = cy.nodes().jsons();
+    $scope.automaton.eles.edges = cy.edges().jsons();
 
-      // use this variable to hide ui until cy loaded if you want
+    var automaton = $scope.automaton;
+
+    automaton.$save(function (response) {
+        // Clear form fields
+        //$scope.title = '';
+      $scope.automaton = Automata.get({
+        automatonId: response._id
+      },function(){});
+    }, function (errorResponse) {
+      $scope.error = errorResponse.data.message;
+    });
+  };
+
+  // Remove existing Automaton
+  $scope.remove = function (automaton) {
+    if (automaton) {
+      automaton.$remove();
+      for (var i in $scope.automata) {
+        if ($scope.automata[i] === automaton) {
+          $scope.automata.splice(i, 1);
+        }
+      }
+    } else {
+      $scope.automaton.$remove(function () {
+        $location.path('automata');
+      });
+    }
+  };
+
+  // Update existing Automaton
+  $scope.update = function (isValid) {
+    $scope.error = null;
+    if (!isValid) {
+      $scope.$broadcast('show-errors-check-validity', 'automatonForm');
+      return false;
+    }
+
+    $scope.automaton.eles.nodes = cy.nodes().jsons();
+    $scope.automaton.eles.edges = cy.edges().jsons();
+
+    var automaton = $scope.automaton;
+    automaton.$update(function () {
+
+    }, function (errorResponse) {
+      $scope.error = errorResponse.data.message;
+    });
+
+  };
+
+  // Find a list of Automata
+  $scope.find = function () {
+    $scope.automata = Automata.query();
+  };
+
+  // Find existing Automata
+  $scope.findOne = function () {
+    $scope.automaton = Automata.get({
+      automatonId: $stateParams.automatonId
+    },function(){
+      setUpGraph();
+    });
+  };
+
+  $scope.onTextClick = function ($event) {
+    $event.target.blur();
+    $event.target.focus();
+  };
+
+  $scope.focusNext = function(event, index){
+    //changes focus to the next tape cell when a key is pressed
+    var nextInd;
+    if(event.keyCode === 8){
+      $scope.automaton.tape.contents[index] = String.fromCharCode(event.keyCode);
+      //backspace key
+      if(index > 0){
+        nextInd = index - 1;
+      }else{
+        nextInd = index;
+      }
+    }else if(event.keyCode === 37){
+      //leftarrow
+      if(index > 0){
+        nextInd = index - 1;
+      }else{
+        $scope.automaton.tape.contents.unshift(' ');
+        nextInd = 0;
+        angular.element(document.querySelector('.cell-'+nextInd))[0].blur();
+      }
+    }else{
+      $scope.automaton.tape.contents[index] = String.fromCharCode(event.keyCode);
+      nextInd = index + 1;
+      if($scope.automaton.tape.contents.length === nextInd){
+        $scope.automaton.tape.contents.push(' ');
+      }
+    }
+    $timeout(function(){
+    //  angular.element(document.querySelector('.cell-'+index))[0].blur();
+      angular.element(document.querySelector('.cell-'+nextInd))[0].focus();
+    }, 0);
+  };
+
+  if($state.current.data && $state.current.data.type){
+    $scope.automaton = new Automata({
+      title: 'untitled automaton',
+      machine: $state.current.data.type,
+      eles: {
+        nodes: [
+          { data: { id: 'start' }, classes: 'startmarker' },
+          { data: { id: '0', start: true }, classes: 'enode', position: { x: 0, y: 0 } }],
+        edges: []
+      },
+      tape: {
+        position: 0,
+        contents: empty_tape
+      }
+    });
+    setUpGraph();
+  }
+
+  function setUpGraph(){
+    /* CYTOSCAPE */
+    automatonGraph($scope.automaton.eles).then(function(automatonCy){
+      cy = automatonCy;
       $scope.cyLoaded = true;
     });
-    $scope.onWeightChange = function(person){
-       peopleGraph.setPersonWeight( person.id, person.weight );
-    };
-
-    peopleGraph.onWeightChange(function(id, weight){
-      peopleById[id].weight = weight;
-
-      $scope.$apply();
-    });
-
-
-/* END CYTOSCAPE */
-
-
-    // Create new Automaton
-    $scope.create = function (isValid) {
-
-      console.log('creating');
-      $scope.error = null;
-
-      if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'automatonForm');
-
-        return false;
-      }
-
-      // Create new Automaton object
-      var automaton = new Automata({
-        title: this.title,
-        states: [{
-          statename: 's1',
-          start: true,
-          end: false
-        },{
-          statename: 's2',
-          start: false,
-          end: true
-        }]
-      });
-
-      // Redirect after save
-      automaton.$save(function (response) {
-        $location.path('automata/' + response._id);
-
-        // Clear form fields
-        $scope.title = '';
-      //  $scope.content = '';
-      }, function (errorResponse) {
-        $scope.error = errorResponse.data.message;
-      });
-    };
-
-    // Remove existing Article
-    $scope.remove = function (automaton) {
-      if (automaton) {
-        automaton.$remove();
-
-        for (var i in $scope.automata) {
-          if ($scope.automata[i] === automaton) {
-            $scope.automata.splice(i, 1);
-          }
-        }
-      } else {
-        $scope.automaton.$remove(function () {
-          $location.path('automata');
-        });
-      }
-    };
-
-    // Update existing Article
-    $scope.update = function (isValid) {
-      $scope.error = null;
-
-      if (!isValid) {
-        $scope.$broadcast('show-errors-check-validity', 'automatonForm');
-
-        return false;
-      }
-
-      var automaton = $scope.automaton;
-
-      automaton.$update(function () {
-        $location.path('automata/' + automaton._id);
-      }, function (errorResponse) {
-        $scope.error = errorResponse.data.message;
-      });
-    };
-
-    // Find a list of Automata
-    $scope.find = function () {
-      $scope.automata = Automata.query();
-    };
-
-    // Find existing Article
-    $scope.findOne = function () {
-      $scope.automaton = Automata.get({
-        automatonId: $stateParams.automatonId
-      });
-    };
   }
-]);
+}]);
+
+'use strict';
+
+/***** Draggable Library *****/
+
+angular.module('itsADrag',[])
+
+/**
+  Possible element attributes:
+    1.  template
+    2.  id
+    3.  options - json of jquery ui draggable options
+    4.  group
+    5.  placeholder
+**/
+.directive('draggable',[function(){
+  return {
+    restrict : 'AE',
+    link : function(scope,el,attrs){
+      scope.minimized = false;
+      // draggable object properties
+      scope.obj = {
+        id : null,
+        content : '',
+        group : null
+      };
+      scope.placeholder = false;
+
+      /*** Setup ***/
+
+      scope.obj.content = el.html(); // store object's content
+
+      if(angular.isDefined(attrs.id))
+        scope.obj.id = attrs.id;
+
+      if(angular.isDefined(attrs.placeholder))
+        scope.placeholder = scope.$eval(attrs.placeholder);
+
+      // options for jQuery UI's draggable method
+      var opts = (angular.isDefined(attrs.draggable)) ? scope.$eval(attrs.draggable) : {};
+
+      if(angular.isDefined(attrs.group)){
+        scope.obj.group = attrs.group;
+        opts.stack = '.' + attrs.group;
+      }
+
+      // event handlers
+      var evts = {
+        start : function(evt,ui){
+          if(scope.placeholder) // ui.helper is jQuery object
+            ui.helper.wrap('<div class="dragging"></div>');
+
+          scope.$apply(function(){ // emit event in angular context
+            scope.$emit('draggable.started',{ obj: scope.obj });
+          }); // end $apply
+        }, // end start
+
+        drag : function(evt){
+          scope.$apply(function(){ // emit event in angular context
+            scope.$emit('draggable.dragging');
+          }); // end $apply
+        }, // end drag
+
+        stop : function(evt,ui){
+          if(scope.placeholder)
+            ui.helper.unwrap();
+
+          scope.$apply(function(){ // emit event in angular context
+            scope.$emit('draggable.stopped');
+          }); // end $apply
+        } // end stop
+      }; // end evts
+
+      // combine options and events
+      var options = angular.extend({},opts,evts);
+      el.draggable(options); // make element draggable
+    } // end link
+  }; // end return
+}]) // end draggable
+
+.run(['$templateCache',function($templateCache){
+  $templateCache.put('/tmpls/draggable/default','<div ng-transclude></div>');
+}]); // end itsADrag.run
+
+angular.module('resizeIt',[])
+/**
+  jQuery UI resizable adds exact pixel width and heights to the element via a style tag.
+**/
+.directive('resizeable',['$timeout', function($timeout){
+  return {
+    restrict : 'A',
+    link : function(scope,el,attrs,ctrlr){
+      scope.obj = {
+        el : null,
+        id : null,
+        size : null // {width,height}
+      };
+
+      /*** Setup ***/
+
+      scope.obj.el = el; // save handle to element
+
+      if(angular.isDefined(attrs.id))
+        scope.obj.id = attrs.id;
+
+      var opts = (angular.isDefined(attrs.resizeable)) ? scope.$eval(attrs.resizeable) : {};
+
+      var evts = {
+        create : function(evt,ui){
+          $timeout(function(){
+            scope.$emit('resizeable.create',{ obj: scope.obj });
+          });
+        },// end create
+
+        start : function(evt,ui){
+          scope.$apply(function(){
+            scope.$emit('resizeable.start',{ obj: scope.obj });
+          });
+        }, // end start
+
+        stop : function(evt,ui){
+          scope.$apply(function(){
+            scope.$emit('resizeable.stop',{ 'ui': ui });
+            scope.obj.size = angular.copy(ui.size);
+            //console.log(scope.obj.size);
+          });
+        }, // end stop
+
+        resize : function(evt,ui){
+          scope.$apply(function(){
+            scope.$emit('resizeable.resizing');
+          });
+        } // end resize
+      }; // end evts
+
+      var options = angular.extend({},opts,evts);
+      el.resizable(options);
+
+      /*** Listeners ***/
+
+      scope.$on('resizeable.set.width',function(evt,params){
+        if(angular.isDefined(params.width))
+          el.css('width',parseInt(params.width) + 'px');
+      }); // end on(resizeable.set.width
+
+      scope.$on('resizeable.reset.width',function(evt){
+        if(angular.isDefined(scope.obj.size))
+          el.css('width',scope.obj.size.width + 'px');
+      }); // end on(resizeable.reset.width)
+    } // end link
+  }; // end return
+}]); // end resizeable
+
+angular.module('windows',['ngAnimate','itsADrag','resizeIt'])
+
+.directive('window',['$animate',function($animate){
+  return {
+    restrict : 'E',
+    transclude : true,
+    replace : true,
+    templateUrl : 'modules/automata/client/partials/tape.html',
+    scope : {
+      id : '@id',
+      title : '@title'
+    },
+    link : function(scope,el,attr){
+      scope.minimized = false;
+
+      /** Methods **/
+      scope.minimize = function(){
+        scope.minimized = !scope.minimized;
+
+        if(angular.equals(scope.minimized,true)){
+          $animate.addClass(el,'minimize');
+        }else{
+          $animate.removeClass(el,'minimize');
+        }
+      }; // end minimize
+
+    } // end link
+  }; // end return
+}]) // end window
+
+
+.run(['$templateCache', '$http', function($templateCache, $http){
+  $http.get('modules/automata/client/partials/tape.html', { cache:$templateCache });
+}]); // end windows
 
 'use strict';
 
@@ -519,192 +630,209 @@ angular.module('automata').controller('AutomataController', ['$scope', '$statePa
 angular.module('automata').factory('Automata', ['$resource',
   function ($resource) {
     return $resource('api/automata/:automatonId', {
-      articleId: '@_id'
+      automatonId: '@_id'
     }, {
       update: {
-        method: 'PUT'
+        method: 'PUT',
       }
     });
   }
-]).factory('peopleGraph', [ '$q', function( $q ){
-// use a factory instead of a directive, because cy.js is not just for visualisation; you need access to the graph model and events etc
-//angular.module('automata')
-  var cy;
-  var peopleGraph = function(people){
-    var deferred = $q.defer();
+])
+.factory('automatonGraph', [ '$q',
+  function($q){
+  // use a factory instead of a directive, because cy.js is not just for visualisation; you need access to the graph model and events etc
+  //angular.module('automata')
+    var cy;
 
-    // put people model in cy.js
-    var eles = [];
-    for( var i = 0; i < people.length; i++ ){
-      eles.push({
-        group: 'nodes',
-        data: {
-          id: people[i].id,
-          weight: people[i].weight,
-          name: people[i].name
-        }
-      });
-    }
+    var automatonGraph = function(eles){
 
-    $(function(){ // on dom ready
+      var deferred = $q.defer();
 
-      cy = cytoscape({
-        container: $('#cy')[0],
-
-        style: cytoscape.stylesheet()
-          .selector('node')
-            .css({
-              'content': 'data(name)',
-              'height': 80,
-              'width': 'mapData(weight, 1, 200, 1, 200)',
-               'text-valign': 'center',
+      $(function(){ // on dom ready
+        cy = cytoscape({
+          container: $('#cy')[0],
+          boxSelectionEnabled: false,
+          autounselectify: true,
+          layout: {
+            //name: 'cose',
+            name: 'preset',
+  //          fit: true,
+  //          boundingBox: { x1:50, y1:0, x2:250, y2:300 },
+            avoidOverlap: true, // prevents node overlap, may overflow boundingBox if not enough space
+  //          avoidOverlapPadding: 10, // extra spacing around nodes when avoidOverlap: true
+  //          condense: true,
+          },
+          style: cytoscape.stylesheet()
+            .selector('node')
+              .css({
+                'content': 'data(id)',
+                'text-valign': 'center',
+                'color': 'black',
+                'background-color': 'white',
+                'border-style': 'solid',
+                'border-width': '2px'
+              })
+            .selector('.accept')
+              .css({
+                'border-style': 'double',
+                'border-width': '6px'
+              })
+            .selector('edge')
+              .css({
+                'label': 'data(label)',
+                'edge-text-rotation': 'autorotate',
+                'curve-style': 'bezier',
+                'control-point-step-size' : '70px',
+                'target-arrow-shape': 'triangle',
+                'line-color': 'black',
+                'target-arrow-color': 'black',
                 'color': 'white',
                 'text-outline-width': 2,
-                'text-outline-color': '#888'
-             })
-          .selector('edge')
-            .css({
-              'target-arrow-shape': 'triangle'
-            })
-          .selector(':selected')
-            .css({
-              'background-color': 'black',
-              'line-color': 'black',
-              'target-arrow-color': 'black',
-              'source-arrow-color': 'black',
-              'text-outline-color': 'black'
-          }),
+                'text-outline-color': '#555'
+              })
+            .selector(':selected')
+              .css({
+                'background-color': 'black',
+                'line-color': 'black',
+                'target-arrow-color': 'black',
+                'source-arrow-color': 'black'
+              })
+              .selector('.autorotate')
+                .css({
+                  'edge-text-rotation': 'autorotate'
+                })
+              .selector('.startparent')
+                .css({
+                  'border-width': '0',
+                  'background-opacity': '0',
+                  'content' : ''
+                })
+              .selector('.startmarker')
+                .css({
+                  'border-style': 'solid',
+                  'border-width': '2px',
+                  'content': '',
+                  'shape': 'polygon',
+                  'shape-polygon-points': '1 0 0.5 -0.4 0.5 0.4'
+                }),
+          elements: eles,
+          ready: function(){
+            deferred.resolve(this);
+            cy.on('tap', 'node', function(e){
+              var node = e.cyTarget;
+              if (!node.data().accept){
+                node.data().accept = true;
+                node.addClass('accept');
+                if (node.data().start){
+                  cy.$('#start').position({
+                    x: cy.$('#start').position('x') - 2,
+                  });
+                }
+              }else{
+                node.data().accept = false;
+                node.removeClass('accept');
+                if (node.data().start){
+                  cy.$('#start').position({
+                    x: cy.$('#start').position('x') + 2,
+                  });
+                }
+              }
+            });
 
-        layout: {
-          name: 'cose',
-          padding: 10
-        },
+            cy.on('tap', function(e){
+              if(e.cyTarget === cy){
+                var ind = cy.nodes().length - 1;
+                cy.add({
+                  group: 'nodes',
+                  data: { id: ind,
+                          weight: 75 },
+                  classes: 'enode',
+                  position: { x: e.cyPosition.x, y: e.cyPosition.y }
+                });
+              //  cy.elements().removeClass('faded');
+              }
+            });
 
-        elements: eles,
+            cy.on('cxttap', 'node', function(e){
+              var node = e.cyTarget;
+              console.log('right tapped node '+node.id());
+            });
 
-        ready: function(){
-          deferred.resolve( this );
+            cy.on('drag', '#0', function(e){
+              cy.$('#start').position({
+                x: cy.$('#0').position('x') - (e.cyTarget.data().accept ? 34 : 32),
+                y: cy.$('#0').position('y')
+              });
+            });
 
-          cy.on('cxtdrag', 'node', function(e){
-            var node = this;
-            var dy = Math.abs( e.cyPosition.x - node.position().x );
-            var weight = Math.round( dy*2 );
+            cy.$('#start').ungrabify();
+            cy.$('#start').unselectify();
+            cy.$('#start').position({
+              x: cy.$('#0').position('x') - 32,
+              y: cy.$('#0').position('y')
+            });
 
-            node.data('weight', weight);
+              // the default values of each option are outlined below:
+            var defaults = {
+              preview: true, // whether to show added edges preview before releasing selection
+              stackOrder: 4, // Controls stack order of edgehandles canvas element by setting it's z-index
+              handleSize: 10, // the size of the edge handle put on nodes
+              handleColor: '#777777', // the colour of the handle and the line drawn from it
+              handleLineType: 'ghost', // can be 'ghost' for real edge, 'straight' for a straight line, or 'draw' for a draw-as-you-go line
+              handleLineWidth: 1, // width of handle line in pixels
+              handleNodes: '.enode', // selector/filter function for whether edges can be made from a given node
+              hoverDelay: 150, // time spend over a target node before it is considered a target selection
+              cxt: true, // whether cxt events trigger edgehandles (useful on touch)
+              enabled: true, // whether to start the plugin in the enabled state
+              toggleOffOnLeave: false, // whether an edge is cancelled by leaving a node (true), or whether you need to go over again to cancel (false; allows multiple edges in one pass)
+              edgeType: function(sourceNode, targetNode) {
+                // can return 'flat' for flat edges between nodes or 'node' for intermediate node between them
+                // returning null/undefined means an edge can't be added between the two nodes
+                return 'flat';
+              },
+              loopAllowed: function(node) {
+                // for the specified node, return whether edges from itself to itself are allowed
+                return true;
+              },
+              nodeLoopOffset: -50, // offset for edgeType: 'node' loops
+              nodeParams: function(sourceNode, targetNode) {
+                // for edges between the specified source and target
+                // return element object to be passed to cy.add() for intermediary node
+                return {};
+              },
+              edgeParams: function(sourceNode, targetNode, i) {
+                // for edges between the specified source and target
+                // return element object to be passed to cy.add() for edge
+                // NB: i indicates edge index in case of edgeType: 'node'
+                return {};
+              },
+              start: function(sourceNode) {
+                // fired when edgehandles interaction starts (drag on handle)
+              },
+              complete: function(sourceNode, targetNodes, addedEntities) {
+                // fired when edgehandles is done and entities are added
+                //var read = 'read';
+                //var act = 'act';
+                //addedEntities.data('read', read);
+                //addedEntities.data('action', act);
+                //addedEntities.data('label', read +':'+ act);
+                //openModal('sm');
+                angular.element('[ng-controller=AddEdgeModalController]').scope().open('sm', addedEntities);
 
-            fire('onWeightChange', [ node.id(), node.data('weight') ]);
-          });
-        }
+              },
+              stop: function(sourceNode) {
+                // fired when edgehandles interaction is stopped (either complete with added edges or incomplete)
+              }
+            };
+            //console.log(cy);
+            cy.edgehandles(defaults);
+          }
+        });
       });
-
-    }); // on dom ready
-
-    return deferred.promise;
-  };
-
-  peopleGraph.listeners = {};
-
-  function fire(e, args){
-    var listeners = peopleGraph.listeners[e];
-
-    for( var i = 0; listeners && i < listeners.length; i++ ){
-      var fn = listeners[i];
-
-      fn.apply( fn, args );
-    }
-  }
-
-  function listen(e, fn){
-    var listeners = peopleGraph.listeners[e] = peopleGraph.listeners[e] || [];
-
-    listeners.push(fn);
-  }
-
-  peopleGraph.setPersonWeight = function(id, weight){
-    cy.$('#' + id).data('weight', weight);
-  };
-
-  peopleGraph.onWeightChange = function(fn){
-    listen('onWeightChange', fn);
-  };
-
-  return peopleGraph;
-
-
-} ]);
-
-'use strict';
-
-// Configuring the Chat module
-angular.module('chat').run(['Menus',
-  function (Menus) {
-    // Set top bar menu items
-    Menus.addMenuItem('topbar', {
-      title: 'Chat',
-      state: 'chat'
-    });
-  }
-]);
-
-'use strict';
-
-// Configure the 'chat' module routes
-angular.module('chat').config(['$stateProvider',
-  function ($stateProvider) {
-    $stateProvider
-      .state('chat', {
-        url: '/chat',
-        templateUrl: 'modules/chat/client/views/chat.client.view.html',
-        data: {
-          roles: ['user', 'admin']
-        }
-      });
-  }
-]);
-
-'use strict';
-
-// Create the 'chat' controller
-angular.module('chat').controller('ChatController', ['$scope', '$location', 'Authentication', 'Socket',
-  function ($scope, $location, Authentication, Socket) {
-    // Create a messages array
-    $scope.messages = [];
-
-    // If user is not signed in then redirect back home
-    if (!Authentication.user) {
-      $location.path('/');
-    }
-
-    // Make sure the Socket is connected
-    if (!Socket.socket) {
-      Socket.connect();
-    }
-
-    // Add an event listener to the 'chatMessage' event
-    Socket.on('chatMessage', function (message) {
-      $scope.messages.unshift(message);
-    });
-
-    // Create a controller method for sending messages
-    $scope.sendMessage = function () {
-      // Create a new message object
-      var message = {
-        text: this.messageText
-      };
-
-      // Emit a 'chatMessage' message event
-      Socket.emit('chatMessage', message);
-
-      // Clear the message text
-      this.messageText = '';
+      return deferred.promise;
     };
-
-    // Remove the event listener when the controller instance is destroyed
-    $scope.$on('$destroy', function () {
-      Socket.removeListener('chatMessage');
-    });
-  }
-]);
+    return automatonGraph;
+  }]);
 
 'use strict';
 
@@ -781,8 +909,8 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
 
 'use strict';
 
-angular.module('core').controller('HeaderController', ['$scope', '$state', 'Authentication', 'Menus',
-  function ($scope, $state, Authentication, Menus) {
+angular.module('core').controller('HeaderController', ['$scope', '$state', 'Authentication', 'Menus', '$uibModal', '$log',
+  function ($scope, $state, Authentication, Menus, $uibModal, $log) {
     // Expose view variables
     $scope.$state = $state;
     $scope.authentication = Authentication;
@@ -800,8 +928,56 @@ angular.module('core').controller('HeaderController', ['$scope', '$state', 'Auth
     $scope.$on('$stateChangeSuccess', function () {
       $scope.isCollapsed = false;
     });
+
+  //  $scope.items = ['item1', 'item2', 'item3'];
+    $scope.animationsEnabled = true;
+
+    $scope.example = {
+      text: 'word',
+      word: /^\s*\w*\s*$/
+    };
+
+    $scope.createNewAutomaton = function(){
+      var modalInstance = $uibModal.open({
+        animation: $scope.animationsEnabled,
+        templateUrl: 'createNewModal.html',
+        controller: 'CreateNewModalInstanceCtrl',
+        size: 'sm' //,
+      //  resolve: {
+      //    items: function () {
+      //      return $scope.items;
+      //    }
+      //  }
+      });
+
+
+      //modalInstance.result.then(function (selectedItem) {
+      modalInstance.result.then(function () {
+        console.log('result no selection 11');
+        //$scope.selected = selectedItem;
+      }, function () {
+        $log.info('Modal dismissed at: ' + new Date());
+      });
+      console.log('create new');
+    };
   }
-]);
+//]).controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, items) {
+]).controller('CreateNewModalInstanceCtrl', ["$scope", "$uibModalInstance", function ($scope, $uibModalInstance) {
+
+//  $scope.items = items;
+//  $scope.selected = {
+//    item: $scope.items[0]
+//  };
+
+  $scope.ok = function () {
+    //$uibModalInstance.close($scope.selected.item);
+    $uibModalInstance.close();
+  };
+
+  $scope.cancel = function () {
+    $uibModalInstance.dismiss('cancel');
+  };
+}]);
 
 'use strict';
 
@@ -885,17 +1061,19 @@ angular.module('core')
         return linkFn;
       }
     };
-}]);
+  }]);
 
 'use strict';
 
-angular.module('core').factory('authInterceptor', ['$q', '$injector',
-  function ($q, $injector) {
+angular.module('core').factory('authInterceptor', ['$q', '$injector', 'Authentication',
+  function ($q, $injector, Authentication) {
     return {
       responseError: function(rejection) {
         if (!rejection.config.ignoreAuthModule) {
           switch (rejection.status) {
             case 401:
+              // Deauthenticate the global user
+              Authentication.user = null;
               $injector.get('$state').transitionTo('authentication.signin');
               break;
             case 403:
@@ -1128,7 +1306,7 @@ angular.module('core').service('Socket', ['Authentication', '$state', '$timeout'
 
 'use strict';
 
-// Configuring the Articles module
+// Configuring the Users module
 angular.module('users.admin').run(['Menus',
   function (Menus) {
     Menus.addSubMenuItem('topbar', 'admin', {
@@ -1173,37 +1351,6 @@ angular.module('users.admin.routes').config(['$stateProvider',
           }]
         }
       });
-  }
-]);
-
-'use strict';
-
-// Config HTTP Error Handling
-angular.module('users').config(['$httpProvider',
-  function ($httpProvider) {
-    // Set the httpProvider "not authorized" interceptor
-    $httpProvider.interceptors.push(['$q', '$location', 'Authentication',
-      function ($q, $location, Authentication) {
-        return {
-          responseError: function (rejection) {
-            switch (rejection.status) {
-              case 401:
-                // Deauthenticate the global user
-                Authentication.user = null;
-
-                // Redirect to signin page
-                $location.path('signin');
-                break;
-              case 403:
-                // Add unauthorized behaviour
-                break;
-            }
-
-            return $q.reject(rejection);
-          }
-        };
-      }
-    ]);
   }
 ]);
 
@@ -1427,7 +1574,7 @@ angular.module('users').controller('PasswordController', ['$scope', '$stateParam
     $scope.authentication = Authentication;
     $scope.popoverMsg = PasswordValidator.getPopoverMsg();
 
-    //If user is signed in then redirect back home
+    // If user is signed in then redirect back home
     if ($scope.authentication.user) {
       $location.path('/');
     }
@@ -1518,7 +1665,8 @@ angular.module('users').controller('ChangeProfilePictureController', ['$scope', 
 
     // Create file uploader instance
     $scope.uploader = new FileUploader({
-      url: 'api/users/picture'
+      url: 'api/users/picture',
+      alias: 'newProfilePicture'
     });
 
     // Set file uploader image filter
@@ -1665,76 +1813,73 @@ angular.module('users')
   .directive('passwordValidator', ['PasswordValidator', function(PasswordValidator) {
     return {
       require: 'ngModel',
-      link: function(scope, element, attrs, modelCtrl) {
-        modelCtrl.$parsers.unshift(function (password) {
-          var result = PasswordValidator.getResult(password);
-          var strengthIdx = 0;
+      link: function(scope, element, attrs, ngModel) {
+        ngModel.$validators.requirements = function (password) {
+          var status = true;
+          if (password) {
+            var result = PasswordValidator.getResult(password);
+            var requirementsIdx = 0;
 
-          // Strength Meter - visual indicator for users
-          var strengthMeter = [
-            { color: 'danger', progress: '20' },
-            { color: 'warning', progress: '40' },
-            { color: 'info', progress: '60' },
-            { color: 'primary', progress: '80' },
-            { color: 'success', progress: '100' }
-          ];
-          var strengthMax = strengthMeter.length;
+            // Requirements Meter - visual indicator for users
+            var requirementsMeter = [
+              { color: 'danger', progress: '20' },
+              { color: 'warning', progress: '40' },
+              { color: 'info', progress: '60' },
+              { color: 'primary', progress: '80' },
+              { color: 'success', progress: '100' }
+            ];
 
-          if (result.errors.length < strengthMeter.length) {
-            strengthIdx = strengthMeter.length - result.errors.length - 1;
+            if (result.errors.length < requirementsMeter.length) {
+              requirementsIdx = requirementsMeter.length - result.errors.length - 1;
+            }
+
+            scope.requirementsColor = requirementsMeter[requirementsIdx].color;
+            scope.requirementsProgress = requirementsMeter[requirementsIdx].progress;
+
+            if (result.errors.length) {
+              scope.popoverMsg = PasswordValidator.getPopoverMsg();
+              scope.passwordErrors = result.errors;
+              status = false;
+            } else {
+              scope.popoverMsg = '';
+              scope.passwordErrors = [];
+              status = true;
+            }
           }
-
-          scope.strengthColor = strengthMeter[strengthIdx].color;
-          scope.strengthProgress = strengthMeter[strengthIdx].progress;
-
-          if (result.errors.length) {
-            scope.popoverMsg = PasswordValidator.getPopoverMsg();
-            scope.passwordErrors = result.errors;
-            modelCtrl.$setValidity('strength', false);
-            return undefined;
-          } else {
-            scope.popoverMsg = '';
-            modelCtrl.$setValidity('strength', true);
-            return password;
-          }
-        });
+          return status;
+        };
       }
     };
-}]);
+  }]);
 
 'use strict';
 
 angular.module('users')
-  .directive('passwordVerify', function() {
+  .directive('passwordVerify', [function() {
     return {
       require: 'ngModel',
       scope: {
         passwordVerify: '='
       },
-      link: function(scope, element, attrs, modelCtrl) {
+      link: function(scope, element, attrs, ngModel) {
+        var status = true;
         scope.$watch(function() {
           var combined;
-          if (scope.passwordVerify || modelCtrl.$viewValue) {
-            combined = scope.passwordVerify + '_' + modelCtrl.$viewValue;
+          if (scope.passwordVerify || ngModel) {
+            combined = scope.passwordVerify + '_' + ngModel;
           }
           return combined;
         }, function(value) {
           if (value) {
-            modelCtrl.$parsers.unshift(function(viewValue) {
+            ngModel.$validators.passwordVerify = function (password) {
               var origin = scope.passwordVerify;
-              if (origin !== viewValue) {
-                modelCtrl.$setValidity('passwordVerify', false);
-                return undefined;
-              } else {
-                modelCtrl.$setValidity('passwordVerify', true);
-                return viewValue;
-              }
-            });
+              return (origin !== password) ? false : true;
+            };
           }
         });
-     }
+      }
     };
-});
+  }]);
 
 'use strict';
 
