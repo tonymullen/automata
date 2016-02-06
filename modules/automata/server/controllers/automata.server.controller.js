@@ -39,6 +39,7 @@ exports.read = function (req, res) {
 exports.update = function (req, res) {
   var automaton = req.automaton;
   automaton.eles = req.body.eles;
+  automaton.tape = req.body.tape;
   automaton.save(function (err) {
     if (err) {
       return res.status(400).send({
@@ -51,7 +52,7 @@ exports.update = function (req, res) {
 };
 
 /**
- * Delete an article
+ * Delete an automaton
  */
 exports.delete = function (req, res) {
   var automaton = req.automaton;

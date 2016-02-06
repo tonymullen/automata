@@ -28,14 +28,14 @@
   <window id="tape">
     <table>
       <tr class="rw-head">
-        <td ng-repeat="item in tape.contents track by $index" ng-click="tape.position = $index">
-          <div class="rw-head-cell" ng-class="{active: $index === tape.position}"></div>
+        <td ng-repeat="item in automaton.tape.contents track by $index" ng-click="automaton.tape.position = $index">
+          <div class="rw-head-cell" ng-class="{active: $index === automaton.tape.position}"></div>
         </td>
       </tr>
       <tr class="tape-content">
-        <td ng-repeat="item in tape.contents track by $index" ng-class="{active: $index === tape.position}">
+        <td ng-repeat="item in automaton.tape.contents track by $index" ng-class="{active: $index === automaton.tape.position}">
            <input class="{{'cell-'+$index}} tape-cell" type="text" name="input"
-                  ng-model="item.content" maxlength="1" onfocus="this.select()"
+                  ng-model="item" maxlength="1" onfocus="this.select()"
                   ng-keyup="focusNext($event, $index)" ng-click="onTextClick($event)">
         </td>
       </tr>
