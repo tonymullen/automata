@@ -1,5 +1,9 @@
 $assetPath : "/images";
 
+@if compass-env() == 'development' {
+    $assetPath : "/images";
+}
+
 html {
   overflow: hidden;
 }
