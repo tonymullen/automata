@@ -1,48 +1,51 @@
-.floating-window, div.tapeWindowBodyContent, div.tapeWindowBody, .floating-window > .panel  { /* fix for sudden margins when using resizeable with bootstrap */
-  -webkit-box-sizing: content-box; /* Safari/Chrome, other WebKit */
-	-moz-box-sizing: content-box;    /* Firefox, other Gecko */
-	box-sizing: content-box;         /* Opera/IE 8+ */
+.floating-window, div.tapeWindowBodyContent, div.tapeWindowBody, .floating-window > .panel {
+  /* fix for sudden margins when using resizeable with bootstrap */
+  -webkit-box-sizing: content-box;
+  /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: content-box;
+  /* Firefox, other Gecko */
+  box-sizing: content-box;
+  /* Opera/IE 8+ */
   /*height: 100px;*/
-  z-index: 50;
-}
+  z-index: 50; }
 
 /*
 .tape-window.ui-resizeable-ew {
 
 }
 */
-
 .floating-window > .panel {
   min-height: 60px;
-  min-width: 200px;
-}
+  min-width: 200px; }
+
 div.tapeWindowBodyContent {
-/*  min-height: 18px; */
+  /*  min-height: 18px; */
   min-width: 220px;
-  padding: 2px;
-}
+  padding: 2px; }
+
 .floating-window > .panel {
-  width: 80%;
-}
+  width: 80%; }
 
 /** Appropriate mouse cursors **/
-accordion .panel-heading a { cursor: pointer; }
-.cursor-move { cursor: move; }
+accordion .panel-heading a {
+  cursor: pointer; }
+
+.cursor-move {
+  cursor: move; }
 
 /** Hide content falling outside of window **/
-.panel { overflow: hidden; }
+.panel {
+  overflow: hidden; }
 
 /** Scroll window content when necessary **/
 div.tapeWindowBodyContent {
   overflow-y: hidden;
   height: 70px;
   margin: 5px 5px 2px 5px;
-  border: solid 1.5px lightGray;
- }
+  border: solid 1.5px lightGray; }
 
 div.tapeWindowBody {
-  overflow: auto;
-}
+  overflow: auto; }
 
 /** Window minimize and expansion transition **/
 .floating-window {
@@ -51,89 +54,75 @@ div.tapeWindowBody {
   -webkit-transition: max-height .4s ease;
   -moz-transition: max-height .4s ease;
   -o-transition: height .4s ease;
-  transition: max-height .4s ease;
-}
+  transition: max-height .4s ease; }
 
-.floating-window.minimize, .floating-window.minimize-add.minimize-add-active, .floating-window.minimize-remove{
-  max-height: 92px;
-}
+.floating-window.minimize, .floating-window.minimize-add.minimize-add-active, .floating-window.minimize-remove {
+  max-height: 92px; }
 
 .floating-window.minimize-add, .floating-window.minimize-remove.minimize-remove-active {
-  max-height: 1000px;
-}
+  max-height: 1000px; }
 
 .panel-heading.tape-window-heading {
-    background-color: #080808;
-    background-image: linear-gradient(to bottom, #353535 0%, #080808 100%);
-    border-color: #080808;
-    padding: 0;
-    height: 24px;
-}
+  background-color: #080808;
+  background-image: linear-gradient(to bottom, #353535 0%, #080808 100%);
+  border-color: #080808;
+  padding: 0;
+  height: 24px; }
 
 .panel.tape-window {
-    border-color: #080808;
-    background-color: rgb(255,255,255);
-    background-color: rgba(255,255,255,0.5);
-}
-
-tr.tape-content > td{
+  border-color: #080808;
   background-color: white;
-  border: solid 1pt black;
-}
+  background-color: rgba(255, 255, 255, 0.5); }
 
+tr.tape-content > td {
+  background-color: white;
+  border: solid 1pt black; }
 
-tr.tape-content > td > input.tape-cell{
+tr.tape-content > td > input.tape-cell {
   border: none;
   font-family: 'Francois One', sans-serif;
   font-size: 2em;
   text-transform: uppercase;
   text-align: center;
-  height:40px;
-  width:30px;
-}
+  height: 40px;
+  width: 30px; }
 
-tr.tape-content > td.active{
+tr.tape-content > td.active {
+  background-color: black; }
+
+tr.tape-content > td.active > input.tape-cell {
   background-color: black;
-}
+  color: white; }
 
-tr.tape-content > td.active > input.tape-cell{
-  background-color: black;
-  color: white;
-}
-
-tr.tape-content > td.active > input.tape-cell:focus{
+tr.tape-content > td.active > input.tape-cell:focus {
   background-color: #404040;
-  color: lightgray;
-}
+  color: lightgray; }
 
 input:focus {
-    outline: none;
-    background-color: lightgray;
-}
+  outline: none;
+  background-color: lightgray; }
 
-tr.rw-head > td{
+tr.rw-head > td {
   padding: 0;
-  padding-bottom: 2px;
-}
+  padding-bottom: 2px; }
 
-tr.rw-head > td > div.rw-head-cell{
+tr.rw-head > td > div.rw-head-cell {
   border-radius: 10px;
   height: 10px;
-  width: 32px;
-}
+  width: 32px; }
 
-tr.rw-head > td > div.rw-head-cell.inactive{
-  background-color: none;
-}
+tr.rw-head > td > div.rw-head-cell.inactive {
+  background-color: none; }
 
-tr.rw-head > td > div.rw-head-cell.active{
-  background-color: black;
-}
-
+tr.rw-head > td > div.rw-head-cell.active {
+  background-color: black; }
 
 input.tape-cell::selection {
-  background: none; /* WebKit/Blink Browsers */
-}
+  background: none;
+  /* WebKit/Blink Browsers */ }
+
 input.tape-cell::-moz-selection {
-  background: none; /* Gecko Browsers */
-}
+  background: none;
+  /* Gecko Browsers */ }
+
+/*# sourceMappingURL=tape.css.map */

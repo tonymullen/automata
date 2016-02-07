@@ -1,16 +1,15 @@
-input.edgeLabelSymbolInput{
+input.edgeLabelSymbolInput {
   font-family: 'Francois One', sans-serif;
   text-transform: uppercase;
   text-align: center;
   margin: auto;
   padding: 0;
-  width: 30px;
-}
+  width: 30px; }
 
-table.edgeLabels{
-  margin: auto;
-}
+table.edgeLabels {
+  margin: auto; }
 
-table.edgeLabels > tbody > tr > td{
-  padding: 0 15px 0 15px;
-}
+table.edgeLabels > tbody > tr > td {
+  padding: 0 15px 0 15px; }
+
+/*# sourceMappingURL=edgeModal.css.map */

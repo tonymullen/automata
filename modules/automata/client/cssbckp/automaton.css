@@ -1,25 +1,35 @@
 html {
-  overflow: hidden; }
+  overflow: hidden;
+}
 
 body {
-  font: 14px helvetica neue, helvetica, arial, sans-serif; }
+  font: 14px helvetica neue, helvetica, arial, sans-serif;
+}
+
 
 .cy {
   height: 100%;
   width: 100%;
   position: absolute;
-  background: url(/images/GySvQ50pctTrans.png);
+  background: url('../../../../images/GySvQ50pctTrans.png');
   background-color: #EFEEE5;
   left: 0;
-  top: 0; }
+  top: 0;
+}
+
 
 .cy > canvas::selection {
-  background: white;
-  background: rgba(255, 255, 255, 0); }
+  background: rgb(255,255,255);
+  background: rgba(255,255,255,0.0) /* WebKit/Blink Browsers */
+}
 
 .cy > div > canvas::selection {
-  background: white;
-  background: rgba(255, 255, 255, 0); }
+  background: rgb(255,255,255);
+  background: rgba(255,255,255,0.0) /* WebKit/Blink Browsers */
+}
+
+
+
 
 /*
 #info {
@@ -40,6 +50,7 @@ body {
   background: rgba(255, 200, 200, 0.5);
 }
 */
+
 /*
 .panel {
   position: absolute;
@@ -49,7 +60,7 @@ body {
   background-color: transparent;
 }
 */
-th {
-  text-align: left; }
 
-/*# sourceMappingURL=automaton.css.map */
+th {
+  text-align: left;
+}

@@ -1,54 +1,46 @@
-
 div.playIcons {
-  position:relative;
+  position: relative;
   z-index: 500;
   float: left;
   font-family: automaton-icons;
-  margin-top:20px;
-}
+  margin-top: 20px; }
 
 span.playIcons::selection {
-  background: rgb(255,255,255);
-  background: rgba(255,255,255,0.0) /* WebKit/Blink Browsers */
-}
+  background: white;
+  background: rgba(255, 255, 255, 0); }
 
 span.playIcons {
   z-index: 500;
-  font-size: 4em;
-}
+  font-size: 4em; }
 
 span.saveIcon {
   z-index: 500;
-  font-size: 3.5em;
-}
+  font-size: 3.5em; }
 
 div.saveIcon {
-    float: right;
-    margin-top: 20px;
-}
+  float: right;
+  margin-top: 20px; }
 
-span.saveIcon:hover{
-  color: darkgray;
-}
+span.saveIcon:hover {
+  color: darkgray; }
 
 span.playIcons > span:hover {
-  color: darkgray;
-}
+  color: darkgray; }
 
 span.saveIcon:active {
   background-color: #565656;
   color: transparent;
-  text-shadow: 0 2px 3px rgba(255,255,255,0.5);
+  text-shadow: 0 2px 3px rgba(255, 255, 255, 0.5);
   -webkit-background-clip: text;
-     -moz-background-clip: text;
-          background-clip: text;
-}
+  -moz-background-clip: text;
+  background-clip: text; }
 
 span.playIcons > span:active {
   background-color: #565656;
   color: transparent;
-  text-shadow: 0 2px 3px rgba(255,255,255,0.5);
+  text-shadow: 0 2px 3px rgba(255, 255, 255, 0.5);
   -webkit-background-clip: text;
-     -moz-background-clip: text;
-          background-clip: text;
-}
+  -moz-background-clip: text;
+  background-clip: text; }
+
+/*# sourceMappingURL=icons.css.map */
