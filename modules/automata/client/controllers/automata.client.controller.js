@@ -158,6 +158,7 @@ function ($scope, $state, $stateParams, $location, $timeout, $window, Authentica
     /* CYTOSCAPE */
     automatonGraph($scope.automaton.eles).then(function(automatonCy){
       cy = automatonCy;
+      console.log(cy);
       $scope.cyLoaded = true;
     });
   }
