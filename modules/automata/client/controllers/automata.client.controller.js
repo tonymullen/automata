@@ -159,6 +159,7 @@ function ($scope, $state, $stateParams, $location, $timeout, $window, Authentica
     automatonGraph($scope.automaton.eles).then(function(automatonCy){
       cy = automatonCy;
       console.log('badoongyface');
+      console.log(cy);
       $scope.cyLoaded = true;
     });
   }
