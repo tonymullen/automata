@@ -431,8 +431,6 @@ function ($scope, $state, $stateParams, $location, $timeout, $window, Authentica
     /* CYTOSCAPE */
     automatonGraph($scope.automaton.eles).then(function(automatonCy){
       cy = automatonCy;
-      console.log('badoongyface');
-      console.log(cy);
       $scope.cyLoaded = true;
     });
   }
@@ -640,8 +638,8 @@ angular.module('automata').factory('Automata', ['$resource',
     });
   }
 ])
-.factory('automatonGraph', [ '$q',
-  function($q){
+.factory('automatonGraph', [ '$document','$q',
+  function($document, $q){
   // use a factory instead of a directive, because cy.js is not just for visualisation; you need access to the graph model and events etc
   //angular.module('automata')
     var cy;
@@ -650,7 +648,8 @@ angular.module('automata').factory('Automata', ['$resource',
 
       var deferred = $q.defer();
 
-      $(function(){ // on dom ready
+      $document.ready(function(){
+      //$(function(){ // on dom ready
         cy = cytoscape({
           container: $('#cy')[0],
           boxSelectionEnabled: false,
