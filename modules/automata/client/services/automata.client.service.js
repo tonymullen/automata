@@ -141,9 +141,9 @@ angular.module('automata').factory('Automata', ['$resource',
               });
             });
 
-            cy.$('#start').ungrabify();
-            cy.$('#start').unselectify();
-            cy.$('#start').position({
+            this.$('#start').ungrabify();
+            this.$('#start').unselectify();
+            this.$('#start').position({
               x: cy.$('#0').position('x') - 32,
               y: cy.$('#0').position('y')
             });
