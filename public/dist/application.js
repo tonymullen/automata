@@ -754,12 +754,12 @@ angular.module('automata').factory('Automata', ['$resource',
               }
             });
 
-            cy.on('cxttap', 'node', function(e){
+            this.on('cxttap', 'node', function(e){
               var node = e.cyTarget;
               console.log('right tapped node '+node.id());
             });
 
-            cy.on('drag', '#0', function(e){
+            this.on('drag', '#0', function(e){
               cy.$('#start').position({
                 x: cy.$('#0').position('x') - (e.cyTarget.data().accept ? 34 : 32),
                 y: cy.$('#0').position('y')
@@ -826,7 +826,7 @@ angular.module('automata').factory('Automata', ['$resource',
               }
             };
             //console.log(cy);
-            cy.edgehandles(defaults);
+            this.edgehandles(defaults);
           }
         });
       });
