@@ -135,17 +135,17 @@ angular.module('automata').factory('Automata', ['$resource',
             });
 
             this.on('drag', '#0', function(e){
-              cy.$('#start').position({
-                x: cy.$('#0').position('x') - (e.cyTarget.data().accept ? 34 : 32),
-                y: cy.$('#0').position('y')
+              this.$('#start').position({
+                x: this.$('#0').position('x') - (e.cyTarget.data().accept ? 34 : 32),
+                y: this.$('#0').position('y')
               });
             });
 
             this.$('#start').ungrabify();
             this.$('#start').unselectify();
             this.$('#start').position({
-              x: cy.$('#0').position('x') - 32,
-              y: cy.$('#0').position('y')
+              x: this.$('#0').position('x') - 32,
+              y: this.$('#0').position('y')
             });
 
               // the default values of each option are outlined below:
