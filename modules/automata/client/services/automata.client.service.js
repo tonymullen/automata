@@ -94,7 +94,7 @@ angular.module('automata').factory('Automata', ['$resource',
           elements: eles,
           ready: function(){
             deferred.resolve(this);
-            cy.on('tap', 'node', function(e){
+            this.on('tap', 'node', function(e){
               var node = e.cyTarget;
               if (!node.data().accept){
                 node.data().accept = true;
@@ -115,7 +115,7 @@ angular.module('automata').factory('Automata', ['$resource',
               }
             });
 
-            cy.on('tap', function(e){
+            this.on('tap', function(e){
               if(e.cyTarget === cy){
                 var ind = cy.nodes().length - 1;
                 cy.add({
