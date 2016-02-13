@@ -24,7 +24,9 @@ angular.module('automata').factory('Automata', ['$resource',
       var deferred = $q.defer();
 
       $document.ready(function(){
+        console.log('ready...');
         $timeout(function(){
+          console.log('now');
       //$(function(){ // on dom ready
         cy = cytoscape({
           container: $('#cy')[0],
@@ -206,7 +208,7 @@ angular.module('automata').factory('Automata', ['$resource',
           }
         });
       });
-      }, 3000);//$timeout
+    }, 5000);//$timeout
       return deferred.promise;
     };
     return automatonGraph;
