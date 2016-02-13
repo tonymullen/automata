@@ -638,8 +638,8 @@ angular.module('automata').factory('Automata', ['$resource',
     });
   }
 ])
-.factory('automatonGraph', [ '$document','$q',
-  function($document, $q){
+.factory('automatonGraph', [ '$timeout','$document','$q',
+  function($timeout, $document, $q){
   // use a factory instead of a directive, because cy.js is not just for visualisation; you need access to the graph model and events etc
   //angular.module('automata')
     var cy;
@@ -649,6 +649,7 @@ angular.module('automata').factory('Automata', ['$resource',
       var deferred = $q.defer();
 
       $document.ready(function(){
+        $timeout(function(){
       //$(function(){ // on dom ready
         cy = cytoscape({
           container: $('#cy')[0],
@@ -829,6 +830,7 @@ angular.module('automata').factory('Automata', ['$resource',
             cy.edgehandles(defaults);
           }
         });
+      }, 3000);//$timeout
       });
       return deferred.promise;
     };
