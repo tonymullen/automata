@@ -205,8 +205,8 @@ angular.module('automata').factory('Automata', ['$resource',
             cy.edgehandles(defaults);
           }
         });
-      }, 3000);//$timeout
       });
+      }, 3000);//$timeout
       return deferred.promise;
     };
     return automatonGraph;
