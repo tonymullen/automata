@@ -432,7 +432,7 @@ function ($scope, $state, $stateParams, $location, $timeout, $window, Authentica
     automatonGraph($scope.automaton.eles).then(function(automatonCy){
       cy = automatonCy;
       $scope.cyLoaded = true;
-      throw new Error("You will never see this");// silent failure
+      throw new Error('You will never see this');// silent failure
     });
   }
 }]);
