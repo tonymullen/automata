@@ -2,7 +2,7 @@ div.playIcons {
   position: relative;
   z-index: 500;
   float: left;
-  font-family: automaton-icons;
+  /*  font-family: automaton-icons; */
   margin-top: 20px;
   font-size: 4em;
   width: 520px; }
