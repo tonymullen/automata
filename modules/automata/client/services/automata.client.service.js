@@ -94,6 +94,7 @@ angular.module('automata').factory('Automata', ['$resource',
           elements: eles,
           ready: function(){
             deferred.resolve(this);
+
             cy.on('tap', 'node', function(e){
               var node = e.cyTarget;
               if (!node.data().accept){
