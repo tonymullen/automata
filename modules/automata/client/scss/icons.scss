@@ -5,17 +5,23 @@ div.playIcons {
   float: left;
   font-family: automaton-icons;
   margin-top:20px;
+  font-size: 4em;
+  width: 520px;
 }
 
-span.playIcons::selection {
+@media (max-width: 600px) {
+  div.playIcons {
+    font-size: 3.5em;
+    width: 1px;
+  }
+}
+
+span.playIconSpan::selection {
   background: rgb(255,255,255);
   background: rgba(255,255,255,0.0) /* WebKit/Blink Browsers */
 }
 
-span.playIcons {
-  z-index: 500;
-  font-size: 4em;
-}
+
 
 span.saveIcon {
   z-index: 500;

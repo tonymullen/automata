@@ -5,12 +5,9 @@ div.playIcons {
   float: left;
   font-family: automaton-icons;
   margin-top:20px;
-  z-index: 500;
   width: 520px;
   font-size: 4em;
 }
-
-
 
 span.playIconSpan::selection {
   background: rgb(255,255,255);
