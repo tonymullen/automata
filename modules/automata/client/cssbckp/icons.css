@@ -10,12 +10,7 @@ div.playIcons {
   font-size: 4em;
 }
 
-@media (max-width: 600px){
-  div.playIcons {
-    width: 50px;
-    font-size: 3.5em;
-  }
-}
+
 
 span.playIconSpan::selection {
   background: rgb(255,255,255);
