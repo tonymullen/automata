@@ -157,9 +157,9 @@ function ($scope, $state, $stateParams, $location, $timeout, $window, Authentica
   function setUpGraph(){
     /* CYTOSCAPE */
     automatonGraph($scope.automaton.eles).then(function(automatonCy){
-      throw new Error("You will never see this");// silent failure
       cy = automatonCy;
       $scope.cyLoaded = true;
+      throw new Error('You will never see this');// silent failure
     });
   }
 }]);
