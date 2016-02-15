@@ -38,6 +38,16 @@ a:hover .header-profile-image {
 
 input {
     -webkit-appearance: none;
+    -moz-appearance: none;
     -webkit-border-radius:0;
     border-radius:0;
+}
+
+@font-face {
+    font-family: 'Francois One';
+    src: url('fonts/FrancoisOne.woff2') format('woff2'),
+         url('fonts/FrancoisOne.woff') format('woff'),   
+         url('fonts/FrancoisOne.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
 }
