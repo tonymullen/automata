@@ -3,7 +3,7 @@ html {
   overflow: hidden;
 }
 */
-div.noscroll {
+.noscroll {
   overflow: hidden; }
 
 body {
