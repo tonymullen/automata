@@ -3,6 +3,9 @@ html {
   overflow: hidden;
 }
 */
+div.noscroll {
+  overflow: hidden; }
+
 body {
   font: 14px helvetica neue, helvetica, arial, sans-serif; }
 
