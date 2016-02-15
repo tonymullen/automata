@@ -19,7 +19,8 @@
     "cytoscape-edgehandles": "2.2.0",
     "ng-context-menu": "~1.0.2",
     "jquery-ui": "~1.11.4",
-    "jquery": "~2.1.4"
+    "jquery": "~2.1.4",
+    "jqueryui-touch-punch": "*"
   },
   "resolutions": {
     "angular": "~1.3",
