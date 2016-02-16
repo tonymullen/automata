@@ -7,6 +7,7 @@ section.container.autedit {
   padding: 0; }
 
 .noscroll {
+  height: calc(100vh - 50px);
   overflow: hidden; }
 
 body {
