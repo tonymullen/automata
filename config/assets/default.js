@@ -4,7 +4,7 @@ module.exports = {
   client: {
     lib: {
       css: [
-    /*    'https://fonts.googleapis.com/css?family=Francois+One',*/
+        'https://fonts.googleapis.com/css?family=Francois+One',
         'public/fonts',
         'public/fonts/automaton-icons/fonts',
         'public/fonts/automaton-icons/styles.css',
@@ -13,6 +13,7 @@ module.exports = {
       js: [
         'public/lib/jquery/dist/jquery.js',
         'public/lib/jquery-ui/jquery-ui.js',
+        'public/lib/jqueryui-touch-punch/jquery.ui.touch-punch.min.js',
         'public/lib/angular/angular.js',
         'public/lib/angular-resource/angular-resource.js',
         'public/lib/angular-animate/angular-animate.js',
