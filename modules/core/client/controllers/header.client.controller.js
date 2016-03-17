@@ -49,7 +49,6 @@ angular.module('core').controller('HeaderController', ['$scope', '$state', 'Auth
       }, function () {
         $log.info('Modal dismissed at: ' + new Date());
       });
-      console.log('create new');
     };
   }
 //]).controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, items) {

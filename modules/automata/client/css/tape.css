@@ -79,8 +79,8 @@ tr.tape-content > td {
   border: solid 1pt black; }
 
 tr.tape-content > td > input.tape-cell {
-  padding: 0;
   border: none;
+  padding: 0;
   font-family: 'Francois One', sans-serif;
   font-size: 2em;
   text-transform: uppercase;

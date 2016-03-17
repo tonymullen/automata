@@ -45,9 +45,9 @@ input {
 
 @font-face {
     font-family: 'Francois One';
-    src: url('fonts/FrancoisOne.woff2') format('woff2'),
-         url('fonts/FrancoisOne.woff') format('woff'),   
-         url('fonts/FrancoisOne.ttf') format('truetype');
+    src: url('/fonts/FrancoisOne.woff2') format('woff2'),
+         url('/fonts/FrancoisOne.woff') format('woff'),
+         url('/fonts/FrancoisOne.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }

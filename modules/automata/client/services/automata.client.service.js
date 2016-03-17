@@ -41,7 +41,7 @@ angular.module('automata').factory('Automata', ['$resource',
           style: cytoscape.stylesheet()
             .selector('node')
               .css({
-                'content': 'data(id)',
+                'content': 'data(label)',
                 'text-valign': 'center',
                 'color': 'black',
                 'background-color': 'white',
@@ -52,6 +52,10 @@ angular.module('automata').factory('Automata', ['$resource',
               .css({
                 'border-style': 'double',
                 'border-width': '6px'
+              })
+            .selector('.toDelete')
+              .css({
+                'overlay-color' : 'red'
               })
             .selector('edge')
               .css({
@@ -94,8 +98,83 @@ angular.module('automata').factory('Automata', ['$resource',
           elements: eles,
           ready: function(){
             deferred.resolve(this);
+            var clickstart;
+            var clickstop = 0;
+            var del = false;
 
+            cy.on('click', 'node', function(e){
+              var node = e.cyTarget;
+              if (!node.data().accept){
+                node.data().accept = true;
+                node.addClass('accept');
+                if (node.data().start){
+                  cy.$('#start').position({
+                    x: cy.$('#start').position('x') - 2,
+                  });
+                }
+              }else{
+                node.data().accept = false;
+                node.removeClass('accept');
+                if (node.data().start){
+                  cy.$('#start').position({
+                    x: cy.$('#start').position('x') + 2,
+                  });
+                }
+              }
+            });
+
+            cy.on('vmousedown', 'node', function(e){
+              var node = e.cyTarget;
+              clickstart = e.timeStamp;
+            });
+            cy.on('vmouseup', 'node', function(e){
+              var node = e.cyTarget;
+              clickstop = e.timeStamp - clickstart;
+              if(clickstop >= 750){
+                cy.remove('.toDelete');
+                var deleted = node.data('label');
+                if(del){
+                  cy.nodes().forEach(function(n){
+                    if(n.data('label') && n.data('label') > deleted){
+                      var newLabel = n.data('label') - 1;
+                      n.data('label', newLabel);
+                    }
+                  });
+                }
+              }//else{
+              //  console.log('shortclick');
+              //}
+              node.removeClass('toDelete');
+              clickstart = 0;
+              del = false;
+            });
+            cy.on('taphold', 'node', function(e){
+              var node = e.cyTarget;
+              if(!(node.id() === 'start' || node.id() === '0')){
+                node.addClass('toDelete');
+                del = true;
+              }
+            });
+
+            var tappedBefore;
+            var tappedTimeout;
             cy.on('tap', 'node', function(e){
+              var node = e.cyTarget;
+              if(tappedTimeout && tappedBefore){
+                clearTimeout(tappedTimeout);
+              }
+              if(tappedBefore === node) {
+                node.trigger('doubleTap');
+                tappedBefore = null;
+              } else {
+                tappedTimeout = setTimeout(function(){
+                  tappedBefore = null;
+                }, 300);
+                tappedBefore = node;
+              }
+            });
+
+            cy.on('doubleTap', function(e){
               var node = e.cyTarget;
               if (!node.data().accept){
                 node.data().accept = true;
@@ -119,9 +198,10 @@ angular.module('automata').factory('Automata', ['$resource',
             cy.on('tap', function(e){
               if(e.cyTarget === cy){
                 var ind = cy.nodes().length - 1;
+                //console.log(ind);
                 cy.add({
                   group: 'nodes',
-                  data: { id: ind,
+                  data: { label: ind,
                           weight: 75 },
                   classes: 'enode',
                   position: { x: e.cyPosition.x, y: e.cyPosition.y }
@@ -129,12 +209,12 @@ angular.module('automata').factory('Automata', ['$resource',
               //  cy.elements().removeClass('faded');
               }
             });
-
+/*
             cy.on('cxttap', 'node', function(e){
               var node = e.cyTarget;
               console.log('right tapped node '+node.id());
             });
-
+*/
             cy.on('drag', '#0', function(e){
               cy.$('#start').position({
                 x: cy.$('#0').position('x') - (e.cyTarget.data().accept ? 34 : 32),
@@ -153,7 +233,7 @@ angular.module('automata').factory('Automata', ['$resource',
             var defaults = {
               preview: true, // whether to show added edges preview before releasing selection
               stackOrder: 4, // Controls stack order of edgehandles canvas element by setting it's z-index
-              handleSize: 10, // the size of the edge handle put on nodes
+              handleSize: 15, // the size of the edge handle put on nodes
               handleColor: '#777777', // the colour of the handle and the line drawn from it
               handleLineType: 'ghost', // can be 'ghost' for real edge, 'straight' for a straight line, or 'draw' for a draw-as-you-go line
               handleLineWidth: 1, // width of handle line in pixels
