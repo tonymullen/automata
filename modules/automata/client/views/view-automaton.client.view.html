@@ -67,14 +67,22 @@
      <tr>
      <td>
       <div class="form-group">
-        <label for="read">Read symbol</label>
-        <input type="text" ng-model="labels.read" maxlength="1" class="form-control edgeLabelSymbolInput" id="read" required/>
+      <label for="read">Read symbol</label>
+      <form name="readForm">
+        <select name="read" id="read" ng-model="labels.read" class="form-control edgeLabelSymbolInput" >
+        <option ng-repeat="symbol in alphabet" value="{{ symbol }}">{{ symbol }}</option>
+      </select>
+      </form>
       </div>
       </td>
       <td>
       <div class="form-group">
         <label for="action">Action</label>
-        <input type="text" ng-model="labels.act" maxlength="1" class="form-control edgeLabelSymbolInput" id="action" required/>
+        <form name="actionForm">
+          <select name="action" id="action" ng-model="labels.act" class="form-control edgeLabelSymbolInput" >
+          <option ng-repeat="symbol in act_alph" value="{{ symbol }}">{{ symbol }}</option>
+        </select>
+        </form>
       </div>
       </td>
       </tr>

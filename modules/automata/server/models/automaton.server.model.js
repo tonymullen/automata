@@ -38,6 +38,7 @@ var AutomatonSchema = new Schema({
       {
         data: {
           id: String,
+          label: String,
           start: Boolean,
           accept: Boolean
         },
@@ -58,7 +59,8 @@ var AutomatonSchema = new Schema({
         }
       }
     ]
-  }
+  },
+  alphabet: [String]
 });
 
 mongoose.model('Automaton', AutomatonSchema);

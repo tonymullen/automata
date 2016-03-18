@@ -2,7 +2,6 @@
 
 angular.module('automata').controller('AddEdgeModalController', ['$scope', '$uibModal', '$log',
 function ($scope, $uibModal, $log) {
-
   $scope.open = function (size, addedEntities) {
     var modalInstance = $uibModal.open({
       animation: true,
@@ -11,6 +10,9 @@ function ($scope, $uibModal, $log) {
       backdrop: 'static',
       size: size,
       resolve: {
+        alphabet: function () {
+          return $scope.$parent.automaton.alphabet;
+        },
         addedEntities: function () {
           return addedEntities;
         }
@@ -29,10 +31,11 @@ function ($scope, $uibModal, $log) {
 // It is not the same as the $uibModal service used above.
 
 angular.module('automata').controller('AddEdgeModalInstanceCtrl',
-['$scope', '$uibModalInstance', 'addedEntities',
-function ($scope, $uibModalInstance, addedEntities) {
+['$scope', '$uibModalInstance', 'addedEntities', 'alphabet',
+function ($scope, $uibModalInstance, addedEntities, alphabet) {
+  $scope.alphabet = alphabet;
+  $scope.act_alph = alphabet.concat(['<','>'])
   $scope.addedEntities = addedEntities;
-
   $scope.ok = function () {
     var read = $scope.labels.read.toUpperCase();
     var act = $scope.labels.act.toUpperCase();

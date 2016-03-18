@@ -198,7 +198,6 @@ angular.module('automata').factory('Automata', ['$resource',
             cy.on('tap', function(e){
               if(e.cyTarget === cy){
                 var ind = cy.nodes().length - 1;
-                //console.log(ind);
                 cy.add({
                   group: 'nodes',
                   data: { label: ind,
@@ -209,12 +208,13 @@ angular.module('automata').factory('Automata', ['$resource',
               //  cy.elements().removeClass('faded');
               }
             });
-/*
+
             cy.on('cxttap', 'node', function(e){
               var node = e.cyTarget;
-              console.log('right tapped node '+node.id());
+              node.removeClass('toDelete');
+              del = false;
             });
-*/
+
             cy.on('drag', '#0', function(e){
               cy.$('#start').position({
                 x: cy.$('#0').position('x') - (e.cyTarget.data().accept ? 34 : 32),

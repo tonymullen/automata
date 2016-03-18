@@ -140,6 +140,7 @@ function ($scope, $state, $stateParams, $location, $timeout, $window, Authentica
     $scope.automaton = new Automata({
       title: 'untitled automaton',
       machine: $state.current.data.type,
+      alphabet: ['A','B','1','0','_'],
       eles: {
         nodes: [
           { data: { id: 'start' }, classes: 'startmarker' },
