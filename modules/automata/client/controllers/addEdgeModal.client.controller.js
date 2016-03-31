@@ -34,7 +34,7 @@ angular.module('automata').controller('AddEdgeModalInstanceCtrl',
 ['$scope', '$uibModalInstance', 'addedEntities', 'alphabet',
 function ($scope, $uibModalInstance, addedEntities, alphabet) {
   $scope.alphabet = alphabet;
-  $scope.act_alph = alphabet.concat(['<','>'])
+  $scope.act_alph = alphabet.concat(['<','>']);
   $scope.addedEntities = addedEntities;
   $scope.ok = function () {
     var read = $scope.labels.read.toUpperCase();
