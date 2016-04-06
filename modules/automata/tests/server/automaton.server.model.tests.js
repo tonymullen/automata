@@ -11,7 +11,8 @@ var should = require('should'),
 /**
  * Globals
  */
-var user, automaton;
+var user;
+var automaton;
 
 /**
  * Unit tests

@@ -22,8 +22,8 @@ module.exports = function (app, db) {
     var options = {
       key: privateKey,
       cert: certificate,
-      //  requestCert : true,
-      //  rejectUnauthorized : true,
+      //  requestCert: true,
+      //  rejectUnauthorized: true,
       secureProtocol: 'TLSv1_method',
       ciphers: [
         'ECDHE-RSA-AES128-GCM-SHA256',

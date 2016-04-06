@@ -68,7 +68,7 @@
         automatonResolve: {}
       });
 
-      //Spy on state go
+      // Spy on state go
       spyOn($state, 'go');
     }));
 
@@ -97,7 +97,7 @@
 
         // Test URL redirection after the article was created
         expect($state.go).toHaveBeenCalledWith('automata.view', {
-          articleId: mockAutomaton._id
+          automatonId: mockAutomaton._id
         });
       }));
 
@@ -152,12 +152,13 @@
 
     describe('vm.remove()', function () {
       beforeEach(function () {
-        //Setup articles
+        // Setup articles
         $scope.vm.automaton = mockAutomaton;
       });
 
       it('should delete the automaton and redirect to automata', function () {
-        //Return true on confirm message
+        // Return true on confirm message
+
         spyOn(window, 'confirm').and.returnValue(true);
 
         $httpBackend.expectDELETE(/api\/automata\/([0-9a-fA-F]{24})$/).respond(204);
@@ -170,7 +171,8 @@
 
 
       it('should should not delete the automaton and not redirect', function () {
-        //Return false on confirm message
+        // Return false on confirm message
+
         spyOn(window, 'confirm').and.returnValue(false);
 
         $scope.vm.remove();
@@ -179,4 +181,4 @@
       });
     });
   });
-})();
+}());

@@ -1,7 +1,7 @@
-$assetPath : "/images";
+$assetPath: "/images";
 
 @if compass-env() == 'development' {
-    $assetPath : "/images";
+    $assetPath: "/images";
 }
 
 

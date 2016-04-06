@@ -1,6 +1,9 @@
-'use strict';
+(function (app) {
+  'use strict';
 
-// Use Applicaion configuration module to register a new module
-ApplicationConfiguration.registerModule('itsADrag');
-ApplicationConfiguration.registerModule('resizeIt');
-ApplicationConfiguration.registerModule('windows',['itsADrag','resizeIt']);
+  // Use Applicaion configuration module to register a new module
+  app.registerModule('itsADrag');
+  app.registerModule('resizeIt');
+  app.registerModule('windows', ['itsADrag', 'resizeIt']);
+
+}(ApplicationConfiguration));

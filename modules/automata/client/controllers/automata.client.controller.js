@@ -1,165 +1,127 @@
-'use strict';
+(function () {
+  'use strict';
 
-// Automata controller
+  angular
+    .module('automata')
+    .controller('AutomataController', AutomataController);
 
-angular.module('automata').controller('AutomataController', ['$scope', '$state', '$stateParams', '$location', '$timeout', '$window', 'Authentication', 'Automata', 'automatonGraph',
-function ($scope, $state, $stateParams, $location, $timeout, $window, Authentication, Automata, automatonGraph) {
-  var cy; //ref to cy
+  AutomataController.$inject =
+            ['$scope', '$state', '$window',
+            '$timeout', '$location', '$stateParams',
+            'Authentication', 'automatonResolve',
+            'automatonGraph', 'AutomataService'];
 
-  var empty_tape = [];
-  for(var i = 0; i < 50; i++){
-    empty_tape.push(' ');
-  }
+  function AutomataController($scope, $state, $window,
+          $timeout, $location, $stateParams,
+          Authentication, automaton,
+          automatonGraph, AutomataService) {
+    var vm = this;
+    vm.automaton = automaton;
+    vm.authentication = Authentication;
+    vm.error = null;
+    // vm.form = {};
+    vm.remove = remove;
+    vm.save = save;
 
-  $scope.authentication = Authentication;
 
-  $scope.labels = { read: '', act: '' };
+    vm.automaton.machine = vm.automaton.machine || $state.current.data.type;
+    vm.automaton.title = vm.automaton.title || (function() {
+      if ($state.current.data.type === 'fsa') return 'Untitled Finite-State Automaton';
+      else if ($state.current.data.type === 'pda') return 'Untitled Pushdown Automaton';
+      else return 'Untitled Turing Machine';
+    }());
+    console.log(vm.automaton.title);
 
-  $scope.createOrUpdate = function(isValid){
-    if ($scope.automaton._id){
-      $scope.update(isValid);
-    } else {
-      $scope.create(isValid);
+    // Copied from previous controller
+    var cy; // ref to cy
+
+    vm.labels = { read: '', act: '' };
+
+    // Remove existing Automaton
+    function remove() {
+      if ($window.confirm('Are you sure you want to delete?')) {
+        vm.automaton.$remove($state.go('automata.list'));
+      }
     }
-  };
 
-  // Create new Automaton in the database
-  $scope.create = function (isValid) {
-    //var automaton;
-    $scope.error = null;
-    if (!isValid) {
-      $scope.$broadcast('show-errors-check-validity', 'automatonForm');
-      return false;
+    // Save Automaton
+    function save(isValid) {
+      if (!isValid) {
+        $scope.$broadcast('show-errors-check-validity', 'vm.form.automataForm');
+        return false;
+      }
+
+      vm.automaton.eles.nodes = cy.nodes().jsons();
+      vm.automaton.eles.edges = cy.edges().jsons();
+
+      // TODO: move create/update logic to service
+      if (vm.automaton._id) {
+        vm.automaton.$update(successCallback, errorCallback);
+      } else {
+        vm.automaton.$save(successCallback, errorCallback);
+      }
+
+      function successCallback(res) {
+        // vm.automaton = AutomataService.get({
+
+        vm.automaton._id = res._id;
+        // vm.automaton = AutomataService.get({
+        //  automatonId: res._id
+        // }).$promise;
+
+        /*
+        $state.go('automata.view', {
+          automatonId: res._id
+        });
+        */
+      }
+
+      function errorCallback(res) {
+        vm.error = res.data.message;
+      }
     }
 
-    $scope.automaton.eles.nodes = cy.nodes().jsons();
-    $scope.automaton.eles.edges = cy.edges().jsons();
-
-    var automaton = $scope.automaton;
-
-    automaton.$save(function (response) {
-        // Clear form fields
-        //$scope.title = '';
-      $scope.automaton = Automata.get({
-        automatonId: response._id
-      },function(){});
-    }, function (errorResponse) {
-      $scope.error = errorResponse.data.message;
-    });
-  };
-
-  // Remove existing Automaton
-  $scope.remove = function (automaton) {
-    if (automaton) {
-      automaton.$remove();
-      for (var i in $scope.automata) {
-        if ($scope.automata[i] === automaton) {
-          $scope.automata.splice(i, 1);
+    // Copied over from previous version
+    $scope.focusNext = function(event, index) {
+      // changes focus to the next tape cell when a key is pressed
+      var nextInd;
+      if (event.keyCode === 8) {
+        vm.automaton.tape.contents[index] = String.fromCharCode(event.keyCode);
+        // backspace key
+        if (index > 0) {
+          nextInd = index - 1;
+        } else {
+          nextInd = index;
+        }
+      } else if (event.keyCode === 37) {
+        // leftarrow
+        if (index > 0) {
+          nextInd = index - 1;
+        } else {
+          vm.automaton.tape.contents.unshift(' ');
+          nextInd = 0;
+          angular.element(document.querySelector('.cell-' + nextInd))[0].blur();
+        }
+      } else {
+        vm.automaton.tape.contents[index] = String.fromCharCode(event.keyCode);
+        nextInd = index + 1;
+        if (vm.automaton.tape.contents.length === nextInd) {
+          vm.automaton.tape.contents.push(' ');
         }
       }
-    } else {
-      $scope.automaton.$remove(function () {
-        $location.path('automata');
+      $timeout(function() {
+        angular.element(document.querySelector('.cell-' + nextInd))[0].focus();
+      }, 0);
+    };
+
+    // setUpGraph();
+
+    (function setUpGraph() {
+      /* CYTOSCAPE */
+      automatonGraph(vm.automaton.eles).then(function(automatonCy) {
+        cy = automatonCy;
+        vm.cyLoaded = true;
       });
-    }
-  };
-
-  // Update existing Automaton
-  $scope.update = function (isValid) {
-    $scope.error = null;
-    if (!isValid) {
-      $scope.$broadcast('show-errors-check-validity', 'automatonForm');
-      return false;
-    }
-
-    $scope.automaton.eles.nodes = cy.nodes().jsons();
-    $scope.automaton.eles.edges = cy.edges().jsons();
-
-    var automaton = $scope.automaton;
-    automaton.$update(function () {
-
-    }, function (errorResponse) {
-      $scope.error = errorResponse.data.message;
-    });
-
-  };
-
-  // Find a list of Automata
-  $scope.find = function () {
-    $scope.automata = Automata.query();
-  };
-
-  // Find existing Automata
-  $scope.findOne = function () {
-    $scope.automaton = Automata.get({
-      automatonId: $stateParams.automatonId
-    },function(){
-      setUpGraph();
-    });
-  };
-
-  $scope.onTextClick = function ($event) {
-    $event.target.blur();
-    $event.target.focus();
-  };
-
-  $scope.focusNext = function(event, index){
-    //changes focus to the next tape cell when a key is pressed
-    var nextInd;
-    if(event.keyCode === 8){
-      $scope.automaton.tape.contents[index] = String.fromCharCode(event.keyCode);
-      //backspace key
-      if(index > 0){
-        nextInd = index - 1;
-      }else{
-        nextInd = index;
-      }
-    }else if(event.keyCode === 37){
-      //leftarrow
-      if(index > 0){
-        nextInd = index - 1;
-      }else{
-        $scope.automaton.tape.contents.unshift(' ');
-        nextInd = 0;
-        angular.element(document.querySelector('.cell-'+nextInd))[0].blur();
-      }
-    }else{
-      $scope.automaton.tape.contents[index] = String.fromCharCode(event.keyCode);
-      nextInd = index + 1;
-      if($scope.automaton.tape.contents.length === nextInd){
-        $scope.automaton.tape.contents.push(' ');
-      }
-    }
-    $timeout(function(){
-    //  angular.element(document.querySelector('.cell-'+index))[0].blur();
-      angular.element(document.querySelector('.cell-'+nextInd))[0].focus();
-    }, 0);
-  };
-
-  if($state.current.data && $state.current.data.type){
-    $scope.automaton = new Automata({
-      title: 'untitled automaton',
-      machine: $state.current.data.type,
-      alphabet: ['A','B','1','0','_'],
-      eles: {
-        nodes: [
-          { data: { id: 'start' }, classes: 'startmarker' },
-          { data: { id: '0', label: 0, start: true }, classes: 'enode', position: { x: 0, y: 0 } }],
-        edges: []
-      },
-      tape: {
-        position: 0,
-        contents: empty_tape
-      }
-    });
-    setUpGraph();
+    }());
   }
-
-  function setUpGraph(){
-    /* CYTOSCAPE */
-    automatonGraph($scope.automaton.eles).then(function(automatonCy){
-      cy = automatonCy;
-      $scope.cyLoaded = true;
-    });
-  }
-}]);
+}());

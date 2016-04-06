@@ -20,13 +20,12 @@ var AutomatonSchema = new Schema({
   },
   title: {
     type: String,
-    default: 'Untitled automaton',
     trim: true,
     required: 'Title cannot be blank'
   },
   machine: {
     type: String,
-    enum: ['tm','fsa','pda']
+    enum: ['tm', 'fsa', 'pda']
   },
   determ: { type: Boolean, default: true },
   tape: {

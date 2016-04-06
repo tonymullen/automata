@@ -1,12 +1,14 @@
 <section class="container">
+  <!--
 <section ng-controller="AutomataController" ng-init="find()">
+-->
   <div class="page-header">
     <h1>Automata</h1>
   </div>
   <div class="list-group">
-    <a ng-repeat="automaton in automata" ui-sref="automata.view({automatonId: automaton._id})" class="list-group-item">
+    <a ng-repeat="automaton in vm.automata" ui-sref="automata.view({automatonId: automaton._id})" class="list-group-item">
       <small class="list-group-item-text">
-        Posted on
+        Created on
         <span ng-bind="automaton.created | date:'mediumDate'"></span>
         by
         <span ng-bind="automaton.user.displayName"></span>
@@ -14,9 +16,6 @@
       <h4 class="list-group-item-heading" ng-bind="automaton.title"></h4>
       <p class="list-group-item-text" ng-bind="automaton.content"></p>
     </a>
-  </div>
-  <div class="alert alert-warning text-center" ng-if="automata.$resolved && !automata.length">
-    No automata yet, why don't you <a ui-sref="automata.create">create one</a>?
   </div>
 </section>
 </section>

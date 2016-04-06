@@ -9,7 +9,7 @@ var path = require('path'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller'));
 
 /**
- * Create an article
+ * Create an automaton
  */
 exports.create = function (req, res) {
   var automaton = new Automaton(req.body);
@@ -30,7 +30,14 @@ exports.create = function (req, res) {
  * Show the current automaton
  */
 exports.read = function (req, res) {
-  res.json(req.automaton);
+  // convert mongoose document to JSON
+  var automaton = req.automaton ? req.automaton.toJSON() : {};
+
+  // Add a custom field to the Automaton, for determining if the current User is the "owner".
+  // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Automaton model.
+  automaton.isCurrentUserOwner = !!(req.user && automaton.user && automaton.user._id.toString() === req.user._id.toString());
+
+  res.json(automaton);
 };
 
 /**
@@ -87,7 +94,6 @@ exports.list = function (req, res) {
  * Automaton middleware
  */
 exports.automatonByID = function (req, res, next, id) {
-
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).send({
       message: 'Automaton is invalid'

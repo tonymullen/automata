@@ -11,7 +11,11 @@ var should = require('should'),
 /**
  * Globals
  */
-var app, agent, credentials, user, automaton;
+var app;
+var agent;
+var credentials;
+var user;
+var automaton;
 
 /**
  * Automaton routes tests

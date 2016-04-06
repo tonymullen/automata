@@ -11,7 +11,7 @@ function ($scope, $uibModal, $log) {
       size: size,
       resolve: {
         alphabet: function () {
-          return $scope.$parent.automaton.alphabet;
+          return $scope.$parent.vm.automaton.alphabet;
         },
         addedEntities: function () {
           return addedEntities;
@@ -34,14 +34,14 @@ angular.module('automata').controller('AddEdgeModalInstanceCtrl',
 ['$scope', '$uibModalInstance', 'addedEntities', 'alphabet',
 function ($scope, $uibModalInstance, addedEntities, alphabet) {
   $scope.alphabet = alphabet;
-  $scope.act_alph = alphabet.concat(['<','>']);
+  $scope.act_alph = alphabet.concat(['<', '>']);
   $scope.addedEntities = addedEntities;
   $scope.ok = function () {
     var read = $scope.labels.read.toUpperCase();
     var act = $scope.labels.act.toUpperCase();
     addedEntities.data('read', read);
     addedEntities.data('action', act);
-    addedEntities.data('label', read +':'+ act);
+    addedEntities.data('label', read + ':' + act);
     $uibModalInstance.close();
   };
 

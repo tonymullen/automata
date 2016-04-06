@@ -106,14 +106,14 @@ angular.element(document).ready(function () {
 'use strict';
 
 // Use Applicaion configuration module to register a new module
-ApplicationConfiguration.registerModule('automata',['windows','ui.bootstrap']);
+ApplicationConfiguration.registerModule('automata', ['windows', 'ui.bootstrap']);
 
 'use strict';
 
 // Use Applicaion configuration module to register a new module
 ApplicationConfiguration.registerModule('itsADrag');
 ApplicationConfiguration.registerModule('resizeIt');
-ApplicationConfiguration.registerModule('windows',['itsADrag','resizeIt']);
+ApplicationConfiguration.registerModule('windows', ['itsADrag', 'resizeIt']);
 
 'use strict';
 
@@ -280,7 +280,7 @@ function ($scope, $state, $stateParams, $location, $timeout, $window, Authentica
   var cy; //ref to cy
 
   var empty_tape = [];
-  for(var i = 0; i < 50; i++){
+  for(var i = 0; i < 50; i++) {
     empty_tape.push(' ');
   }
 
@@ -288,8 +288,8 @@ function ($scope, $state, $stateParams, $location, $timeout, $window, Authentica
 
   $scope.labels = { read: '', act: '' };
 
-  $scope.createOrUpdate = function(isValid){
-    if ($scope.automaton._id){
+  $scope.createOrUpdate = function(isValid) {
+    if ($scope.automaton._id) {
       $scope.update(isValid);
     } else {
       $scope.create(isValid);
@@ -315,7 +315,7 @@ function ($scope, $state, $stateParams, $location, $timeout, $window, Authentica
         //$scope.title = '';
       $scope.automaton = Automata.get({
         automatonId: response._id
-      },function(){});
+      },function() {});
     }, function (errorResponse) {
       $scope.error = errorResponse.data.message;
     });
@@ -366,7 +366,7 @@ function ($scope, $state, $stateParams, $location, $timeout, $window, Authentica
   $scope.findOne = function () {
     $scope.automaton = Automata.get({
       automatonId: $stateParams.automatonId
-    },function(){
+    },function() {
       setUpGraph();
     });
   };
@@ -376,20 +376,20 @@ function ($scope, $state, $stateParams, $location, $timeout, $window, Authentica
     $event.target.focus();
   };
 
-  $scope.focusNext = function(event, index){
+  $scope.focusNext = function(event, index) {
     //changes focus to the next tape cell when a key is pressed
     var nextInd;
-    if(event.keyCode === 8){
+    if (event.keyCode === 8) {
       $scope.automaton.tape.contents[index] = String.fromCharCode(event.keyCode);
       //backspace key
-      if(index > 0){
+      if (index > 0) {
         nextInd = index - 1;
       }else{
         nextInd = index;
       }
-    }else if(event.keyCode === 37){
+    }else if (event.keyCode === 37) {
       //leftarrow
-      if(index > 0){
+      if (index > 0) {
         nextInd = index - 1;
       }else{
         $scope.automaton.tape.contents.unshift(' ');
@@ -399,17 +399,17 @@ function ($scope, $state, $stateParams, $location, $timeout, $window, Authentica
     }else{
       $scope.automaton.tape.contents[index] = String.fromCharCode(event.keyCode);
       nextInd = index + 1;
-      if($scope.automaton.tape.contents.length === nextInd){
+      if ($scope.automaton.tape.contents.length === nextInd) {
         $scope.automaton.tape.contents.push(' ');
       }
     }
-    $timeout(function(){
+    $timeout(function() {
     //  angular.element(document.querySelector('.cell-'+index))[0].blur();
       angular.element(document.querySelector('.cell-'+nextInd))[0].focus();
     }, 0);
   };
 
-  if($state.current.data && $state.current.data.type){
+  if ($state.current.data && $state.current.data.type) {
     $scope.automaton = new Automata({
       title: 'untitled automaton',
       machine: $state.current.data.type,
@@ -427,9 +427,9 @@ function ($scope, $state, $stateParams, $location, $timeout, $window, Authentica
     setUpGraph();
   }
 
-  function setUpGraph(){
+  function setUpGraph() {
     /* CYTOSCAPE */
-    automatonGraph($scope.automaton.eles).then(function(automatonCy){
+    automatonGraph($scope.automaton.eles).then(function(automatonCy) {
       cy = automatonCy;
       $scope.cyLoaded = true;
     });
@@ -440,7 +440,7 @@ function ($scope, $state, $stateParams, $location, $timeout, $window, Authentica
 
 /***** Draggable Library *****/
 
-angular.module('itsADrag',[])
+angular.module('itsADrag', [])
 
 /**
   Possible element attributes:
@@ -450,16 +450,16 @@ angular.module('itsADrag',[])
     4.  group
     5.  placeholder
 **/
-.directive('draggable',[function(){
+.directive('draggable', [function() {
   return {
-    restrict : 'AE',
-    link : function(scope,el,attrs){
+    restrict: 'AE',
+    link: function(scope,el,attrs) {
       scope.minimized = false;
       // draggable object properties
       scope.obj = {
-        id : null,
-        content : '',
-        group : null
+        id: null,
+        content: '',
+        group: null
       };
       scope.placeholder = false;
 
@@ -467,42 +467,42 @@ angular.module('itsADrag',[])
 
       scope.obj.content = el.html(); // store object's content
 
-      if(angular.isDefined(attrs.id))
+      if (angular.isDefined(attrs.id))
         scope.obj.id = attrs.id;
 
-      if(angular.isDefined(attrs.placeholder))
+      if (angular.isDefined(attrs.placeholder))
         scope.placeholder = scope.$eval(attrs.placeholder);
 
       // options for jQuery UI's draggable method
-      var opts = (angular.isDefined(attrs.draggable)) ? scope.$eval(attrs.draggable) : {};
+      var opts = (angular.isDefined(attrs.draggable)) ? scope.$eval(attrs.draggable): {};
 
-      if(angular.isDefined(attrs.group)){
+      if (angular.isDefined(attrs.group)) {
         scope.obj.group = attrs.group;
         opts.stack = '.' + attrs.group;
       }
 
       // event handlers
       var evts = {
-        start : function(evt,ui){
-          if(scope.placeholder) // ui.helper is jQuery object
+        start: function(evt,ui) {
+          if (scope.placeholder) // ui.helper is jQuery object
             ui.helper.wrap('<div class="dragging"></div>');
 
-          scope.$apply(function(){ // emit event in angular context
+          scope.$apply(function() { // emit event in angular context
             scope.$emit('draggable.started',{ obj: scope.obj });
           }); // end $apply
         }, // end start
 
-        drag : function(evt){
-          scope.$apply(function(){ // emit event in angular context
+        drag: function(evt) {
+          scope.$apply(function() { // emit event in angular context
             scope.$emit('draggable.dragging');
           }); // end $apply
         }, // end drag
 
-        stop : function(evt,ui){
-          if(scope.placeholder)
+        stop: function(evt,ui) {
+          if (scope.placeholder)
             ui.helper.unwrap();
 
-          scope.$apply(function(){ // emit event in angular context
+          scope.$apply(function() { // emit event in angular context
             scope.$emit('draggable.stopped');
           }); // end $apply
         } // end stop
@@ -515,56 +515,56 @@ angular.module('itsADrag',[])
   }; // end return
 }]) // end draggable
 
-.run(['$templateCache',function($templateCache){
-  $templateCache.put('/tmpls/draggable/default','<div ng-transclude></div>');
+.run(['$templateCache',function($templateCache) {
+  $templateCache.put('/tmpls/draggable/default', '<div ng-transclude></div>');
 }]); // end itsADrag.run
 
-angular.module('resizeIt',[])
+angular.module('resizeIt', [])
 /**
   jQuery UI resizable adds exact pixel width and heights to the element via a style tag.
 **/
-.directive('resizeable',['$timeout', function($timeout){
+.directive('resizeable', ['$timeout', function($timeout) {
   return {
-    restrict : 'A',
-    link : function(scope,el,attrs,ctrlr){
+    restrict: 'A',
+    link: function(scope,el,attrs,ctrlr) {
       scope.obj = {
-        el : null,
-        id : null,
-        size : null // {width,height}
+        el: null,
+        id: null,
+        size: null // {width,height}
       };
 
       /*** Setup ***/
 
       scope.obj.el = el; // save handle to element
 
-      if(angular.isDefined(attrs.id))
+      if (angular.isDefined(attrs.id))
         scope.obj.id = attrs.id;
 
-      var opts = (angular.isDefined(attrs.resizeable)) ? scope.$eval(attrs.resizeable) : {};
+      var opts = (angular.isDefined(attrs.resizeable)) ? scope.$eval(attrs.resizeable): {};
 
       var evts = {
-        create : function(evt,ui){
-          $timeout(function(){
+        create: function(evt,ui) {
+          $timeout(function() {
             scope.$emit('resizeable.create',{ obj: scope.obj });
           });
         },// end create
 
-        start : function(evt,ui){
-          scope.$apply(function(){
+        start: function(evt,ui) {
+          scope.$apply(function() {
             scope.$emit('resizeable.start',{ obj: scope.obj });
           });
         }, // end start
 
-        stop : function(evt,ui){
-          scope.$apply(function(){
+        stop: function(evt,ui) {
+          scope.$apply(function() {
             scope.$emit('resizeable.stop',{ 'ui': ui });
             scope.obj.size = angular.copy(ui.size);
             //console.log(scope.obj.size);
           });
         }, // end stop
 
-        resize : function(evt,ui){
-          scope.$apply(function(){
+        resize: function(evt,ui) {
+          scope.$apply(function() {
             scope.$emit('resizeable.resizing');
           });
         } // end resize
@@ -575,39 +575,39 @@ angular.module('resizeIt',[])
 
       /*** Listeners ***/
 
-      scope.$on('resizeable.set.width',function(evt,params){
-        if(angular.isDefined(params.width))
+      scope.$on('resizeable.set.width',function(evt,params) {
+        if (angular.isDefined(params.width))
           el.css('width',parseInt(params.width) + 'px');
       }); // end on(resizeable.set.width
 
-      scope.$on('resizeable.reset.width',function(evt){
-        if(angular.isDefined(scope.obj.size))
+      scope.$on('resizeable.reset.width',function(evt) {
+        if (angular.isDefined(scope.obj.size))
           el.css('width',scope.obj.size.width + 'px');
       }); // end on(resizeable.reset.width)
     } // end link
   }; // end return
 }]); // end resizeable
 
-angular.module('windows',['ngAnimate','itsADrag','resizeIt'])
+angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
 
-.directive('window',['$animate',function($animate){
+.directive('window', ['$animate',function($animate) {
   return {
-    restrict : 'E',
-    transclude : true,
-    replace : true,
-    templateUrl : 'modules/automata/client/partials/tape.html',
-    scope : {
-      id : '@id',
-      title : '@title'
+    restrict: 'E',
+    transclude: true,
+    replace: true,
+    templateUrl: 'modules/automata/client/partials/tape.html',
+    scope: {
+      id: '@id',
+      title: '@title'
     },
-    link : function(scope,el,attr){
+    link: function(scope,el,attr) {
       scope.minimized = false;
 
       /** Methods **/
-      scope.minimize = function(){
+      scope.minimize = function() {
         scope.minimized = !scope.minimized;
 
-        if(angular.equals(scope.minimized,true)){
+        if (angular.equals(scope.minimized,true)) {
           $animate.addClass(el,'minimize');
         }else{
           $animate.removeClass(el,'minimize');
@@ -619,7 +619,7 @@ angular.module('windows',['ngAnimate','itsADrag','resizeIt'])
 }]) // end window
 
 
-.run(['$templateCache', '$http', function($templateCache, $http){
+.run(['$templateCache', '$http', function($templateCache, $http) {
   $http.get('modules/automata/client/partials/tape.html', { cache:$templateCache });
 }]); // end windows
 
@@ -639,17 +639,17 @@ angular.module('automata').factory('Automata', ['$resource',
   }
 ])
 .factory('automatonGraph', ['$q',
-  function($q){
+  function($q) {
   // use a factory instead of a directive, because cy.js is not just for visualisation; you need access to the graph model and events etc
   //angular.module('automata')
     var cy;
 
-    var automatonGraph = function(eles){
+    var automatonGraph = function(eles) {
 
       var deferred = $q.defer();
 
-      //$document.ready(function(){
-      $(function(){ // on dom ready
+      //$document.ready(function() {
+      $(function() { // on dom ready
         cy = cytoscape({
           container: $('#cy')[0],
           boxSelectionEnabled: false,
@@ -683,7 +683,7 @@ angular.module('automata').factory('Automata', ['$resource',
                 'label': 'data(label)',
                 'edge-text-rotation': 'autorotate',
                 'curve-style': 'bezier',
-                'control-point-step-size' : '70px',
+                'control-point-step-size': '70px',
                 'target-arrow-shape': 'triangle',
                 'line-color': 'black',
                 'target-arrow-color': 'black',
@@ -706,7 +706,7 @@ angular.module('automata').factory('Automata', ['$resource',
                 .css({
                   'border-width': '0',
                   'background-opacity': '0',
-                  'content' : ''
+                  'content': ''
                 })
               .selector('.startmarker')
                 .css({
@@ -717,15 +717,15 @@ angular.module('automata').factory('Automata', ['$resource',
                   'shape-polygon-points': '1 0 0.5 -0.4 0.5 0.4'
                 }),
           elements: eles,
-          ready: function(){
+          ready: function() {
             deferred.resolve(this);
 
-            cy.on('tap', 'node', function(e){
+            cy.on('tap', 'node', function(e) {
               var node = e.cyTarget;
-              if (!node.data().accept){
+              if (!node.data().accept) {
                 node.data().accept = true;
                 node.addClass('accept');
-                if (node.data().start){
+                if (node.data().start) {
                   cy.$('#start').position({
                     x: cy.$('#start').position('x') - 2,
                   });
@@ -733,7 +733,7 @@ angular.module('automata').factory('Automata', ['$resource',
               }else{
                 node.data().accept = false;
                 node.removeClass('accept');
-                if (node.data().start){
+                if (node.data().start) {
                   cy.$('#start').position({
                     x: cy.$('#start').position('x') + 2,
                   });
@@ -741,8 +741,8 @@ angular.module('automata').factory('Automata', ['$resource',
               }
             });
 
-            cy.on('tap', function(e){
-              if(e.cyTarget === cy){
+            cy.on('tap', function(e) {
+              if (e.cyTarget === cy) {
                 var ind = cy.nodes().length - 1;
                 cy.add({
                   group: 'nodes',
@@ -755,14 +755,14 @@ angular.module('automata').factory('Automata', ['$resource',
               }
             });
 
-            cy.on('cxttap', 'node', function(e){
+            cy.on('cxttap', 'node', function(e) {
               var node = e.cyTarget;
               console.log('right tapped node '+node.id());
             });
 
-            cy.on('drag', '#0', function(e){
+            cy.on('drag', '#0', function(e) {
               cy.$('#start').position({
-                x: cy.$('#0').position('x') - (e.cyTarget.data().accept ? 34 : 32),
+                x: cy.$('#0').position('x') - (e.cyTarget.data().accept ? 34: 32),
                 y: cy.$('#0').position('y')
               });
             });
@@ -939,7 +939,7 @@ angular.module('core').controller('HeaderController', ['$scope', '$state', 'Auth
       word: /^\s*\w*\s*$/
     };
 
-    $scope.createNewAutomaton = function(){
+    $scope.createNewAutomaton = function() {
       var modalInstance = $uibModal.open({
         animation: $scope.animationsEnabled,
         templateUrl: 'createNewModal.html',
@@ -1106,7 +1106,7 @@ angular.module('core').service('Menus', [
       if (!!~this.roles.indexOf('*')) {
         return true;
       } else {
-        if(!user) {
+        if (!user) {
           return false;
         }
         for (var userRoleIndex in user.roles) {
@@ -1182,7 +1182,7 @@ angular.module('core').service('Menus', [
         state: options.state || '',
         type: options.type || 'item',
         class: options.class,
-        roles: ((options.roles === null || typeof options.roles === 'undefined') ? this.defaultRoles : options.roles),
+        roles: ((options.roles === null || typeof options.roles === 'undefined') ? this.defaultRoles: options.roles),
         position: options.position || 0,
         items: [],
         shouldRender: shouldRender
@@ -1213,7 +1213,7 @@ angular.module('core').service('Menus', [
           this.menus[menuId].items[itemIndex].items.push({
             title: options.title || '',
             state: options.state || '',
-            roles: ((options.roles === null || typeof options.roles === 'undefined') ? this.menus[menuId].items[itemIndex].roles : options.roles),
+            roles: ((options.roles === null || typeof options.roles === 'undefined') ? this.menus[menuId].items[itemIndex].roles: options.roles),
             position: options.position || 0,
             shouldRender: shouldRender
           });
@@ -1875,7 +1875,7 @@ angular.module('users')
           if (value) {
             ngModel.$validators.passwordVerify = function (password) {
               var origin = scope.passwordVerify;
-              return (origin !== password) ? false : true;
+              return (origin !== password) ? false: true;
             };
           }
         });
@@ -1891,7 +1891,7 @@ angular.module('users').directive('lowercase', function () {
     require: 'ngModel',
     link: function (scope, element, attrs, modelCtrl) {
       modelCtrl.$parsers.push(function (input) {
-        return input ? input.toLowerCase() : '';
+        return input ? input.toLowerCase(): '';
       });
       element.css('text-transform', 'lowercase');
     }

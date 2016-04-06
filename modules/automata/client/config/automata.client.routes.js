@@ -1,9 +1,13 @@
-'use strict';
+(function () {
+  'use strict';
 
-// Setting up route
-angular.module('automata').config(['$stateProvider',
-  function ($stateProvider) {
-    // Articles state routing
+  angular
+    .module('automata.routes')
+    .config(routeConfig);
+
+  routeConfig.$inject = ['$stateProvider'];
+
+  function routeConfig($stateProvider) {
     $stateProvider
       .state('automata', {
         abstract: true,
@@ -12,38 +16,99 @@ angular.module('automata').config(['$stateProvider',
       })
       .state('automata.list', {
         url: '',
-        templateUrl: 'modules/automata/client/views/list-automata.client.view.html'
+        templateUrl: 'modules/automata/client/views/list-automata.client.view.html',
+        controller: 'AutomataListController',
+        controllerAs: 'vm',
+        data: {
+          pageTitle: 'Automata List'
+        }
       })
       .state('automata.create-tm', {
         url: '/create-tm',
-        templateUrl: 'modules/automata/client/views/create-automaton.client.view.html',
+        templateUrl: 'modules/automata/client/views/view-automaton.client.view.html',
+        controller: 'AutomataController',
+        controllerAs: 'vm',
+        resolve: {
+          automatonResolve: newAutomaton
+        },
         data: {
           roles: ['user', 'admin'],
-          type: 'tm'
+          type: 'tm',
+          pageTitle: 'Create TM'
         }
       })
       .state('automata.create-fsa', {
         url: '/create-fsa',
-        templateUrl: 'modules/automata/client/views/create-automaton.client.view.html',
+        templateUrl: 'modules/automata/client/views/view-automaton.client.view.html',
+        controller: 'AutomataController',
+        controllerAs: 'vm',
+        resolve: {
+          automatonResolve: newAutomaton
+        },
         data: {
           roles: ['user', 'admin'],
-          type: 'fsa'
+          type: 'fsa',
+          pageTitle: 'Create FSA'
         }
       })
       .state('automata.create-pda', {
         url: '/create-pda',
-        templateUrl: 'modules/automata/client/views/create-automaton.client.view.html',
+        templateUrl: 'modules/automata/client/views/view-automaton.client.view.html',
+        controller: 'AutomataController',
+        controllerAs: 'vm',
+        resolve: {
+          automatonResolve: newAutomaton
+        },
         data: {
           roles: ['user', 'admin'],
-          type: 'pda'
+          type: 'pda',
+          pageTitle: 'Create PDA'
         }
       })
       .state('automata.view', {
         url: '/:automatonId',
         templateUrl: 'modules/automata/client/views/view-automaton.client.view.html',
+        controller: 'AutomataController',
+        controllerAs: 'vm',
+        resolve: {
+          automatonResolve: getAutomaton
+        },
         data: {
-          roles: ['user', 'admin']
+          roles: ['user', 'admin'],
+          pageTitle: 'View Automaton'
         }
       });
   }
-]);
+
+  getAutomaton.$inject = ['$stateParams', 'AutomataService'];
+
+  function getAutomaton($stateParams, AutomataService) {
+    return AutomataService.get({
+      automatonId: $stateParams.automatonId
+    }).$promise;
+  }
+
+  newAutomaton.$inject = ['$state', 'AutomataService'];
+
+  function newAutomaton($state, AutomataService) {
+    // return new AutomataService();
+    console.log($state.current);
+    var empty_tape = [];
+    for (var i = 0; i < 50; i++) {
+      empty_tape.push(' ');
+    }
+    return new AutomataService({
+      alphabet: ['A', 'B', '1', '0', '_'],
+      eles: {
+        nodes: [
+          { data: { id: 'start' }, classes: 'startmarker' },
+          { data: { id: '0', label: 0, start: true }, classes: 'enode', position: { x: 0, y: 0 } }],
+        edges: []
+      },
+      tape: {
+        position: 0,
+        contents: empty_tape
+      }
+    });
+  }
+}());

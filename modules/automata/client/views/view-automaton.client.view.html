@@ -1,5 +1,5 @@
-<section class="container autedit">
-<div class="noscroll" ng-controller="AutomataController">
+<!--<section class="container autedit">-->
+<div class="noscroll">
 <div class="playIcons" >
   <span class="playIcons">
     <!--
@@ -16,10 +16,9 @@
   </span>
 </div>
 <div class="saveIcon">
-  <span class="saveIcon glyphicon glyphicon-cloud-upload" ng-click="update(true)"></span>
+  <span class="saveIcon glyphicon glyphicon-cloud-upload" ng-click="vm.save(true)"></span>
 </div>
-
-<section ng-init="findOne()">
+<section>
           <div style="height:300px; width:700px">
               <div id="cy" class="cy"></div>
             </div>
@@ -29,12 +28,12 @@
   <window id="tape">
     <table>
       <tr class="rw-head">
-        <td ng-repeat="item in automaton.tape.contents track by $index" ng-click="automaton.tape.position = $index">
-          <div class="rw-head-cell" ng-class="{active: $index === automaton.tape.position}"></div>
+        <td ng-repeat="item in vm.automaton.tape.contents track by $index" ng-click="vm.automaton.tape.position = $index">
+          <div class="rw-head-cell" ng-class="{active: $index === vm.automaton.tape.position}"></div>
         </td>
       </tr>
       <tr class="tape-content">
-        <td ng-repeat="item in automaton.tape.contents track by $index" ng-class="{active: $index === automaton.tape.position}">
+        <td ng-repeat="item in vm.automaton.tape.contents track by $index" ng-class="{active: $index === vm.automaton.tape.position}">
            <input class="{{'cell-'+$index}} tape-cell" type="text" name="input"
                   ng-model="item" maxlength="1" onfocus="this.select()"
                   ng-keyup="focusNext($event, $index)" ng-click="onTextClick($event)">

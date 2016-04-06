@@ -1,70 +1,25 @@
-'use strict';
+(function () {
+  'use strict';
 
-angular.module('core').controller('HeaderController', ['$scope', '$state', 'Authentication', 'Menus', '$uibModal', '$log',
-  function ($scope, $state, Authentication, Menus, $uibModal, $log) {
-    // Expose view variables
-    $scope.$state = $state;
-    $scope.authentication = Authentication;
+  angular
+    .module('core')
+    .controller('HeaderController', HeaderController);
 
-    // Get the topbar menu
-    $scope.menu = Menus.getMenu('topbar');
+  HeaderController.$inject = ['$scope', '$state', 'Authentication', 'menuService'];
 
-    // Toggle the menu items
-    $scope.isCollapsed = false;
-    $scope.toggleCollapsibleMenu = function () {
-      $scope.isCollapsed = !$scope.isCollapsed;
-    };
+  function HeaderController($scope, $state, Authentication, menuService) {
+    var vm = this;
 
-    // Collapsing the menu after navigation
-    $scope.$on('$stateChangeSuccess', function () {
-      $scope.isCollapsed = false;
-    });
+    vm.accountMenu = menuService.getMenu('account').items[0];
+    vm.authentication = Authentication;
+    vm.isCollapsed = false;
+    vm.menu = menuService.getMenu('topbar');
 
-  //  $scope.items = ['item1', 'item2', 'item3'];
-    $scope.animationsEnabled = true;
+    $scope.$on('$stateChangeSuccess', stateChangeSuccess);
 
-    $scope.example = {
-      text: 'word',
-      word: /^\s*\w*\s*$/
-    };
-
-    $scope.createNewAutomaton = function(){
-      var modalInstance = $uibModal.open({
-        animation: $scope.animationsEnabled,
-        templateUrl: 'createNewModal.html',
-        controller: 'CreateNewModalInstanceCtrl',
-        size: 'sm' //,
-      //  resolve: {
-      //    items: function () {
-      //      return $scope.items;
-      //    }
-      //  }
-      });
-
-
-      //modalInstance.result.then(function (selectedItem) {
-      modalInstance.result.then(function () {
-        console.log('result no selection 11');
-        //$scope.selected = selectedItem;
-      }, function () {
-        $log.info('Modal dismissed at: ' + new Date());
-      });
-    };
+    function stateChangeSuccess() {
+      // Collapsing the menu after navigation
+      vm.isCollapsed = false;
+    }
   }
-//]).controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, items) {
-]).controller('CreateNewModalInstanceCtrl', function ($scope, $uibModalInstance) {
-
-//  $scope.items = items;
-//  $scope.selected = {
-//    item: $scope.items[0]
-//  };
-
-  $scope.ok = function () {
-    //$uibModalInstance.close($scope.selected.item);
-    $uibModalInstance.close();
-  };
-
-  $scope.cancel = function () {
-    $uibModalInstance.dismiss('cancel');
-  };
-});
+}());

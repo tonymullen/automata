@@ -6,7 +6,7 @@
  */
 var automataPolicy = require('../policies/automata.server.policy'),
   automata = require('../controllers/automata.server.controller');
-  //node = require('../controllers/node.server.controller');
+  // node = require('../controllers/node.server.controller');
 
 module.exports = function (app) {
   // Automata collection routes
