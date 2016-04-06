@@ -19,8 +19,7 @@
     vm.automaton = automaton;
     vm.authentication = Authentication;
     vm.error = null;
-    // vm.form = {};
-    vm.remove = remove;
+    // vm.remove = remove;
     vm.save = save;
 
 
@@ -30,19 +29,19 @@
       else if ($state.current.data.type === 'pda') return 'Untitled Pushdown Automaton';
       else return 'Untitled Turing Machine';
     }());
-    console.log(vm.automaton.title);
 
-    // Copied from previous controller
     var cy; // ref to cy
 
     vm.labels = { read: '', act: '' };
 
-    // Remove existing Automaton
+    // TODO: Remove existing Automaton
+    /*
     function remove() {
       if ($window.confirm('Are you sure you want to delete?')) {
         vm.automaton.$remove($state.go('automata.list'));
       }
     }
+    */
 
     // Save Automaton
     function save(isValid) {
@@ -62,18 +61,7 @@
       }
 
       function successCallback(res) {
-        // vm.automaton = AutomataService.get({
-
         vm.automaton._id = res._id;
-        // vm.automaton = AutomataService.get({
-        //  automatonId: res._id
-        // }).$promise;
-
-        /*
-        $state.go('automata.view', {
-          automatonId: res._id
-        });
-        */
       }
 
       function errorCallback(res) {
@@ -81,7 +69,6 @@
       }
     }
 
-    // Copied over from previous version
     $scope.focusNext = function(event, index) {
       // changes focus to the next tape cell when a key is pressed
       var nextInd;
@@ -114,11 +101,9 @@
       }, 0);
     };
 
-    // setUpGraph();
-
     (function setUpGraph() {
-      /* CYTOSCAPE */
-      automatonGraph(vm.automaton.eles).then(function(automatonCy) {
+      /* Set up Cytoscape graph */
+      automatonGraph(vm.automaton.eles, vm.automaton.machine).then(function(automatonCy) {
         cy = automatonCy;
         vm.cyLoaded = true;
       });

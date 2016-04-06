@@ -41,21 +41,6 @@
       </tr>
     </table>
    </window>
-<!--
-<table id="panel" class="panel">
-<tbody>
-  <tr>
-    <th>Name</th>
-    <th><form name="automatonForm" class="form-horizontal"
-    ng-submit="create(automatonForm.$valid)" novalidate>
-    <div class="form-group">
-    <input type="submit" name="Save" value="Save" class="btn btn-default">
-    </div>
-  </form></th>
-</tr>
-</tbody>
-</table>
--->
 
 
 <div ng-controller="AddEdgeModalController">
@@ -75,7 +60,8 @@
       </div>
       </td>
       <td>
-      <div class="form-group">
+
+      <div class="form-group" ng-if="'tm' === machine">
         <label for="action">Action</label>
         <form name="actionForm">
           <select name="action" id="action" ng-model="labels.act" class="form-control edgeLabelSymbolInput" >
@@ -96,6 +82,8 @@
 
     </script>
 </div>
+</div>
+
 
 </section>
 </div>

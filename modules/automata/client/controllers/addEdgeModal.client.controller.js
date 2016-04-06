@@ -10,6 +10,9 @@ function ($scope, $uibModal, $log) {
       backdrop: 'static',
       size: size,
       resolve: {
+        machine: function () {
+          return $scope.$parent.vm.automaton.machine;
+        },
         alphabet: function () {
           return $scope.$parent.vm.automaton.alphabet;
         },
@@ -31,17 +34,22 @@ function ($scope, $uibModal, $log) {
 // It is not the same as the $uibModal service used above.
 
 angular.module('automata').controller('AddEdgeModalInstanceCtrl',
-['$scope', '$uibModalInstance', 'addedEntities', 'alphabet',
-function ($scope, $uibModalInstance, addedEntities, alphabet) {
+['$scope', '$uibModalInstance', 'machine', 'addedEntities', 'alphabet',
+function ($scope, $uibModalInstance, machine, addedEntities, alphabet) {
   $scope.alphabet = alphabet;
+  $scope.machine = machine;
   $scope.act_alph = alphabet.concat(['<', '>']);
   $scope.addedEntities = addedEntities;
   $scope.ok = function () {
     var read = $scope.labels.read.toUpperCase();
-    var act = $scope.labels.act.toUpperCase();
     addedEntities.data('read', read);
-    addedEntities.data('action', act);
-    addedEntities.data('label', read + ':' + act);
+    if (machine === 'tm') {
+      var act = $scope.labels.act.toUpperCase();
+      addedEntities.data('action', act);
+      addedEntities.data('label', read + ':' + act);
+    } else {
+      addedEntities.data('label', read);
+    }
     $uibModalInstance.close();
   };
 

@@ -92,7 +92,6 @@
 
   function newAutomaton($state, AutomataService) {
     // return new AutomataService();
-    console.log($state.current);
     var empty_tape = [];
     for (var i = 0; i < 50; i++) {
       empty_tape.push(' ');

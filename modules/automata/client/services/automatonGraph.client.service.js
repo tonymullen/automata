@@ -17,7 +17,7 @@
     */
     var cy;
 
-    var automatonGraph = function(eles) {
+    var automatonGraph = function(eles, machine) {
 
       var deferred = $q.defer();
 
@@ -99,27 +99,6 @@
             var clickstop = 0;
             var del = false;
 
-            cy.on('click', 'node', function(e) {
-              var node = e.cyTarget;
-              if (!node.data().accept) {
-                node.data().accept = true;
-                node.addClass('accept');
-                if (node.data().start) {
-                  cy.$('#start').position({
-                    x: cy.$('#start').position('x') - 2
-                  });
-                }
-              } else {
-                node.data().accept = false;
-                node.removeClass('accept');
-                if (node.data().start) {
-                  cy.$('#start').position({
-                    x: cy.$('#start').position('x') + 2
-                  });
-                }
-              }
-            });
-
             cy.on('vmousedown', 'node', function(e) {
               var node = e.cyTarget;
               clickstart = e.timeStamp;
@@ -171,26 +150,49 @@
               }
             });
 
-            cy.on('doubleTap', function(e) {
-              var node = e.cyTarget;
-              if (!node.data().accept) {
-                node.data().accept = true;
-                node.addClass('accept');
-                if (node.data().start) {
-                  cy.$('#start').position({
-                    x: cy.$('#start').position('x') - 2
-                  });
+            if (machine !== 'tm') { // accept states only for FSAs and PDAs
+              cy.on('click', 'node', function(e) {
+                var node = e.cyTarget;
+                if (!node.data().accept) {
+                  node.data().accept = true;
+                  node.addClass('accept');
+                  if (node.data().start) {
+                    cy.$('#start').position({
+                      x: cy.$('#start').position('x') - 2
+                    });
+                  }
+                } else {
+                  node.data().accept = false;
+                  node.removeClass('accept');
+                  if (node.data().start) {
+                    cy.$('#start').position({
+                      x: cy.$('#start').position('x') + 2
+                    });
+                  }
                 }
-              } else {
-                node.data().accept = false;
-                node.removeClass('accept');
-                if (node.data().start) {
-                  cy.$('#start').position({
-                    x: cy.$('#start').position('x') + 2
-                  });
+              });
+
+              cy.on('doubleTap', function(e) {
+                var node = e.cyTarget;
+                if (!node.data().accept) {
+                  node.data().accept = true;
+                  node.addClass('accept');
+                  if (node.data().start) {
+                    cy.$('#start').position({
+                      x: cy.$('#start').position('x') - 2
+                    });
+                  }
+                } else {
+                  node.data().accept = false;
+                  node.removeClass('accept');
+                  if (node.data().start) {
+                    cy.$('#start').position({
+                      x: cy.$('#start').position('x') + 2
+                    });
+                  }
                 }
-              }
-            });
+              });
+            }
 
             cy.on('tap', function(e) {
               if (e.cyTarget === cy) {
