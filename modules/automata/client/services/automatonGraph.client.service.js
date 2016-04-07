@@ -18,7 +18,6 @@
     var cy;
 
     var automatonGraph = function(eles, machine) {
-
       var deferred = $q.defer();
 
       $(function() { // on dom ready
@@ -99,11 +98,11 @@
             var clickstop = 0;
             var del = false;
 
-            cy.on('vmousedown', 'node', function(e) {
+            this.on('vmousedown', 'node', function(e) {
               var node = e.cyTarget;
               clickstart = e.timeStamp;
             });
-            cy.on('vmouseup', 'node', function(e) {
+            this.on('vmouseup', 'node', function(e) {
               var node = e.cyTarget;
               clickstop = e.timeStamp - clickstart;
               if (clickstop >= 750) {
@@ -124,7 +123,7 @@
               clickstart = 0;
               del = false;
             });
-            cy.on('taphold', 'node', function(e) {
+            this.on('taphold', 'node', function(e) {
               var node = e.cyTarget;
               if (!(node.id() === 'start' || node.id() === '0')) {
                 node.addClass('toDelete');
@@ -134,7 +133,7 @@
 
             var tappedBefore;
             var tappedTimeout;
-            cy.on('tap', 'node', function(e) {
+            this.on('tap', 'node', function(e) {
               var node = e.cyTarget;
               if (tappedTimeout && tappedBefore) {
                 clearTimeout(tappedTimeout);
@@ -151,7 +150,7 @@
             });
 
             if (machine !== 'tm') { // accept states only for FSAs and PDAs
-              cy.on('click', 'node', function(e) {
+              this.on('click', 'node', function(e) {
                 var node = e.cyTarget;
                 if (!node.data().accept) {
                   node.data().accept = true;
@@ -172,7 +171,7 @@
                 }
               });
 
-              cy.on('doubleTap', function(e) {
+              this.on('doubleTap', function(e) {
                 var node = e.cyTarget;
                 if (!node.data().accept) {
                   node.data().accept = true;
@@ -194,7 +193,7 @@
               });
             }
 
-            cy.on('tap', function(e) {
+            this.on('tap', function(e) {
               if (e.cyTarget === cy) {
                 var ind = cy.nodes().length - 1;
                 cy.add({
@@ -208,25 +207,26 @@
               }
             });
 
-            cy.on('cxttap', 'node', function(e) {
+            this.on('cxttap', 'node', function(e) {
               var node = e.cyTarget;
               node.removeClass('toDelete');
               del = false;
             });
 
-            cy.on('drag', '#0', function(e) {
+            this.on('drag', '#0', function(e) {
               cy.$('#start').position({
                 x: cy.$('#0').position('x') - (e.cyTarget.data().accept ? 34 : 32),
                 y: cy.$('#0').position('y')
               });
             });
 
-            cy.$('#start').ungrabify();
-            cy.$('#start').unselectify();
-            cy.$('#start').position({
-              x: cy.$('#0').position('x') - 32,
-              y: cy.$('#0').position('y')
+            this.$('#start').ungrabify();
+            this.$('#start').unselectify();
+            this.$('#start').position({
+              x: this.$('#0').position('x') - 32,
+              y: this.$('#0').position('y')
             });
+
 
             // the default values of each option are outlined below:
             var defaults = {
@@ -263,6 +263,7 @@
                 return {};
               },
               start: function(sourceNode) {
+                console.log("HI THERE");
                 // fired when edgehandles interaction starts (drag on handle)
               },
               complete: function(sourceNode, targetNodes, addedEntities) {
@@ -280,8 +281,7 @@
                 // fired when edgehandles interaction is stopped (either complete with added edges or incomplete)
               }
             };
-            // console.log(cy);
-            cy.edgehandles(defaults);
+            this.edgehandles(defaults);
           }
         });
       });
