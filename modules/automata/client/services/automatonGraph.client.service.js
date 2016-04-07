@@ -98,17 +98,18 @@
             var clickstop = 0;
             var del = false;
 
-            this.on('vmousedown', 'node', function(e) {
-              var node = e.cyTarget;
+            this.on('vmousedown', function(e) {
+              // var node = e.cyTarget;
               clickstart = e.timeStamp;
             });
-            this.on('vmouseup', 'node', function(e) {
-              var node = e.cyTarget;
+
+            function doMouseUp(e) {
+              var element = e.cyTarget;
               clickstop = e.timeStamp - clickstart;
               if (clickstop >= 750) {
                 cy.remove('.toDelete');
-                var deleted = node.data('label');
-                if (del) {
+                var deleted = element.data('label');
+                if (del && element.isNode()) {
                   cy.nodes().forEach(function(n) {
                     if (n.data('label') && n.data('label') > deleted) {
                       var newLabel = n.data('label') - 1;
@@ -116,19 +117,34 @@
                     }
                   });
                 }
-              } // else {
-              //  console.log('shortclick');
-              // }
-              node.removeClass('toDelete');
+              }
+              element.removeClass('toDelete');
               clickstart = 0;
               del = false;
+            }
+
+            this.on('vmouseup', 'node', function(e) {
+              doMouseUp(e);
             });
-            this.on('taphold', 'node', function(e) {
-              var node = e.cyTarget;
-              if (!(node.id() === 'start' || node.id() === '0')) {
-                node.addClass('toDelete');
+
+            this.on('vmouseup', 'edge', function(e) {
+              doMouseUp(e);
+            });
+
+            function doTapHold(e) {
+              var element = e.cyTarget;
+              if (!(element.id() === 'start' || element.id() === '0')) {
+                element.addClass('toDelete');
                 del = true;
               }
+            }
+
+            this.on('taphold', 'node', function(e) {
+              doTapHold(e);
+            });
+
+            this.on('taphold', 'edge', function(e) {
+              doTapHold(e);
             });
 
             var tappedBefore;
@@ -263,7 +279,6 @@
                 return {};
               },
               start: function(sourceNode) {
-                console.log("HI THERE");
                 // fired when edgehandles interaction starts (drag on handle)
               },
               complete: function(sourceNode, targetNodes, addedEntities) {
