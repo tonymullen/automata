@@ -1,6 +1,10 @@
 html {
   overflow: hidden; }
 
+header.navbar{
+  margin-bottom:0;
+}
+
 section.container.autedit {
   width: 100vw;
   margin: 0;

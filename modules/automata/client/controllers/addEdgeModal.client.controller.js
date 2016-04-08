@@ -55,6 +55,7 @@ function ($scope, $uibModalInstance, machine, addedEntities, alphabet) {
 
   $scope.cancel = function () {
     $uibModalInstance.dismiss('cancel');
+    $scope.addedEntities.remove();
   };
 
 }]);

@@ -17,19 +17,13 @@
           <li ng-repeat="subitem in item.items | orderBy: 'position'" ng-if="subitem.shouldRender(vm.authentication.user);" ui-sref-active="active">
             <a ui-sref="{{subitem.state}}" ng-bind="subitem.title"></a>
           </li>
-<!--
-          <li ng-if="item.items[0].shouldRender(authentication.user);" ui-sref-active="active">
-            <a ui-sref="{{item.items[0].state}}" ng-bind="item.items[0].title"></a>
-          </li>
-          <li ng-if="item.items[1].shouldRender(authentication.user);" ui-sref-active="active">
-            <a ng-click="createNewAutomaton()" ng-bind="item.items[1].title"></a>
-          </li>
--->
 
         </ul>
         <a ng-switch-default ui-sref="{{item.state}}" ng-bind="item.title"></a>
       </li>
     </ul>
+
+
     <ul class="nav navbar-nav navbar-right" ng-hide="vm.authentication.user">
       <li ui-sref-active="active">
         <a ui-sref="authentication.signup">Sign Up</a>
@@ -39,18 +33,10 @@
         <a ui-sref="authentication.signin">Sign In</a>
       </li>
     </ul>
-<<<<<<< HEAD
     <ul class="nav navbar-nav navbar-right" ng-show="authentication.user">
       <li class="dropdown" dropdown>
         <a class="dropdown-toggle user-header-dropdown-toggle" dropdown-toggle role="button">
           <span ng-bind="authentication.user.displayName"></span> <b class="caret"></b>
-=======
-    <ul class="nav navbar-nav navbar-right" ng-show="vm.authentication.user">
-      <li class="dropdown" uib-dropdown>
-        <a class="dropdown-toggle user-header-dropdown-toggle" uib-dropdown-toggle role="button">
-          <img ng-src="{{vm.authentication.user.profileImageURL}}" alt="{{vm.authentication.user.displayName}}" class="header-profile-image" />
-          <span ng-bind="vm.authentication.user.displayName"></span> <b class="caret"></b>
->>>>>>> 8da372519a4f7894966835904ab7bd28368922ea
         </a>
         <ul class="dropdown-menu" role="menu">
           <li ui-sref-active="active" ng-repeat="item in vm.accountMenu.items">
