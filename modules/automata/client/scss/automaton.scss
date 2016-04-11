@@ -5,10 +5,6 @@ $assetPath: "/images";
 }
 
 
-html {
-  overflow: hidden;
-}
-
 section.container.autedit {
   width: 100vw;
   margin: 0;
@@ -24,6 +20,9 @@ body {
   font: 14px helvetica neue, helvetica, arial, sans-serif;
 }
 
+header.navbar {
+  margin-bottom:0;
+}
 
 .cy {
   height: 100%;
@@ -46,8 +45,13 @@ body {
   background: rgba(255,255,255,0.0) /* WebKit/Blink Browsers */
 }
 
-
-
+span.automaton_title {
+  z-index: 500;
+  position: absolute;
+  font-size: 2em;
+  left: 10px;
+  bottom: 10px;
+}
 
 /*
 #info {
@@ -81,4 +85,14 @@ body {
 
 th {
   text-align: left;
+}
+
+.noSelect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* IE/Edge */
+  user-select: none;           /* non-prefixed version, currently
+                                  not supported by any browser */
 }

@@ -18,6 +18,9 @@ function ($scope, $uibModal, $log) {
         },
         addedEntities: function () {
           return addedEntities;
+        },
+        determ: function () {
+          return $scope.$parent.vm.automaton.determ;
         }
       }
     });
@@ -34,12 +37,25 @@ function ($scope, $uibModal, $log) {
 // It is not the same as the $uibModal service used above.
 
 angular.module('automata').controller('AddEdgeModalInstanceCtrl',
-['$scope', '$uibModalInstance', 'machine', 'addedEntities', 'alphabet',
-function ($scope, $uibModalInstance, machine, addedEntities, alphabet) {
+['$scope', '$uibModalInstance', 'machine', 'determ', 'addedEntities', 'alphabet',
+function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
   $scope.alphabet = alphabet;
+  $scope.read_alph = $scope.alphabet.slice();
   $scope.machine = machine;
-  $scope.act_alph = alphabet.concat(['<', '>']);
   $scope.addedEntities = addedEntities;
+  $scope.act_alph = alphabet.concat(['<', '>']);
+  if (determ) { // ensures only available out symbols
+    var fromNode = $scope.addedEntities.source();
+    fromNode.outgoers().forEach(function(el) {
+      if (el.isEdge() && el.data().read) {
+        for (var i = 0; i < $scope.read_alph.length; i++) {
+          if (el.data().read === $scope.read_alph[i]) {
+            $scope.read_alph.splice(i, 1);
+          }
+        }
+      }
+    });
+  }
   $scope.ok = function () {
     var read = $scope.labels.read.toUpperCase();
     addedEntities.data('read', read);

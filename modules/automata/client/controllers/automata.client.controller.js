@@ -9,12 +9,12 @@
             ['$scope', '$state', '$window',
             '$timeout', '$location', '$stateParams',
             'Authentication', 'automatonResolve',
-            'automatonGraph', 'AutomataService'];
+            'automatonGraph', 'automatonPlay', 'tape'];
 
   function AutomataController($scope, $state, $window,
           $timeout, $location, $stateParams,
           Authentication, automaton,
-          automatonGraph, AutomataService) {
+          automatonGraph, automatonPlay, tape) {
     var vm = this;
     vm.automaton = automaton;
     vm.authentication = Authentication;
@@ -31,6 +31,11 @@
     }());
 
     var cy; // ref to cy
+
+    vm.playAutomaton = automatonPlay;
+    vm.play = function () {
+      vm.playAutomaton(cy, vm.automaton);
+    };
 
     vm.labels = { read: '', act: '' };
 
@@ -69,37 +74,7 @@
       }
     }
 
-    $scope.focusNext = function(event, index) {
-      // changes focus to the next tape cell when a key is pressed
-      var nextInd;
-      if (event.keyCode === 8) {
-        vm.automaton.tape.contents[index] = String.fromCharCode(event.keyCode);
-        // backspace key
-        if (index > 0) {
-          nextInd = index - 1;
-        } else {
-          nextInd = index;
-        }
-      } else if (event.keyCode === 37) {
-        // leftarrow
-        if (index > 0) {
-          nextInd = index - 1;
-        } else {
-          vm.automaton.tape.contents.unshift(' ');
-          nextInd = 0;
-          angular.element(document.querySelector('.cell-' + nextInd))[0].blur();
-        }
-      } else {
-        vm.automaton.tape.contents[index] = String.fromCharCode(event.keyCode);
-        nextInd = index + 1;
-        if (vm.automaton.tape.contents.length === nextInd) {
-          vm.automaton.tape.contents.push(' ');
-        }
-      }
-      $timeout(function() {
-        angular.element(document.querySelector('.cell-' + nextInd))[0].focus();
-      }, 0);
-    };
+    $scope.focusNext = tape.focusNext;
 
     (function setUpGraph() {
       /* Set up Cytoscape graph */

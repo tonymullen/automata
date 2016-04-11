@@ -97,7 +97,7 @@
       empty_tape.push(' ');
     }
     return new AutomataService({
-      alphabet: ['A', 'B', '1', '0', '_'],
+      alphabet: ['0', '1', 'A', 'B', 'C', '_'],
       eles: {
         nodes: [
           { data: { id: 'start' }, classes: 'startmarker' },
@@ -107,7 +107,8 @@
       tape: {
         position: 0,
         contents: empty_tape
-      }
+      },
+      determ: true
     });
   }
 }());

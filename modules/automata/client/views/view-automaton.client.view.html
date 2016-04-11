@@ -1,13 +1,14 @@
 <!--<section class="container autedit">-->
+
 <div class="noscroll">
-<div class="playIcons" >
-  <span class="playIcons">
+<div class="playIcons noSelect" >
+  <span class="playIcons noSelect">
     <!--
     <span class="auticon-arrow-bold-left"></span>
     <span class="auticon-arrow-bold-right"></span>
     <span class="auticon-circle-with-cross"></span>
   -->
-    <span class="auticon-controller-play"></span>
+    <span class="auticon-controller-play" ng-click="vm.play()"></span>
     <span class="auticon-controller-step"></span>
     <span class="auticon-controller-pause"></span>
     <span class="auticon-controller-fast-forward"></span>
@@ -18,7 +19,9 @@
 <div class="saveIcon">
   <span class="saveIcon glyphicon glyphicon-cloud-upload" ng-click="vm.save(true)"></span>
 </div>
-
+<span class="automaton_title noSelect">
+      {{vm.automaton.title}}
+</span>
 
 <section>
           <div style="height:300px; width:700px">
@@ -28,7 +31,7 @@
 
 
   <window id="tape">
-    <table>
+    <table id="tape-table">
       <tr class="rw-head">
         <td ng-repeat="item in vm.automaton.tape.contents track by $index" ng-click="vm.automaton.tape.position = $index">
           <div class="rw-head-cell" ng-class="{active: $index === vm.automaton.tape.position}"></div>
@@ -38,12 +41,11 @@
         <td ng-repeat="item in vm.automaton.tape.contents track by $index" ng-class="{active: $index === vm.automaton.tape.position}">
            <input class="{{'cell-'+$index}} tape-cell" type="text" name="input"
                   ng-model="item" maxlength="1" onfocus="this.select()"
-                  ng-keyup="focusNext($event, $index)" ng-click="onTextClick($event)">
+                  ng-keyup="focusNext($event, $index, vm.automaton)" ng-click="onTextClick($event)">
         </td>
       </tr>
     </table>
    </window>
-
 
 <div ng-controller="AddEdgeModalController">
   <script type="text/ng-template" id="addEdgeModalContent.html">
@@ -56,7 +58,7 @@
       <label for="read">Read symbol</label>
       <form name="readForm">
         <select name="read" id="read" ng-model="labels.read" class="form-control edgeLabelSymbolInput" >
-        <option ng-repeat="symbol in alphabet" value="{{ symbol }}">{{ symbol }}</option>
+        <option ng-repeat="symbol in read_alph" value="{{ symbol }}">{{ symbol }}</option>
       </select>
       </form>
       </div>
@@ -83,7 +85,9 @@
     </form>
 
     </script>
+
 </div>
+
 </div>
 
 

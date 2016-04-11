@@ -4,7 +4,8 @@ div.playIcons {
   z-index: 500;
   float: left;
 /*  font-family: automaton-icons; */
-  margin-top:20px;
+/*  margin-top:20px; */
+  margin-left:10px;
   font-size: 4em;
   width: 520px;
 }
@@ -30,7 +31,8 @@ span.saveIcon {
 
 div.saveIcon {
     float: right;
-    margin-top: 20px;
+  /*  margin-top: 20px; */
+    margin-right:10px;
 }
 
 span.saveIcon:hover{

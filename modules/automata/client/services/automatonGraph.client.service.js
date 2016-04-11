@@ -23,7 +23,7 @@
       $(function() { // on dom ready
         cy = cytoscape({
           container: $('#cy')[0],
-          boxSelectionEnabled: false,
+          boxSelectionEnabled: true,
           autounselectify: true,
           layout: {
             // name: 'cose',
@@ -90,7 +90,29 @@
                   'content': '',
                   'shape': 'polygon',
                   'shape-polygon-points': '1 0 0.5 -0.4 0.5 0.4'
-                }),
+                })
+                .selector('node.active')
+                  .css({
+                    'border-color': 'Orange'
+                  })
+                .selector('node.accept.active')
+                  .css({
+                    'border-color': 'LimeGreen'
+                  })
+                .selector('node.accepting.active')
+                  .css({
+                    'border-color': 'LimeGreen'
+                  })
+                .selector('edge.active')
+                  .css({
+                    'line-color': 'Orange',
+                    'target-arrow-color': 'Orange'
+                  })
+                .selector('edge.accepting.active')
+                  .css({
+                    'line-color': 'LimeGreen',
+                    'target-arrow-color': 'LimeGreen'
+                  }),
           elements: eles,
           ready: function() {
             deferred.resolve(this);
@@ -243,13 +265,17 @@
               y: this.$('#0').position('y')
             });
 
+            this.on('mouseout', 'node', function() {
+              // ugly hack to force edghandles to
+              // disappear through re-rendering
+              cy.panBy({ x: 0, y: 0 });
+            });
 
-            // the default values of each option are outlined below:
             var defaults = {
               preview: true, // whether to show added edges preview before releasing selection
               stackOrder: 4, // Controls stack order of edgehandles canvas element by setting it's z-index
               handleSize: 15, // the size of the edge handle put on nodes
-              handleColor: '#777777', // the colour of the handle and the line drawn from it
+              handleColor: '#b395bb', // the colour of the handle and the line drawn from it
               handleLineType: 'ghost', // can be 'ghost' for real edge, 'straight' for a straight line, or 'draw' for a draw-as-you-go line
               handleLineWidth: 1, // width of handle line in pixels
               handleNodes: '.enode', // selector/filter function for whether edges can be made from a given node
@@ -282,18 +308,12 @@
                 // fired when edgehandles interaction starts (drag on handle)
               },
               complete: function(sourceNode, targetNodes, addedEntities) {
-                // fired when edgehandles is done and entities are added
-                // var read = 'read';
-                // var act = 'act';
-                // addedEntities.data('read', read);
-                // addedEntities.data('action', act);
-                // addedEntities.data('label', read +':'+ act);
-                // openModal('sm');
                 angular.element('[ng-controller=AddEdgeModalController]').scope().open('sm', addedEntities);
 
               },
               stop: function(sourceNode) {
-                // fired when edgehandles interaction is stopped (either complete with added edges or incomplete)
+                // fired when edgehandles interaction is stopped
+                // (either complete with added edges or incomplete)
               }
             };
             this.edgehandles(defaults);
