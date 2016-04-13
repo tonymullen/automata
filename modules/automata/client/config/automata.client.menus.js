@@ -25,17 +25,17 @@
     menuService.addSubMenuItem('topbar', 'automata', {
       title: 'Create New Turing Machine',
       state: 'automata.create-tm',
-      roles: ['user']
+      roles: ['*']
     });
     menuService.addSubMenuItem('topbar', 'automata', {
       title: 'Create New Finite State Automaton',
       state: 'automata.create-fsa',
-      roles: ['user']
+      roles: ['*']
     });
     menuService.addSubMenuItem('topbar', 'automata', {
       title: 'Create New Pushdown Automaton',
       state: 'automata.create-pda',
-      roles: ['user']
+      roles: ['*']
     });
   }
 }());

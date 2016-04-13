@@ -25,6 +25,11 @@ div.saveIcon {
   /*  margin-top: 20px; */
   margin-right: 10px; }
 
+span.saveIcon.logInToSave {
+  top: 10px;
+  position: relative;
+  font-size: 1em; }
+
 span.saveIcon:hover {
   color: darkgray; }
 

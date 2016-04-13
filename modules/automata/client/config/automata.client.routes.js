@@ -32,7 +32,7 @@
           automatonResolve: newAutomaton
         },
         data: {
-          roles: ['user', 'admin'],
+//          roles: ['user', 'admin'],
           type: 'tm',
           pageTitle: 'Create TM'
         }
@@ -46,7 +46,7 @@
           automatonResolve: newAutomaton
         },
         data: {
-          roles: ['user', 'admin'],
+//          roles: ['user', 'admin'],
           type: 'fsa',
           pageTitle: 'Create FSA'
         }
@@ -60,7 +60,7 @@
           automatonResolve: newAutomaton
         },
         data: {
-          roles: ['user', 'admin'],
+//          roles: ['user', 'admin'],
           type: 'pda',
           pageTitle: 'Create PDA'
         }
@@ -74,7 +74,7 @@
           automatonResolve: getAutomaton
         },
         data: {
-          roles: ['user', 'admin'],
+//          roles: ['user', 'admin'],
           pageTitle: 'View Automaton'
         }
       });

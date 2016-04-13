@@ -17,7 +17,8 @@
   </span>
 </div>
 <div class="saveIcon">
-  <span class="saveIcon glyphicon glyphicon-cloud-upload" ng-click="vm.save(true)"></span>
+  <span class="saveIcon glyphicon glyphicon-cloud-upload" ng-click="vm.save(true)"  ng-show="vm.authentication.user;"></span>
+  <span class="saveIcon logInToSave" ng-hide="vm.authentication.user;">Log in first to enable saving</span>
 </div>
 <span class="automaton_title noSelect">
       {{vm.automaton.title}}
