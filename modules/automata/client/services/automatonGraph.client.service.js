@@ -93,24 +93,22 @@
                 })
                 .selector('node.active')
                   .css({
-                    'border-color': 'Orange'
+                    'color' : 'white',
+                    'background-color': 'DarkGray',
+                    'border-color': 'Gray'
                   })
-                .selector('node.active.rejected')
+                .selector('node.rejected')
                   .css({
                     'border-color': 'red'
                   })
-                .selector('node.accept.active')
-                  .css({
-                    'border-color': 'LimeGreen'
-                  })
-                .selector('node.accepting.active')
+                .selector('node.accepting')
                   .css({
                     'border-color': 'LimeGreen'
                   })
                 .selector('edge.active')
                   .css({
-                    'line-color': 'Orange',
-                    'target-arrow-color': 'Orange'
+                    'line-color': 'Gray',
+                    'target-arrow-color': 'Gray'
                   })
                 .selector('edge.accepting.active')
                   .css({
