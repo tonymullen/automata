@@ -79,13 +79,16 @@
     vm.setTapePosition = function(pos) {
       vm.automaton.tape.position = pos;
       cy.$('node').removeClass('active');
+      cy.$('node').removeClass('rejected');
       angular.element(document.querySelector('.tape-content')).removeClass('accepted');
       angular.element(document.querySelector('.tape-content')).removeClass('rejected');
-    }
+      angular.element(document.querySelector('.node')).removeClass('rejected');
+    };
 
     vm.reset = function(cy, automaton) {
       vm.automaton.tape.position = 0;
       cy.$('node').removeClass('active');
+      cy.$('node').removeClass('rejected');
       angular.element(document.querySelector('.tape-content')).removeClass('accepted');
       angular.element(document.querySelector('.tape-content')).removeClass('rejected');
     };
@@ -119,7 +122,7 @@
       } else if (prevEdge) {
         setTimeout(function() {
           prevEdge.removeClass('active');
-          if (!node.hasClass('accept')){
+          if (!node.hasClass('accept')) {
             angular.element(document.querySelector('.tape-content')).addClass('rejected');
             node.addClass('rejected');
           }
