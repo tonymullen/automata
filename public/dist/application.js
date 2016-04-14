@@ -352,12 +352,12 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
             ['$scope', '$state', '$window',
             '$timeout', '$location', '$stateParams',
             'Authentication', 'automatonResolve',
-            'automatonGraph', 'automatonPlay', 'tape'];
+            'automatonGraph', 'tape'];
 
   function AutomataController($scope, $state, $window,
           $timeout, $location, $stateParams,
           Authentication, automaton,
-          automatonGraph, automatonPlay, tape) {
+          automatonGraph, tape) {
     var vm = this;
     vm.automaton = automaton;
     vm.authentication = Authentication;
@@ -375,7 +375,7 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
 
     var cy; // ref to cy
 
-    vm.playAutomaton = automatonPlay;
+
     vm.play = function () {
       vm.playAutomaton(cy, vm.automaton);
     };
@@ -417,7 +417,69 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
       }
     }
 
-    $scope.focusNext = tape.focusNext;
+    vm.focusNext = tape.focusNext;
+
+    vm.setTapePosition = function(pos) {
+      vm.automaton.tape.position = pos;
+      cy.$('node').removeClass('active');
+      cy.$('node').removeClass('rejected');
+      angular.element(document.querySelector('.tape-content')).removeClass('accepted');
+      angular.element(document.querySelector('.tape-content')).removeClass('rejected');
+      angular.element(document.querySelector('.node')).removeClass('rejected');
+    };
+
+    vm.reset = function(cy, automaton) {
+      vm.automaton.tape.position = 0;
+      cy.$('node').removeClass('active');
+      cy.$('node').removeClass('rejected');
+      angular.element(document.querySelector('.tape-content')).removeClass('accepted');
+      angular.element(document.querySelector('.tape-content')).removeClass('rejected');
+    };
+
+    vm.doNextStep = function(node, pos, cy, prevEdge, pause, t) {
+      if (vm.automaton.tape.contents[pos] && (vm.automaton.tape.contents[pos] !== ' ')) {
+        setTimeout(function() {
+          node.outgoers().forEach(function(edge) {
+            if (edge.data().read === vm.automaton.tape.contents[pos]) {
+              edge.addClass('active');
+              var nextNode = edge.target();
+              if (nextNode.hasClass('accept')) {
+                cy.elements().addClass('accepting');
+                angular.element(document.querySelector('.tape-content')).addClass('accepted');
+              } else {
+                cy.elements().removeClass('accepting');
+                angular.element(document.querySelector('.tape-content')).removeClass('accepted');
+              }
+              nextNode.addClass('active');
+              node.removeClass('active');
+              if (prevEdge) {
+                prevEdge.removeClass('active');
+              }
+              $scope.$apply(
+                t.movePosition(1, vm.automaton)
+              );
+              vm.doNextStep(nextNode, pos + 1, cy, edge, pause, t);
+            }
+          });
+        }, pause);
+      } else if (prevEdge) {
+        setTimeout(function() {
+          prevEdge.removeClass('active');
+          if (!node.hasClass('accept')) {
+            angular.element(document.querySelector('.tape-content')).addClass('rejected');
+            node.addClass('rejected');
+          }
+        }, pause);
+      }
+    };
+
+    vm.playAutomaton = function(cy, automaton) {
+      vm.reset(cy, automaton);
+      var startNode = cy.getElementById('0');
+      startNode.addClass('active');
+      var pause = 500;
+      vm.doNextStep(startNode, 0, cy, null, pause, tape);
+    };
 
     (function setUpGraph() {
       /* Set up Cytoscape graph */
@@ -752,6 +814,10 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
                   .css({
                     'border-color': 'Orange'
                   })
+                .selector('node.active.rejected')
+                  .css({
+                    'border-color': 'red'
+                  })
                 .selector('node.accept.active')
                   .css({
                     'border-color': 'LimeGreen'
@@ -981,64 +1047,6 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
       return deferred.promise;
     };
     return automatonGraph;
-  }
-}());
-
-
-(function () {
-  'use strict';
-
-  angular
-    .module('automata.services')
-    .factory('automatonPlay', automatonPlay);
-
-  automatonPlay.$inject = ['tape'];
-  function reset(cy, automaton) {
-    cy.$('node').removeClass('active');
-  }
-
-  function automatonPlay (tape) {
-    // pass the value of cy and automaton as a
-    var automatonPlay = function(cy, automaton) {
-      reset(cy, automaton);
-      var startNode = cy.getElementById('0');
-      startNode.addClass('active');
-      var pause = 500;
-      doNextStep(startNode, automaton, 0, cy, null, pause, tape);
-    };
-    return automatonPlay;
-  }
-
-  function doNextStep(node, automaton, pos, cy, prevEdge, pause, t) {
-    if (automaton.tape.contents[pos] && (automaton.tape.contents[pos] !== ' ')) {
-      setTimeout(function() {
-        node.outgoers().forEach(function(edge) {
-          if (edge.data().read === automaton.tape.contents[pos]) {
-            edge.addClass('active');
-            var nextNode = edge.target();
-            if (nextNode.hasClass('accept')) {
-              cy.elements().addClass('accepting');
-            } else {
-              cy.elements().removeClass('accepting');
-            }
-            nextNode.addClass('active');
-            node.removeClass('active');
-            if (prevEdge) {
-              prevEdge.removeClass('active');
-            }
-            // (function(n, t, p, c, e, pause) {
-            // tape.position++;
-            t.movePosition(1, automaton);
-            doNextStep(nextNode, automaton, pos + 1, cy, edge, pause, t);
-            // }(nextNode, tape, pos + 1, cy, edge, pause));
-          }
-        });
-      }, pause);
-    } else if (prevEdge) {
-      setTimeout(function() {
-        prevEdge.removeClass('active');
-      }, pause);
-    }
   }
 }());
 
