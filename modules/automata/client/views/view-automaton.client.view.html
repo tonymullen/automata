@@ -34,7 +34,7 @@
   <window id="tape">
     <table id="tape-table">
       <tr class="rw-head">
-        <td ng-repeat="item in vm.automaton.tape.contents track by $index" ng-click="vm.automaton.tape.position = $index">
+        <td ng-repeat="item in vm.automaton.tape.contents track by $index" ng-click="vm.setTapePosition($index)">
           <div class="rw-head-cell" ng-class="{active: $index === vm.automaton.tape.position}"></div>
         </td>
       </tr>

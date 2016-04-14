@@ -3,14 +3,14 @@ div.playIcons {
   z-index: 500;
   float: left;
   /*  font-family: automaton-icons; */
-  /*  margin-top:20px; */
-  margin-left: 10px;
-  font-size: 4em;
+  margin-top: 20px;
+  margin-left: 20px;
+  font-size: 2.75em;
   width: 520px; }
 
 @media (max-width: 600px) {
   div.playIcons {
-    font-size: 3.5em;
+    font-size: 2.5em;
     width: 1px; } }
 span.playIconSpan::selection {
   background: white;
@@ -18,12 +18,12 @@ span.playIconSpan::selection {
 
 span.saveIcon {
   z-index: 500;
-  font-size: 3.5em; }
+  font-size: 2.5em; }
 
 div.saveIcon {
   float: right;
-  /*  margin-top: 20px; */
-  margin-right: 10px; }
+  margin-top: 20px;
+  margin-right: 20px; }
 
 span.saveIcon.logInToSave {
   top: 10px;

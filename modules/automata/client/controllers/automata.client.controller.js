@@ -34,7 +34,6 @@
 
 
     vm.play = function () {
-      //tape.movePosition(1, vm.automaton);
       vm.playAutomaton(cy, vm.automaton);
     };
 
@@ -77,9 +76,19 @@
 
     vm.focusNext = tape.focusNext;
 
-    vm.reset = function(cy, automaton) {
+    vm.setTapePosition = function(pos) {
+      vm.automaton.tape.position = pos;
       cy.$('node').removeClass('active');
+      angular.element(document.querySelector('.tape-content')).removeClass('accepted');
+      angular.element(document.querySelector('.tape-content')).removeClass('rejected');
     }
+
+    vm.reset = function(cy, automaton) {
+      vm.automaton.tape.position = 0;
+      cy.$('node').removeClass('active');
+      angular.element(document.querySelector('.tape-content')).removeClass('accepted');
+      angular.element(document.querySelector('.tape-content')).removeClass('rejected');
+    };
 
     vm.doNextStep = function(node, pos, cy, prevEdge, pause, t) {
       if (vm.automaton.tape.contents[pos] && (vm.automaton.tape.contents[pos] !== ' ')) {
@@ -90,8 +99,10 @@
               var nextNode = edge.target();
               if (nextNode.hasClass('accept')) {
                 cy.elements().addClass('accepting');
+                angular.element(document.querySelector('.tape-content')).addClass('accepted');
               } else {
                 cy.elements().removeClass('accepting');
+                angular.element(document.querySelector('.tape-content')).removeClass('accepted');
               }
               nextNode.addClass('active');
               node.removeClass('active');
@@ -108,6 +119,10 @@
       } else if (prevEdge) {
         setTimeout(function() {
           prevEdge.removeClass('active');
+          if (!node.hasClass('accept')){
+            angular.element(document.querySelector('.tape-content')).addClass('rejected');
+            node.addClass('rejected');
+          }
         }, pause);
       }
     };

@@ -95,6 +95,10 @@
                   .css({
                     'border-color': 'Orange'
                   })
+                .selector('node.active.rejected')
+                  .css({
+                    'border-color': 'red'
+                  })
                 .selector('node.accept.active')
                   .css({
                     'border-color': 'LimeGreen'

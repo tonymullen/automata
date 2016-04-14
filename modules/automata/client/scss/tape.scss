@@ -84,6 +84,7 @@ tr.tape-content > td{
 
 tr.tape-content > td > input.tape-cell{
   border: none;
+  color: black;
   padding: 0;
   font-family: 'Francois One', sans-serif;
   font-size: 2em;
@@ -93,13 +94,21 @@ tr.tape-content > td > input.tape-cell{
   width:30px;
 }
 
+tr.tape-content.rejected > td > input.tape-cell{
+  color: red;
+}
+
+tr.tape-content.accepted > td > input.tape-cell{
+  color: LimeGreen;
+}
+
 tr.tape-content > td.active{
   background-color: black;
 }
 
 tr.tape-content > td.active > input.tape-cell{
   background-color: black;
-  color: white;
+  color: white
 }
 
 tr.tape-content > td.active > input.tape-cell:focus{
