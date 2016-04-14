@@ -93,7 +93,7 @@
                 })
                 .selector('node.active')
                   .css({
-                    'color' : 'white',
+                    'color': 'white',
                     'background-color': 'DarkGray',
                     'border-color': 'Gray'
                   })

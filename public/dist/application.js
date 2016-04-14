@@ -418,67 +418,97 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
     }
 
     vm.focusNext = tape.focusNext;
+    var stopPlay = true;
 
-    vm.setTapePosition = function(pos) {
-      vm.automaton.tape.position = pos;
+    vm.resetElementColors = function() {
       cy.$('node').removeClass('active');
+      cy.$('edge').removeClass('active');
       cy.$('node').removeClass('rejected');
+      cy.$('node').removeClass('accepting');
       angular.element(document.querySelector('.tape-content')).removeClass('accepted');
       angular.element(document.querySelector('.tape-content')).removeClass('rejected');
       angular.element(document.querySelector('.node')).removeClass('rejected');
     };
 
+    vm.setTapePosition = function(pos) {
+      stopPlay = true;
+      vm.automaton.tape.position = pos;
+      vm.resetElementColors();
+    };
+
     vm.reset = function(cy, automaton) {
+      stopPlay = true;
       vm.automaton.tape.position = 0;
-      cy.$('node').removeClass('active');
-      cy.$('node').removeClass('rejected');
-      angular.element(document.querySelector('.tape-content')).removeClass('accepted');
-      angular.element(document.querySelector('.tape-content')).removeClass('rejected');
+      vm.resetElementColors();
     };
 
     vm.doNextStep = function(node, pos, cy, prevEdge, pause, t) {
-      if (vm.automaton.tape.contents[pos] && (vm.automaton.tape.contents[pos] !== ' ')) {
-        setTimeout(function() {
-          node.outgoers().forEach(function(edge) {
-            if (edge.data().read === vm.automaton.tape.contents[pos]) {
-              edge.addClass('active');
-              var nextNode = edge.target();
-              if (nextNode.hasClass('accept')) {
-                cy.elements().addClass('accepting');
-                angular.element(document.querySelector('.tape-content')).addClass('accepted');
-              } else {
-                cy.elements().removeClass('accepting');
-                angular.element(document.querySelector('.tape-content')).removeClass('accepted');
+      if (!stopPlay) {
+        if (vm.automaton.tape.contents[pos] && (vm.automaton.tape.contents[pos] !== ' ')) {
+          setTimeout(function() {
+            var noOutgoing = true;
+            node.outgoers().forEach(function(edge) {
+              if (edge.data().read === vm.automaton.tape.contents[pos]) {
+                noOutgoing = false;
+                edge.addClass('active');
+                var nextNode = edge.target();
+                /*
+                if (nextNode.hasClass('accept')) {
+                  cy.elements().addClass('accepting');
+                } else {
+                  cy.elements().removeClass('accepting');
+                }
+                */
+                nextNode.addClass('active');
+                node.removeClass('active');
+                if (prevEdge) {
+                  prevEdge.removeClass('active');
+                }
+                if (!stopPlay) {
+                  $scope.$apply(
+                    t.movePosition(1, vm.automaton)
+                  );
+                  vm.doNextStep(nextNode, pos + 1, cy, edge, pause, t);
+                } else {
+                  vm.resetElementColors();
+                }
               }
-              nextNode.addClass('active');
+            });
+            if (noOutgoing) {
+              stopPlay = true;
+              if (prevEdge) prevEdge.removeClass('active');
+              angular.element(document.querySelector('.tape-content')).addClass('rejected');
               node.removeClass('active');
-              if (prevEdge) {
-                prevEdge.removeClass('active');
-              }
-              $scope.$apply(
-                t.movePosition(1, vm.automaton)
-              );
-              vm.doNextStep(nextNode, pos + 1, cy, edge, pause, t);
+              node.addClass('rejected');
             }
-          });
-        }, pause);
-      } else if (prevEdge) {
-        setTimeout(function() {
-          prevEdge.removeClass('active');
-          if (!node.hasClass('accept')) {
-            angular.element(document.querySelector('.tape-content')).addClass('rejected');
-            node.addClass('rejected');
-          }
-        }, pause);
+          }, pause);
+        } else if (prevEdge) {
+          setTimeout(function() {
+            stopPlay = true;
+            prevEdge.removeClass('active');
+            if (node.hasClass('accept')) {
+              angular.element(document.querySelector('.tape-content')).addClass('accepted');
+              node.removeClass('active');
+              node.addClass('accepting');
+            } else {
+              angular.element(document.querySelector('.tape-content')).addClass('rejected');
+              node.removeClass('active');
+              node.addClass('rejected');
+            }
+          }, pause);
+        }
       }
     };
 
     vm.playAutomaton = function(cy, automaton) {
-      vm.reset(cy, automaton);
-      var startNode = cy.getElementById('0');
-      startNode.addClass('active');
-      var pause = 500;
-      vm.doNextStep(startNode, 0, cy, null, pause, tape);
+      if (stopPlay) {
+        vm.reset(cy, automaton);
+        stopPlay = false;
+        var startNode = cy.getElementById('0');
+        startNode.addClass('active');
+        var pause = 500;
+        vm.doNextStep(startNode, 0, cy, null, pause, tape);
+      }
     };
 
     (function setUpGraph() {
@@ -812,24 +842,22 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
                 })
                 .selector('node.active')
                   .css({
-                    'border-color': 'Orange'
+                    'color': 'white',
+                    'background-color': 'DarkGray',
+                    'border-color': 'Gray'
                   })
-                .selector('node.active.rejected')
+                .selector('node.rejected')
                   .css({
                     'border-color': 'red'
                   })
-                .selector('node.accept.active')
-                  .css({
-                    'border-color': 'LimeGreen'
-                  })
-                .selector('node.accepting.active')
+                .selector('node.accepting')
                   .css({
                     'border-color': 'LimeGreen'
                   })
                 .selector('edge.active')
                   .css({
-                    'line-color': 'Orange',
-                    'target-arrow-color': 'Orange'
+                    'line-color': 'Gray',
+                    'target-arrow-color': 'Gray'
                   })
                 .selector('edge.accepting.active')
                   .css({
