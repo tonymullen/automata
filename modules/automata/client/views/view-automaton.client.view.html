@@ -42,7 +42,7 @@
         <td ng-repeat="item in vm.automaton.tape.contents track by $index" ng-class="{active: $index === vm.automaton.tape.position}">
            <input class="{{'cell-'+$index}} tape-cell" type="text" name="input"
                   ng-model="item" maxlength="1" onfocus="this.select()"
-                  ng-keyup="focusNext($event, $index, vm.automaton)" ng-click="onTextClick($event)">
+                  ng-keyup="vm.focusNext($event, $index, vm.automaton)" ng-click="onTextClick($event)">
         </td>
       </tr>
     </table>

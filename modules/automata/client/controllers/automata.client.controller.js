@@ -9,12 +9,12 @@
             ['$scope', '$state', '$window',
             '$timeout', '$location', '$stateParams',
             'Authentication', 'automatonResolve',
-            'automatonGraph', 'automatonPlay', 'tape'];
+            'automatonGraph', 'tape'];
 
   function AutomataController($scope, $state, $window,
           $timeout, $location, $stateParams,
           Authentication, automaton,
-          automatonGraph, automatonPlay, tape) {
+          automatonGraph, tape) {
     var vm = this;
     vm.automaton = automaton;
     vm.authentication = Authentication;
@@ -32,8 +32,9 @@
 
     var cy; // ref to cy
 
-    vm.playAutomaton = automatonPlay;
+
     vm.play = function () {
+      //tape.movePosition(1, vm.automaton);
       vm.playAutomaton(cy, vm.automaton);
     };
 
@@ -74,7 +75,50 @@
       }
     }
 
-    $scope.focusNext = tape.focusNext;
+    vm.focusNext = tape.focusNext;
+
+    vm.reset = function(cy, automaton) {
+      cy.$('node').removeClass('active');
+    }
+
+    vm.doNextStep = function(node, pos, cy, prevEdge, pause, t) {
+      if (vm.automaton.tape.contents[pos] && (vm.automaton.tape.contents[pos] !== ' ')) {
+        setTimeout(function() {
+          node.outgoers().forEach(function(edge) {
+            if (edge.data().read === vm.automaton.tape.contents[pos]) {
+              edge.addClass('active');
+              var nextNode = edge.target();
+              if (nextNode.hasClass('accept')) {
+                cy.elements().addClass('accepting');
+              } else {
+                cy.elements().removeClass('accepting');
+              }
+              nextNode.addClass('active');
+              node.removeClass('active');
+              if (prevEdge) {
+                prevEdge.removeClass('active');
+              }
+              $scope.$apply(
+                t.movePosition(1, vm.automaton)
+              );
+              vm.doNextStep(nextNode, pos + 1, cy, edge, pause, t);
+            }
+          });
+        }, pause);
+      } else if (prevEdge) {
+        setTimeout(function() {
+          prevEdge.removeClass('active');
+        }, pause);
+      }
+    };
+
+    vm.playAutomaton = function(cy, automaton) {
+      vm.reset(cy, automaton);
+      var startNode = cy.getElementById('0');
+      startNode.addClass('active');
+      var pause = 500;
+      vm.doNextStep(startNode, 0, cy, null, pause, tape);
+    };
 
     (function setUpGraph() {
       /* Set up Cytoscape graph */
