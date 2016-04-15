@@ -14,7 +14,8 @@
       // changes focus to the next tape cell when a key is pressed
         var nextInd;
         if (event.keyCode === 8) {
-          automaton.tape.contents[index] = String.fromCharCode(event.keyCode);
+          // automaton.tape.contents[index] = String.fromCharCode(event.keyCode);
+          automaton.tape.contents[index] = '';
           // backspace key
           if (index > 0) {
             nextInd = index - 1;

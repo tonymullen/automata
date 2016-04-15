@@ -421,13 +421,15 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
     var stopPlay = true;
 
     vm.resetElementColors = function() {
+      cy.$('node').removeClass('running');
+      cy.$('edge').removeClass('running');
       cy.$('node').removeClass('active');
       cy.$('edge').removeClass('active');
       cy.$('node').removeClass('rejected');
       cy.$('node').removeClass('accepting');
       angular.element(document.querySelector('.tape-content')).removeClass('accepted');
       angular.element(document.querySelector('.tape-content')).removeClass('rejected');
-      angular.element(document.querySelector('.node')).removeClass('rejected');
+      // angular.element(document.querySelector('.node')).removeClass('rejected');
     };
 
     vm.setTapePosition = function(pos) {
@@ -444,7 +446,11 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
 
     vm.doNextStep = function(node, pos, cy, prevEdge, pause, t) {
       if (!stopPlay) {
-        if (vm.automaton.tape.contents[pos] && (vm.automaton.tape.contents[pos] !== ' ')) {
+        if ((!!vm.automaton.tape.contents[pos])
+          && (vm.automaton.tape.contents[pos] !== ' ')
+          && (vm.automaton.tape.contents[pos].length > 0)) {
+          console.log(">>" + vm.automaton.tape.contents[pos] + "<<");
+          console.log(">>" + vm.automaton.tape.contents[pos].length + "<<");
           setTimeout(function() {
             var noOutgoing = true;
             node.outgoers().forEach(function(edge) {
@@ -477,6 +483,8 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
             if (noOutgoing) {
               stopPlay = true;
               if (prevEdge) prevEdge.removeClass('active');
+              cy.$('node').removeClass('running');
+              cy.$('edge').removeClass('running');
               angular.element(document.querySelector('.tape-content')).addClass('rejected');
               node.removeClass('active');
               node.addClass('rejected');
@@ -486,6 +494,8 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
           setTimeout(function() {
             stopPlay = true;
             prevEdge.removeClass('active');
+            cy.$('node').removeClass('running');
+            cy.$('edge').removeClass('running');
             if (node.hasClass('accept')) {
               angular.element(document.querySelector('.tape-content')).addClass('accepted');
               node.removeClass('active');
@@ -504,6 +514,8 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
       if (stopPlay) {
         vm.reset(cy, automaton);
         stopPlay = false;
+        cy.$('node').addClass('running');
+        cy.$('edge').addClass('running');
         var startNode = cy.getElementById('0');
         startNode.addClass('active');
         var pause = 500;
@@ -766,6 +778,17 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
     */
     var cy;
 
+    function resetElementColors() {
+      cy.$('node').removeClass('running');
+      cy.$('edge').removeClass('running');
+      cy.$('node').removeClass('active');
+      cy.$('edge').removeClass('active');
+      cy.$('node').removeClass('rejected');
+      cy.$('node').removeClass('accepting');
+      angular.element(document.querySelector('.tape-content')).removeClass('accepted');
+      angular.element(document.querySelector('.tape-content')).removeClass('rejected');
+    }
+
     var automatonGraph = function(eles, machine) {
       var deferred = $q.defer();
 
@@ -805,7 +828,7 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
             .selector('edge')
               .css({
                 'label': 'data(label)',
-                'edge-text-rotation': 'autorotate',
+                'edge-text-rotation': 'none',
                 'curve-style': 'bezier',
                 'control-point-step-size': '70px',
                 'target-arrow-shape': 'triangle',
@@ -840,11 +863,17 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
                   'shape': 'polygon',
                   'shape-polygon-points': '1 0 0.5 -0.4 0.5 0.4'
                 })
-                .selector('node.active')
+                .selector('node.running')
                   .css({
-                    'color': 'white',
-                    'background-color': 'DarkGray',
+                    'color': 'Gray',
+                    'background-color': 'lightGray',
                     'border-color': 'Gray'
+                  })
+                .selector('node.running.active')
+                  .css({
+                    'color': 'black',
+                    'background-color': 'white',
+                    'border-color': 'black'
                   })
                 .selector('node.rejected')
                   .css({
@@ -854,10 +883,15 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
                   .css({
                     'border-color': 'LimeGreen'
                   })
-                .selector('edge.active')
+                .selector('edge.running')
                   .css({
                     'line-color': 'Gray',
                     'target-arrow-color': 'Gray'
+                  })
+                .selector('edge.running.active')
+                  .css({
+                    'line-color': 'Black',
+                    'target-arrow-color': 'Black'
                   })
                 .selector('edge.accepting.active')
                   .css({
@@ -880,6 +914,7 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
               var element = e.cyTarget;
               clickstop = e.timeStamp - clickstart;
               if (clickstop >= 750) {
+                resetElementColors();
                 cy.remove('.toDelete');
                 var deleted = element.data('label');
                 if (del && element.isNode()) {
@@ -944,6 +979,7 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
                 if (!node.data().accept) {
                   node.data().accept = true;
                   node.addClass('accept');
+                  resetElementColors();
                   if (node.data().start) {
                     cy.$('#start').position({
                       x: cy.$('#start').position('x') - 2
@@ -952,6 +988,7 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
                 } else {
                   node.data().accept = false;
                   node.removeClass('accept');
+                  resetElementColors();
                   if (node.data().start) {
                     cy.$('#start').position({
                       x: cy.$('#start').position('x') + 2
@@ -965,6 +1002,7 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
                 if (!node.data().accept) {
                   node.data().accept = true;
                   node.addClass('accept');
+                  resetElementColors();
                   if (node.data().start) {
                     cy.$('#start').position({
                       x: cy.$('#start').position('x') - 2
@@ -973,6 +1011,7 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
                 } else {
                   node.data().accept = false;
                   node.removeClass('accept');
+                  resetElementColors();
                   if (node.data().start) {
                     cy.$('#start').position({
                       x: cy.$('#start').position('x') + 2
@@ -983,6 +1022,7 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
             }
 
             this.on('tap', function(e) {
+              resetElementColors();
               if (e.cyTarget === cy) {
                 var ind = cy.nodes().length - 1;
                 cy.add({
@@ -1059,8 +1099,8 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
                 // fired when edgehandles interaction starts (drag on handle)
               },
               complete: function(sourceNode, targetNodes, addedEntities) {
+                resetElementColors();
                 angular.element('[ng-controller=AddEdgeModalController]').scope().open('sm', addedEntities);
-
               },
               stop: function(sourceNode) {
                 // fired when edgehandles interaction is stopped
@@ -1094,7 +1134,8 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
       // changes focus to the next tape cell when a key is pressed
         var nextInd;
         if (event.keyCode === 8) {
-          automaton.tape.contents[index] = String.fromCharCode(event.keyCode);
+          // automaton.tape.contents[index] = String.fromCharCode(event.keyCode);
+          automaton.tape.contents[index] = '';
           // backspace key
           if (index > 0) {
             nextInd = index - 1;

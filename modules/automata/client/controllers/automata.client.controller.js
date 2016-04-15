@@ -78,13 +78,15 @@
     var stopPlay = true;
 
     vm.resetElementColors = function() {
+      cy.$('node').removeClass('running');
+      cy.$('edge').removeClass('running');
       cy.$('node').removeClass('active');
       cy.$('edge').removeClass('active');
       cy.$('node').removeClass('rejected');
       cy.$('node').removeClass('accepting');
       angular.element(document.querySelector('.tape-content')).removeClass('accepted');
       angular.element(document.querySelector('.tape-content')).removeClass('rejected');
-      angular.element(document.querySelector('.node')).removeClass('rejected');
+      // angular.element(document.querySelector('.node')).removeClass('rejected');
     };
 
     vm.setTapePosition = function(pos) {
@@ -101,7 +103,11 @@
 
     vm.doNextStep = function(node, pos, cy, prevEdge, pause, t) {
       if (!stopPlay) {
-        if (vm.automaton.tape.contents[pos] && (vm.automaton.tape.contents[pos] !== ' ')) {
+        if ((!!vm.automaton.tape.contents[pos])
+          && (vm.automaton.tape.contents[pos] !== ' ')
+          && (vm.automaton.tape.contents[pos].length > 0)) {
+          console.log(">>" + vm.automaton.tape.contents[pos] + "<<");
+          console.log(">>" + vm.automaton.tape.contents[pos].length + "<<");
           setTimeout(function() {
             var noOutgoing = true;
             node.outgoers().forEach(function(edge) {
@@ -134,6 +140,8 @@
             if (noOutgoing) {
               stopPlay = true;
               if (prevEdge) prevEdge.removeClass('active');
+              cy.$('node').removeClass('running');
+              cy.$('edge').removeClass('running');
               angular.element(document.querySelector('.tape-content')).addClass('rejected');
               node.removeClass('active');
               node.addClass('rejected');
@@ -143,6 +151,8 @@
           setTimeout(function() {
             stopPlay = true;
             prevEdge.removeClass('active');
+            cy.$('node').removeClass('running');
+            cy.$('edge').removeClass('running');
             if (node.hasClass('accept')) {
               angular.element(document.querySelector('.tape-content')).addClass('accepted');
               node.removeClass('active');
@@ -161,6 +171,8 @@
       if (stopPlay) {
         vm.reset(cy, automaton);
         stopPlay = false;
+        cy.$('node').addClass('running');
+        cy.$('edge').addClass('running');
         var startNode = cy.getElementById('0');
         startNode.addClass('active');
         var pause = 500;

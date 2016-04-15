@@ -102,6 +102,10 @@ tr.tape-content > td.active > input.tape-cell {
   background-color: black;
   color: white; }
 
+tr.tape-content.rejected > td.active > input.tape-cell {
+  background-color: red;
+  color: white; }
+
 tr.tape-content > td.active > input.tape-cell:focus {
   background-color: #404040;
   color: lightgray; }

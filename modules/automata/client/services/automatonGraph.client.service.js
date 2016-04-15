@@ -17,6 +17,17 @@
     */
     var cy;
 
+    function resetElementColors() {
+      cy.$('node').removeClass('running');
+      cy.$('edge').removeClass('running');
+      cy.$('node').removeClass('active');
+      cy.$('edge').removeClass('active');
+      cy.$('node').removeClass('rejected');
+      cy.$('node').removeClass('accepting');
+      angular.element(document.querySelector('.tape-content')).removeClass('accepted');
+      angular.element(document.querySelector('.tape-content')).removeClass('rejected');
+    }
+
     var automatonGraph = function(eles, machine) {
       var deferred = $q.defer();
 
@@ -56,7 +67,7 @@
             .selector('edge')
               .css({
                 'label': 'data(label)',
-                'edge-text-rotation': 'autorotate',
+                'edge-text-rotation': 'none',
                 'curve-style': 'bezier',
                 'control-point-step-size': '70px',
                 'target-arrow-shape': 'triangle',
@@ -91,11 +102,17 @@
                   'shape': 'polygon',
                   'shape-polygon-points': '1 0 0.5 -0.4 0.5 0.4'
                 })
-                .selector('node.active')
+                .selector('node.running')
                   .css({
-                    'color': 'white',
-                    'background-color': 'DarkGray',
+                    'color': 'Gray',
+                    'background-color': 'lightGray',
                     'border-color': 'Gray'
+                  })
+                .selector('node.running.active')
+                  .css({
+                    'color': 'black',
+                    'background-color': 'white',
+                    'border-color': 'black'
                   })
                 .selector('node.rejected')
                   .css({
@@ -105,10 +122,15 @@
                   .css({
                     'border-color': 'LimeGreen'
                   })
-                .selector('edge.active')
+                .selector('edge.running')
                   .css({
                     'line-color': 'Gray',
                     'target-arrow-color': 'Gray'
+                  })
+                .selector('edge.running.active')
+                  .css({
+                    'line-color': 'Black',
+                    'target-arrow-color': 'Black'
                   })
                 .selector('edge.accepting.active')
                   .css({
@@ -131,6 +153,7 @@
               var element = e.cyTarget;
               clickstop = e.timeStamp - clickstart;
               if (clickstop >= 750) {
+                resetElementColors();
                 cy.remove('.toDelete');
                 var deleted = element.data('label');
                 if (del && element.isNode()) {
@@ -195,6 +218,7 @@
                 if (!node.data().accept) {
                   node.data().accept = true;
                   node.addClass('accept');
+                  resetElementColors();
                   if (node.data().start) {
                     cy.$('#start').position({
                       x: cy.$('#start').position('x') - 2
@@ -203,6 +227,7 @@
                 } else {
                   node.data().accept = false;
                   node.removeClass('accept');
+                  resetElementColors();
                   if (node.data().start) {
                     cy.$('#start').position({
                       x: cy.$('#start').position('x') + 2
@@ -216,6 +241,7 @@
                 if (!node.data().accept) {
                   node.data().accept = true;
                   node.addClass('accept');
+                  resetElementColors();
                   if (node.data().start) {
                     cy.$('#start').position({
                       x: cy.$('#start').position('x') - 2
@@ -224,6 +250,7 @@
                 } else {
                   node.data().accept = false;
                   node.removeClass('accept');
+                  resetElementColors();
                   if (node.data().start) {
                     cy.$('#start').position({
                       x: cy.$('#start').position('x') + 2
@@ -234,6 +261,7 @@
             }
 
             this.on('tap', function(e) {
+              resetElementColors();
               if (e.cyTarget === cy) {
                 var ind = cy.nodes().length - 1;
                 cy.add({
@@ -310,8 +338,8 @@
                 // fired when edgehandles interaction starts (drag on handle)
               },
               complete: function(sourceNode, targetNodes, addedEntities) {
+                resetElementColors();
                 angular.element('[ng-controller=AddEdgeModalController]').scope().open('sm', addedEntities);
-
               },
               stop: function(sourceNode) {
                 // fired when edgehandles interaction is stopped
