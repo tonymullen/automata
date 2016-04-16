@@ -465,9 +465,9 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
                   cy.elements().removeClass('accepting');
                 }
                 */
-                nextNode.addClass('active');
                 node.removeClass('active');
-                if (prevEdge) {
+                nextNode.addClass('active');
+                if (prevEdge && prevEdge !== edge) {
                   prevEdge.removeClass('active');
                 }
                 if (!stopPlay) {
