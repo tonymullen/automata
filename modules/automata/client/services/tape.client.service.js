@@ -44,6 +44,9 @@
       },
       movePosition: function(move, automaton) {
         automaton.tape.position = automaton.tape.position + move;
+      },
+      setContent: function(position, automaton, value) {
+        automaton.tape.contents[position] = value;
       }
     };
     return tape;
