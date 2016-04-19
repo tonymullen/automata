@@ -377,7 +377,11 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
 
 
     vm.play = function () {
-      vm.playAutomaton(cy, vm.automaton);
+      if (vm.automaton.machine === 'fsa') {
+        vm.playFSM(cy, vm.automaton);
+      } else if (vm.automaton.machine === 'tm') {
+        vm.playTM(cy, vm.automaton);
+      }
     };
 
     vm.labels = { read: '', act: '' };
@@ -444,13 +448,11 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
       vm.resetElementColors();
     };
 
-    vm.doNextStep = function(node, pos, cy, prevEdge, pause, t) {
+    vm.doNextStepFSM = function(node, pos, cy, prevEdge, pause, t) {
       if (!stopPlay) {
         if ((!!vm.automaton.tape.contents[pos])
           && (vm.automaton.tape.contents[pos] !== ' ')
           && (vm.automaton.tape.contents[pos].length > 0)) {
-          console.log(">>" + vm.automaton.tape.contents[pos] + "<<");
-          console.log(">>" + vm.automaton.tape.contents[pos].length + "<<");
           setTimeout(function() {
             var noOutgoing = true;
             node.outgoers().forEach(function(edge) {
@@ -458,13 +460,6 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
                 noOutgoing = false;
                 edge.addClass('active');
                 var nextNode = edge.target();
-                /*
-                if (nextNode.hasClass('accept')) {
-                  cy.elements().addClass('accepting');
-                } else {
-                  cy.elements().removeClass('accepting');
-                }
-                */
                 node.removeClass('active');
                 nextNode.addClass('active');
                 if (prevEdge && prevEdge !== edge) {
@@ -474,7 +469,7 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
                   $scope.$apply(
                     t.movePosition(1, vm.automaton)
                   );
-                  vm.doNextStep(nextNode, pos + 1, cy, edge, pause, t);
+                  vm.doNextStepFSM(nextNode, pos + 1, cy, edge, pause, t);
                 } else {
                   vm.resetElementColors();
                 }
@@ -510,7 +505,7 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
       }
     };
 
-    vm.playAutomaton = function(cy, automaton) {
+    vm.playFSM = function(cy, automaton) {
       if (stopPlay) {
         vm.reset(cy, automaton);
         stopPlay = false;
@@ -519,7 +514,84 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
         var startNode = cy.getElementById('0');
         startNode.addClass('active');
         var pause = 500;
-        vm.doNextStep(startNode, 0, cy, null, pause, tape);
+        vm.doNextStepFSM(startNode, 0, cy, null, pause, tape);
+      }
+    };
+
+    vm.doNextStepTM = function(node, pos, cy, prevEdge, pause, t) {
+      if (!stopPlay) {
+        $timeout(function() {
+          var noOutgoing = true;
+          var action = null;
+          var read = null;
+          node.outgoers().forEach(function(edge) {
+            if (edge.data().read === '_') {
+              read = ' ';
+            } else {
+              read = edge.data().read;
+            }
+            if (read === vm.automaton.tape.contents[pos]) {
+              action = edge.data().action;
+              noOutgoing = false;
+              edge.addClass('active');
+              var nextNode = edge.target();
+              node.removeClass('active');
+              nextNode.addClass('active');
+              if (prevEdge && prevEdge !== edge) {
+                prevEdge.removeClass('active');
+              }
+              if (!stopPlay) {
+                if (action === '>') {
+                  $scope.$apply(
+                    t.movePosition(1, vm.automaton)
+                  );
+                } else if (action === '<') {
+                  $scope.$apply(
+                    t.movePosition((-1), vm.automaton)
+                  );
+                } else if (action === '_') {
+                  $scope.$apply(
+                    t.setContent(vm.automaton.tape.position, vm.automaton, ' ')
+                  );
+                } else if (action) {
+                  $scope.$apply(
+                    t.setContent(vm.automaton.tape.position, vm.automaton, edge.data().action)
+                  );
+                }
+                action = null;
+                read = null;
+                vm.doNextStepTM(nextNode, vm.automaton.tape.position, cy, edge, pause, t);
+              } else {
+                vm.resetElementColors();
+              }
+              // break the foreach loop when a matching edge is found
+              // otherwise read values will match newly written
+              // tape values. "break" doesn't work for foreach
+              return false;
+            }
+          });
+          if (noOutgoing) {
+            stopPlay = true;
+            if (prevEdge) prevEdge.removeClass('active');
+            cy.$('node').removeClass('running');
+            cy.$('edge').removeClass('running');
+          }
+        }, pause);
+      }
+    };
+
+
+    vm.playTM = function(cy, automaton) {
+      console.log('playing turing machine');
+      if (stopPlay) {
+        vm.reset(cy, automaton);
+        stopPlay = false;
+        cy.$('node').addClass('running');
+        cy.$('edge').addClass('running');
+        var startNode = cy.getElementById('0');
+        startNode.addClass('active');
+        var pause = 1000;
+        vm.doNextStepTM(startNode, 0, cy, null, pause, tape);
       }
     };
 
@@ -1066,7 +1138,7 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
               preview: true, // whether to show added edges preview before releasing selection
               stackOrder: 4, // Controls stack order of edgehandles canvas element by setting it's z-index
               handleSize: 15, // the size of the edge handle put on nodes
-              handleColor: '#b395bb', // the colour of the handle and the line drawn from it
+              handleColor: '#A7A6A0', // the colour of the handle and the line drawn from it
               handleLineType: 'ghost', // can be 'ghost' for real edge, 'straight' for a straight line, or 'draw' for a draw-as-you-go line
               handleLineWidth: 1, // width of handle line in pixels
               handleNodes: '.enode', // selector/filter function for whether edges can be made from a given node
@@ -1164,6 +1236,9 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
       },
       movePosition: function(move, automaton) {
         automaton.tape.position = automaton.tape.position + move;
+      },
+      setContent: function(position, automaton, value) {
+        automaton.tape.contents[position] = value;
       }
     };
     return tape;
