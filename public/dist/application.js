@@ -374,7 +374,7 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
     }());
 
     var cy; // ref to cy
-
+    var PAUSE = 1;
 
     vm.play = function () {
       if (vm.automaton.machine === 'fsa') {
@@ -422,6 +422,8 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
     }
 
     vm.focusNext = tape.focusNext;
+    // play is currently stopped. prevents play when
+    // play is already in progress
     var stopPlay = true;
 
     vm.resetElementColors = function() {
@@ -513,7 +515,7 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
         cy.$('edge').addClass('running');
         var startNode = cy.getElementById('0');
         startNode.addClass('active');
-        var pause = 500;
+        var pause = PAUSE;
         vm.doNextStepFSM(startNode, 0, cy, null, pause, tape);
       }
     };
@@ -530,7 +532,8 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
             } else {
               read = edge.data().read;
             }
-            if (read === vm.automaton.tape.contents[pos]) {
+            if (read === vm.automaton.tape.contents[pos] ||
+                read === vm.automaton.tape.contents[pos] + ' ') {
               action = edge.data().action;
               noOutgoing = false;
               edge.addClass('active');
@@ -548,6 +551,7 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
                 } else if (action === '<') {
                   $scope.$apply(
                     t.movePosition((-1), vm.automaton)
+
                   );
                 } else if (action === '_') {
                   $scope.$apply(
@@ -562,6 +566,7 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
                 read = null;
                 vm.doNextStepTM(nextNode, vm.automaton.tape.position, cy, edge, pause, t);
               } else {
+                console.log("resetting colors");
                 vm.resetElementColors();
               }
               // break the foreach loop when a matching edge is found
@@ -590,7 +595,7 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
         cy.$('edge').addClass('running');
         var startNode = cy.getElementById('0');
         startNode.addClass('active');
-        var pause = 1000;
+        var pause = PAUSE;
         vm.doNextStepTM(startNode, 0, cy, null, pause, tape);
       }
     };
@@ -1236,6 +1241,10 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
       },
       movePosition: function(move, automaton) {
         automaton.tape.position = automaton.tape.position + move;
+        if (automaton.tape.position < 0) {
+          automaton.tape.contents.unshift(' ');
+          automaton.tape.position = 0;
+        }
       },
       setContent: function(position, automaton, value) {
         automaton.tape.contents[position] = value;
@@ -1497,7 +1506,7 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
 
   function pageTitle($rootScope, $timeout, $interpolate, $state) {
     var directive = {
-      retrict: 'A',
+      restrict: 'A',
       link: link
     };
 
@@ -2480,9 +2489,9 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
     .module('users')
     .controller('EditProfileController', EditProfileController);
 
-  EditProfileController.$inject = ['$scope', '$http', '$location', 'Users', 'Authentication'];
+  EditProfileController.$inject = ['$scope', '$http', '$location', 'UsersService', 'Authentication'];
 
-  function EditProfileController($scope, $http, $location, Users, Authentication) {
+  function EditProfileController($scope, $http, $location, UsersService, Authentication) {
     var vm = this;
 
     vm.user = Authentication.user;
@@ -2498,7 +2507,7 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
         return false;
       }
 
-      var user = new Users(vm.user);
+      var user = new UsersService(vm.user);
 
       user.$update(function (response) {
         $scope.$broadcast('show-errors-reset', 'vm.userForm');
