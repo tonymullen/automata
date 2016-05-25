@@ -6964,6 +6964,7 @@ var corefn = ({
 
       if( !bTypes.ids[ params.type ] ){
         bTypes.push( params.type );
+        bTypes.ids[ params.type ] = true;
       }
 
       return; // notifications are disabled during batching
@@ -12239,21 +12240,27 @@ BRp.recalculateNodeLabelProjection = function( node ){
   if( !content || content.match(/^\s+$/) ){ return; }
 
   var textX, textY;
-  var nodeWidth = node.outerWidth();
-  var nodeHeight = node.outerHeight();
-  var nodePos = node._private.position;
-  var textHalign = node._private.style['text-halign'].strValue;
-  var textValign = node._private.style['text-valign'].strValue;
-  var rs = node._private.rscratch;
-  var rstyle = node._private.rstyle;
+  var _p = node._private;
+  var style = node._private.style;
+  var nodeWidth = node.width();
+  var nodeHeight = node.height();
+  var paddingLeft = style['padding-left'].pfValue;
+  var paddingRight = style['padding-right'].pfValue;
+  var paddingTop = style['padding-top'].pfValue;
+  var paddingBottom = style['padding-bottom'].pfValue;
+  var nodePos = _p.position;
+  var textHalign = style['text-halign'].strValue;
+  var textValign = style['text-valign'].strValue;
+  var rs = _p.rscratch;
+  var rstyle = _p.rstyle;
 
   switch( textHalign ){
     case 'left':
-      textX = nodePos.x - nodeWidth / 2;
+      textX = nodePos.x - nodeWidth / 2 - paddingLeft;
       break;
 
     case 'right':
-      textX = nodePos.x + nodeWidth / 2;
+      textX = nodePos.x + nodeWidth / 2 + paddingRight;
       break;
 
     default: // e.g. center
@@ -12262,11 +12269,11 @@ BRp.recalculateNodeLabelProjection = function( node ){
 
   switch( textValign ){
     case 'top':
-      textY = nodePos.y - nodeHeight / 2;
+      textY = nodePos.y - nodeHeight / 2 - paddingTop;
       break;
 
     case 'bottom':
-      textY = nodePos.y + nodeHeight / 2;
+      textY = nodePos.y + nodeHeight / 2 + paddingBottom;
       break;
 
     default: // e.g. middle
@@ -12800,15 +12807,15 @@ BRp.findEdgeControlPoints = function(edges) {
           loopDist = ctrlptDist;
         }
 
-        /*
+/*
         rs.ctrlpts = [
           srcPos.x,
           srcPos.y - (1 + Math.pow(srcH, 1.12) / 100) * loopDist * (j / 3 + 1),
+
           srcPos.x - (1 + Math.pow(srcW, 1.12) / 100) * loopDist * (j / 3 + 1),
           srcPos.y
         ];
-        */
-
+*/
         // my loop alteration
         rs.ctrlpts = [
           srcPos.x + (0.4)*(1 + Math.pow(srcH, 1.12) / 100) * loopDist * (j / 3 + 1),
@@ -13465,6 +13472,7 @@ BRp.getCachedImage = function(url, onLoad) {
 
   var image = cache.image = new Image();
   image.addEventListener('load', onLoad);
+  image.crossOrigin = 'Anonymous'; // prevent tainted canvas
   image.src = url;
 
   return image;
@@ -13556,34 +13564,34 @@ BRp.notify = function(params) {
     types = [ params.type ];
   }
 
+  var has = {};
   for( var i = 0; i < types.length; i++ ){
     var type = types[i];
 
-    switch( type ){
-      case 'destroy':
-        r.destroy();
-        return;
+    has[ type ] = true;
+  }
 
-      case 'add':
-      case 'remove':
-      case 'load':
-        r.updateElementsCache();
-        break;
+  if( has.destroy ){
+    r.destroy();
+    return;
+  }
 
-      case 'viewport':
-        r.redrawHint('select', true);
-        break;
+  if( has.add || has.remove || has.load ){
+    r.updateElementsCache();
+  }
 
-      case 'style':
-        r.updateCachedZSortedEles();
-        break;
-    }
+  if( has.style ){
+    r.updateCachedZSortedEles();
+  }
 
-    if( type === 'load' || type === 'resize' ){
-      r.invalidateContainerClientCoordsCache();
-      r.matchCanvasSize(r.container);
-    }
-  } // for
+  if( has.viewport ){
+    r.redrawHint('select', true);
+  }
+
+  if( has.load || has.resize ){
+    r.invalidateContainerClientCoordsCache();
+    r.matchCanvasSize(r.container);
+  }
 
   r.redrawHint('eles', true);
   r.redrawHint('drag', true);
@@ -13635,9 +13643,10 @@ module.exports = BR;
 },{"../../../is":77,"../../../util":94,"./arrow-shapes":54,"./cached-eles":55,"./coord-ele-math":56,"./images":57,"./load-listeners":59,"./node-shapes":60,"./redraw":61}],59:[function(_dereq_,module,exports){
 'use strict';
 
-var is = _dereq_('../../../is');
-var util = _dereq_('../../../util');
-var Event = _dereq_('../../../event');
+var is = _dereq_( '../../../is' );
+var util = _dereq_( '../../../util' );
+var math = _dereq_( '../../../math' );
+var Event = _dereq_( '../../../event' );
 var Collection = _dereq_('../../../collection');
 
 var BRp = {};
@@ -13918,12 +13927,14 @@ BRp.load = function() {
     r.hoverData.which = e.which;
 
     var cy = r.cy;
-    var pos = r.projectIntoViewport(e.clientX, e.clientY);
+    var gpos = [ e.clientX, e.clientY ];
+    var pos = r.projectIntoViewport( gpos[0], gpos[1] );
     var select = r.selection;
     var near = r.findNearestElement(pos[0], pos[1], true, false);
     var draggedElements = r.dragData.possibleDragElements;
 
     r.hoverData.mdownPos = pos;
+    r.hoverData.mdownGPos = gpos;
 
     var checkForTaphold = function(){
       r.hoverData.tapholdCancelled = false;
@@ -14092,7 +14103,10 @@ BRp.load = function() {
 
     var cy = r.cy;
     var zoom = cy.zoom();
-    var pos = r.projectIntoViewport(e.clientX, e.clientY);
+    var gpos = [ e.clientX, e.clientY ];
+    var pos = r.projectIntoViewport( gpos[0], gpos[1] );
+    var mdownPos = r.hoverData.mdownPos;
+    var mdownGPos = r.hoverData.mdownGPos;
     var select = r.selection;
 
     var near = null;
@@ -14106,16 +14120,19 @@ BRp.load = function() {
 
     var draggedElements = r.dragData.possibleDragElements;
 
-    var dx = select[2] - select[0];
-    var dx2 = dx * dx;
-    var dy = select[3] - select[1];
-    var dy2 = dy * dy;
-    var dist2 = dx2 + dy2;
-    var rdist2 = dist2 * zoom * zoom;
+    var isOverThresholdDrag;
+
+    if( mdownGPos ){
+      var dx = gpos[0] - mdownGPos[0];
+      var dx2 = dx * dx;
+      var dy = gpos[1] - mdownGPos[1];
+      var dy2 = dy * dy;
+      var dist2 = dx2 + dy2;
+
+      isOverThresholdDrag = dist2 >= r.desktopTapThreshold2;
+    }
 
     var multSelKeyDown = isMultSelKeyDown( e );
-
-    var isOverThresholdDrag = rdist2 >= r.desktopTapThreshold2;
 
     if (isOverThresholdDrag) {
       r.hoverData.tapholdCancelled = true;
@@ -14216,28 +14233,29 @@ BRp.load = function() {
         select[4] == 1 && (down == null || down.isEdge())
     ){
 
-      if( !r.hoverData.dragging && cy.boxSelectionEnabled() && ( multSelKeyDown || !cy.panningEnabled() || !cy.userPanningEnabled() ) ){
-        r.data.bgActivePosistion = undefined;
-        r.hoverData.selecting = true;
+      if( isOverThresholdDrag ){
 
-        r.redrawHint('select', true);
-        r.redraw();
+        if( !r.hoverData.dragging && cy.boxSelectionEnabled() && ( multSelKeyDown || !cy.panningEnabled() || !cy.userPanningEnabled() ) ){
+          r.data.bgActivePosistion = undefined;
+          r.hoverData.selecting = true;
 
-      } else if( !r.hoverData.selecting && cy.panningEnabled() && cy.userPanningEnabled() ){
-        r.hoverData.dragging = true;
-        r.hoverData.justStartedPan = true;
-        select[4] = 0;
+          r.redrawHint('select', true);
+          r.redraw();
 
-        r.data.bgActivePosistion = {
-          x: pos[0],
-          y: pos[1]
-        };
+        } else if( !r.hoverData.selecting && cy.panningEnabled() && cy.userPanningEnabled() ){
+          r.hoverData.dragging = true;
+          r.hoverData.justStartedPan = true;
+          select[4] = 0;
 
-        r.redrawHint('select', true);
-        r.redraw();
+          r.data.bgActivePosistion = math.array2point( mdownPos );
+
+          r.redrawHint('select', true);
+          r.redraw();
+        }
+
+        if( down && down.isEdge() && down.active() ){ down.unactivate(); }
+
       }
-
-      if( down && down.isEdge() && down.active() ){ down.unactivate(); }
 
     } else {
       if( down && down.isEdge() && down.active() ){ down.unactivate(); }
@@ -14298,7 +14316,7 @@ BRp.load = function() {
                 if( justStartedDrag ){
                   var dragDelta = r.hoverData.dragDelta;
 
-                  if( updatePos && is.number(dragDelta[0]) && is.number(dragDelta[1]) ){
+                  if( updatePos && dragDelta && is.number(dragDelta[0]) && is.number(dragDelta[1]) ){
                     dPos.x += dragDelta[0];
                     dPos.y += dragDelta[1];
                   }
@@ -14415,8 +14433,9 @@ BRp.load = function() {
       if(
         !r.dragData.didDrag // didn't move a node around
         && !r.hoverData.dragged // didn't pan
+        && !r.hoverData.selecting // not box selection
       ){
-        triggerEvents( near, ['click', 'tap', 'vclick'], e, {
+        triggerEvents( down, ['click', 'tap', 'vclick'], e, {
           cyPosition: { x: pos[0], y: pos[1] }
         } );
       }
@@ -14487,15 +14506,15 @@ BRp.load = function() {
         r.redraw();
       }
 
-      if (!select[4]) {
-
-
+      if( !select[4] ) {
         r.redrawHint('drag', true);
         r.redrawHint('eles', true);
 
+        var downWasGrabbed = down && down.grabbed();
+
         freeDraggedElements( draggedElements );
 
-        if( down ){ down.trigger('free'); }
+        if( downWasGrabbed ){ down.trigger('free'); }
       }
 
     } // else not right mouse
@@ -14508,6 +14527,8 @@ BRp.load = function() {
     r.dragData.didDrag = false;
     r.hoverData.dragged = false;
     r.hoverData.dragDelta = [];
+    r.hoverData.mdownPos = null;
+    r.hoverData.mdownGPos = null;
 
   }, false);
 
@@ -14621,7 +14642,6 @@ BRp.load = function() {
     if (e.touches[0]) { var pos = r.projectIntoViewport(e.touches[0].clientX, e.touches[0].clientY); now[0] = pos[0]; now[1] = pos[1]; }
     if (e.touches[1]) { var pos = r.projectIntoViewport(e.touches[1].clientX, e.touches[1].clientY); now[2] = pos[0]; now[3] = pos[1]; }
     if (e.touches[2]) { var pos = r.projectIntoViewport(e.touches[2].clientX, e.touches[2].clientY); now[4] = pos[0]; now[5] = pos[1]; }
-
 
     // record starting points for pinch-to-zoom
     if( e.touches[1] ){
@@ -14771,10 +14791,13 @@ BRp.load = function() {
       // Tap, taphold
       // -----
 
+      r.touchData.startPosition = [];
       for (var i=0; i<now.length; i++) {
         earlier[i] = now[i];
         r.touchData.startPosition[i] = now[i];
       }
+
+      r.touchData.startGPosition = [ e.touches[0].clientX, e.touches[0].clientY ];
 
       r.touchData.singleTouchMoved = false;
       r.touchData.singleTouchStartTime = +new Date();
@@ -14802,27 +14825,30 @@ BRp.load = function() {
 
   var touchmoveHandler;
   r.registerBinding(window, 'touchmove', touchmoveHandler = function(e) {
-
     var select = r.selection;
     var capture = r.touchData.capture;
     var cy = r.cy;
-    var now = r.touchData.now; var earlier = r.touchData.earlier;
+    var now = r.touchData.now;
+    var earlier = r.touchData.earlier;
     var zoom = cy.zoom();
 
     if (e.touches[0]) { var pos = r.projectIntoViewport(e.touches[0].clientX, e.touches[0].clientY); now[0] = pos[0]; now[1] = pos[1]; }
     if (e.touches[1]) { var pos = r.projectIntoViewport(e.touches[1].clientX, e.touches[1].clientY); now[2] = pos[0]; now[3] = pos[1]; }
     if (e.touches[2]) { var pos = r.projectIntoViewport(e.touches[2].clientX, e.touches[2].clientY); now[4] = pos[0]; now[5] = pos[1]; }
 
-    var disp = []; for (var j=0;j<now.length;j++) { disp[j] = now[j] - earlier[j]; }
-    var startPos = r.touchData.startPosition;
-    var dx = now[0] - startPos[0];
-    var dx2 = dx * dx;
-    var dy = now[1] - startPos[1];
-    var dy2 = dy * dy;
-    var dist2 = dx2 + dy2;
-    var rdist2 = dist2 * zoom * zoom;
+    var isOverThresholdDrag;
 
-    var isOverThresholdDrag = rdist2 >= r.touchTapThreshold2;
+    if( capture && e.touches[0] ){
+      var disp = []; for (var j=0;j<now.length;j++) { disp[j] = now[j] - earlier[j]; }
+      var startGPos = r.touchData.startGPosition;
+      var dx = e.touches[0].clientX - startGPos[0];
+      var dx2 = dx * dx;
+      var dy = e.touches[0].clientY - startGPos[1];
+      var dy2 = dy * dy;
+      var dist2 = dx2 + dy2;
+
+      isOverThresholdDrag = dist2 >= r.touchTapThreshold2;
+    }
 
     // context swipe cancelling
     if( capture && r.touchData.cxt ){
@@ -15033,7 +15059,7 @@ BRp.load = function() {
       if (e.touches[1]) { var pos = r.projectIntoViewport(e.touches[1].clientX, e.touches[1].clientY); now[2] = pos[0]; now[3] = pos[1]; }
       if (e.touches[2]) { var pos = r.projectIntoViewport(e.touches[2].clientX, e.touches[2].clientY); now[4] = pos[0]; now[5] = pos[1]; }
 
-    } else if (e.touches[0]) {
+    } else if ( capture && e.touches[0] ){
       var start = r.touchData.start;
       var last = r.touchData.last;
       var near = near || r.findNearestElement(now[0], now[1], true, true);
@@ -15162,10 +15188,7 @@ BRp.load = function() {
             start.unactivate();
 
             if( !r.data.bgActivePosistion ){
-              r.data.bgActivePosistion = {
-                x: now[0],
-                y: now[1]
-              };
+              r.data.bgActivePosistion = math.array2point( r.touchData.startPosition );
             }
 
             r.redrawHint('select', true);
@@ -15396,6 +15419,8 @@ BRp.load = function() {
 
     if( e.touches.length === 0 ){
       r.touchData.dragDelta = [];
+      r.touchData.startPosition = null;
+      r.touchData.startGPosition = null;
     }
 
     if( updateStartStyle && start ){
@@ -15519,7 +15544,7 @@ BRp.load = function() {
 
 module.exports = BRp;
 
-},{"../../../collection":23,"../../../event":42,"../../../is":77,"../../../util":94}],60:[function(_dereq_,module,exports){
+},{"../../../collection":23,"../../../event":42,"../../../is":77,"../../../math":79,"../../../util":94}],60:[function(_dereq_,module,exports){
 'use strict';
 
 var math = _dereq_('../../../math');
@@ -18864,7 +18889,7 @@ var cytoscape = function( options ){ // jshint ignore:line
 };
 
 // replaced by build system
-cytoscape.version = '2.6.7';
+cytoscape.version = '2.6.12';
 
 // try to register w/ jquery
 if( window && window.jQuery ){
@@ -19137,6 +19162,13 @@ module.exports = registerJquery;
 'use strict';
 
 var math = {};
+
+math.array2point = function( arr ){
+  return {
+    x: arr[0],
+    y: arr[1]
+  };
+};
 
 math.signum = function(x){
   if( x > 0 ){
@@ -21176,6 +21208,7 @@ styfn.apply = function( eles ){
     var cxtStyle = self.getContextStyle( cxtMeta );
     var app = self.applyContextStyle( cxtMeta, cxtStyle, ele );
 
+    self.enforceCompoundSizing( ele );
     self.updateTransitions( ele, app.diffProps );
     self.updateStyleHints( ele );
 
@@ -21341,6 +21374,17 @@ styfn.applyContextStyle = function( cxtMeta, cxtStyle, ele ){
   return {
     diffProps: retDiffProps
   };
+};
+
+// because a node can become and unbecome a parent, it's safer to enforce auto sizing manually
+// (i.e. the style context diff could be empty, meaning the autosizing is stale)
+styfn.enforceCompoundSizing = function(ele){
+  var self = this;
+
+  if( ele.isParent() ){
+    self.applyParsedProperty( ele, self.parse('width', 'auto') );
+    self.applyParsedProperty( ele, self.parse('height', 'auto') );
+  }
 };
 
 styfn.updateStyleHints = function(ele){
