@@ -44,6 +44,10 @@
       },
       movePosition: function(move, automaton) {
         automaton.tape.position = automaton.tape.position + move;
+        if (automaton.tape.position < 0) {
+          automaton.tape.contents.unshift(' ');
+          automaton.tape.position = 0;
+        }
       },
       setContent: function(position, automaton, value) {
         automaton.tape.contents[position] = value;

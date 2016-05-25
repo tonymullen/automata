@@ -31,7 +31,7 @@
     }());
 
     var cy; // ref to cy
-
+    var PAUSE = 1;
 
     vm.play = function () {
       if (vm.automaton.machine === 'fsa') {
@@ -79,6 +79,8 @@
     }
 
     vm.focusNext = tape.focusNext;
+    // play is currently stopped. prevents play when
+    // play is already in progress
     var stopPlay = true;
 
     vm.resetElementColors = function() {
@@ -170,7 +172,7 @@
         cy.$('edge').addClass('running');
         var startNode = cy.getElementById('0');
         startNode.addClass('active');
-        var pause = 500;
+        var pause = PAUSE;
         vm.doNextStepFSM(startNode, 0, cy, null, pause, tape);
       }
     };
@@ -187,7 +189,8 @@
             } else {
               read = edge.data().read;
             }
-            if (read === vm.automaton.tape.contents[pos]) {
+            if (read === vm.automaton.tape.contents[pos] ||
+                read === vm.automaton.tape.contents[pos] + ' ') {
               action = edge.data().action;
               noOutgoing = false;
               edge.addClass('active');
@@ -205,6 +208,7 @@
                 } else if (action === '<') {
                   $scope.$apply(
                     t.movePosition((-1), vm.automaton)
+
                   );
                 } else if (action === '_') {
                   $scope.$apply(
@@ -219,6 +223,7 @@
                 read = null;
                 vm.doNextStepTM(nextNode, vm.automaton.tape.position, cy, edge, pause, t);
               } else {
+                console.log("resetting colors");
                 vm.resetElementColors();
               }
               // break the foreach loop when a matching edge is found
@@ -247,7 +252,7 @@
         cy.$('edge').addClass('running');
         var startNode = cy.getElementById('0');
         startNode.addClass('active');
-        var pause = 1000;
+        var pause = PAUSE;
         vm.doNextStepTM(startNode, 0, cy, null, pause, tape);
       }
     };
