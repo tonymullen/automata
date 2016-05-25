@@ -14,6 +14,7 @@ var AutomatonSchema = new Schema({
     type: Date,
     default: Date.now
   },
+  demo: { type: Boolean, default: false },
   user: {
     type: Schema.ObjectId,
     ref: 'User'
