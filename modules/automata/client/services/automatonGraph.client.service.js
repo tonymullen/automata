@@ -70,6 +70,7 @@
                 'edge-text-rotation': 'none',
                 'curve-style': 'bezier',
                 'control-point-step-size': '70px',
+                'loop-direction': 'north',
                 'target-arrow-shape': 'triangle',
                 'line-color': 'black',
                 'target-arrow-color': 'black',
