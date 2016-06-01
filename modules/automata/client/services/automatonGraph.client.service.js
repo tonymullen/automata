@@ -272,6 +272,7 @@
                   classes: 'enode',
                   position: { x: e.cyPosition.x, y: e.cyPosition.y }
                 });
+
               //  cy.elements().removeClass('faded');
               }
             });

@@ -14,7 +14,6 @@ var AutomatonSchema = new Schema({
     type: Date,
     default: Date.now
   },
-  demo: { type: Boolean, default: false },
   user: {
     type: Schema.ObjectId,
     ref: 'User'
@@ -50,8 +49,10 @@ var AutomatonSchema = new Schema({
       }
     ],
     edges: [
-      { data:
-        { source: String,
+      {
+        data: {
+          id: String,
+          source: String,
           target: String,
           read: String,
           action: String,
