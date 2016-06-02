@@ -124,10 +124,12 @@
     });
 
     // Add the dropdown list item
+    /*
     menuService.addSubMenuItem('topbar', 'automata', {
       title: 'List Automata',
       state: 'automata.list'
     });
+    */
 
     // Add the dropdown create item
     menuService.addSubMenuItem('topbar', 'automata', {
@@ -566,7 +568,6 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
                 read = null;
                 vm.doNextStepTM(nextNode, vm.automaton.tape.position, cy, edge, pause, t);
               } else {
-                console.log("resetting colors");
                 vm.resetElementColors();
               }
               // break the foreach loop when a matching edge is found
@@ -587,7 +588,6 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
 
 
     vm.playTM = function(cy, automaton) {
-      console.log('playing turing machine');
       if (stopPlay) {
         vm.reset(cy, automaton);
         stopPlay = false;
@@ -617,12 +617,13 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
     .module('automata')
     .controller('AutomataListController', AutomataListController);
 
-  AutomataListController.$inject = ['AutomataService'];
+  AutomataListController.$inject = ['AutomataService', 'DemoService', 'Authentication'];
 
-  function AutomataListController(AutomataService) {
+  function AutomataListController(AutomataService, DemoService, Authentication) {
     var vm = this;
-
+    vm.authentication = Authentication;
     vm.automata = AutomataService.query();
+    vm.demos = DemoService.query();
   }
 }());
 
@@ -908,6 +909,7 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
                 'edge-text-rotation': 'none',
                 'curve-style': 'bezier',
                 'control-point-step-size': '70px',
+                'loop-direction': 'north',
                 'target-arrow-shape': 'triangle',
                 'line-color': 'black',
                 'target-arrow-color': 'black',
@@ -1109,6 +1111,7 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
                   classes: 'enode',
                   position: { x: e.cyPosition.x, y: e.cyPosition.y }
                 });
+
               //  cy.elements().removeClass('faded');
               }
             });
@@ -1192,6 +1195,22 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
       return deferred.promise;
     };
     return automatonGraph;
+  }
+}());
+
+(function () {
+  'use strict';
+
+  angular
+    .module('automata.services')
+    .factory('DemoService', DemoService);
+
+  DemoService.$inject = ['$resource'];
+
+  function DemoService($resource) {
+    return $resource('api/demos/:automatonId', {
+      automatonId: '@_id'
+    });
   }
 }());
 

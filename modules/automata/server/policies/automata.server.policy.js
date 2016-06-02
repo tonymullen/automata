@@ -66,6 +66,11 @@ exports.invokeRolesPolicies = function () {
 exports.isAllowed = function (req, res, next) {
   var roles = (req.user) ? req.user.roles : ['guest'];
 
+  // If an automaton is a demo
+  if (req.automaton && req.automaton.demo) {
+    return next();
+  }
+
   // If an automaton is being processed and the current user created it then allow any manipulation
   if (req.automaton && req.user && req.automaton.user.id === req.user.id) {
 
