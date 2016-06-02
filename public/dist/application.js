@@ -117,7 +117,7 @@
 
   function menuConfig(menuService) {
     menuService.addMenuItem('topbar', {
-      title: 'Automata',
+      title: 'Create',
       state: 'automata',
       type: 'dropdown',
       roles: ['*']
@@ -133,17 +133,17 @@
 
     // Add the dropdown create item
     menuService.addSubMenuItem('topbar', 'automata', {
-      title: 'Create New Turing Machine',
+      title: 'New Turing Machine',
       state: 'automata.create-tm',
       roles: ['*']
     });
     menuService.addSubMenuItem('topbar', 'automata', {
-      title: 'Create New Finite State Automaton',
+      title: 'New Finite State Automaton',
       state: 'automata.create-fsa',
       roles: ['*']
     });
     menuService.addSubMenuItem('topbar', 'automata', {
-      title: 'Create New Pushdown Automaton',
+      title: 'New Pushdown Automaton',
       state: 'automata.create-pda',
       roles: ['*']
     });
