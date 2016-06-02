@@ -5,11 +5,12 @@
     .module('automata')
     .controller('AutomataListController', AutomataListController);
 
-  AutomataListController.$inject = ['AutomataService'];
+  AutomataListController.$inject = ['AutomataService', 'DemoService', 'Authentication'];
 
-  function AutomataListController(AutomataService) {
+  function AutomataListController(AutomataService, DemoService, Authentication) {
     var vm = this;
-
+    vm.authentication = Authentication;
     vm.automata = AutomataService.query();
+    vm.demos = DemoService.query();
   }
 }());

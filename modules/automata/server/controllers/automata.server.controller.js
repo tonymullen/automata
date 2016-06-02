@@ -79,7 +79,22 @@ exports.delete = function (req, res) {
  * List of Automata
  */
 exports.list = function (req, res) {
-  Automaton.find().sort('-created').populate('user', 'displayName').exec(function (err, automata) {
+  Automaton.find().where('user').eq(req.user._id).sort('-created').populate('user', 'displayName').exec(function (err, automata) {
+    if (err) {
+      return res.status(400).send({
+        message: errorHandler.getErrorMessage(err)
+      });
+    } else {
+      res.json(automata);
+    }
+  });
+};
+
+/**
+ * List of Demos
+ */
+exports.demos = function (req, res) {
+  Automaton.find().where('demo').eq(true).sort('-created').populate('user', 'displayName').exec(function (err, automata) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
