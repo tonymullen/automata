@@ -18,6 +18,10 @@ var AutomatonSchema = new Schema({
     type: Schema.ObjectId,
     ref: 'User'
   },
+  demo: {
+    type: Boolean,
+    default: false
+  },
   title: {
     type: String,
     trim: true,

@@ -223,7 +223,6 @@
                 read = null;
                 vm.doNextStepTM(nextNode, vm.automaton.tape.position, cy, edge, pause, t);
               } else {
-                console.log("resetting colors");
                 vm.resetElementColors();
               }
               // break the foreach loop when a matching edge is found
@@ -244,7 +243,6 @@
 
 
     vm.playTM = function(cy, automaton) {
-      console.log('playing turing machine');
       if (stopPlay) {
         vm.reset(cy, automaton);
         stopPlay = false;

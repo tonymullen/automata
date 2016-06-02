@@ -5,17 +5,37 @@
   <div class="page-header">
     <h1>Automata</h1>
   </div>
-  <div class="list-group">
-    <a ng-repeat="automaton in vm.automata" ui-sref="automata.view({automatonId: automaton._id})" class="list-group-item">
-      <small class="list-group-item-text">
-        Created on
-        <span ng-bind="automaton.created | date:'mediumDate'"></span>
-        by
-        <span ng-bind="automaton.user.displayName"></span>
-      </small>
-      <h4 class="list-group-item-heading" ng-bind="automaton.title"></h4>
-      <p class="list-group-item-text" ng-bind="automaton.content"></p>
-    </a>
-  </div>
-</section>
+
+  <uib-tabset active="active">
+   <uib-tab index="0" heading="Demos">
+     <div class="list-group">
+       <a ng-repeat="automaton in vm.automata" ui-sref="automata.view({automatonId: automaton._id})" class="list-group-item">
+         <small class="list-group-item-text">
+           Created on
+           <span ng-bind="automaton.created | date:'mediumDate'"></span>
+           by
+           <span ng-bind="automaton.user.displayName"></span>
+         </small>
+         <h4 class="list-group-item-heading" ng-bind="automaton.title"></h4>
+         <p class="list-group-item-text" ng-bind="automaton.content"></p>
+       </a>
+     </div>
+
+   </uib-tab>
+
+   <uib-tab index="1" heading="My Automata">
+     <div class="list-group">
+       <a ng-repeat="automaton in vm.automata" ui-sref="automata.view({automatonId: automaton._id})" class="list-group-item">
+         <small class="list-group-item-text">
+           Created on
+           <span ng-bind="automaton.created | date:'mediumDate'"></span>
+           by
+           <span ng-bind="automaton.user.displayName"></span>
+         </small>
+         <h4 class="list-group-item-heading" ng-bind="automaton.title"></h4>
+         <p class="list-group-item-text" ng-bind="automaton.content"></p>
+       </a>
+     </div>
+   </uib-tab>
+ </uib-tabset>
 </section>

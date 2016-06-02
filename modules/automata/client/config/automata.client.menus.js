@@ -16,10 +16,12 @@
     });
 
     // Add the dropdown list item
+    /*
     menuService.addSubMenuItem('topbar', 'automata', {
       title: 'List Automata',
       state: 'automata.list'
     });
+    */
 
     // Add the dropdown create item
     menuService.addSubMenuItem('topbar', 'automata', {
