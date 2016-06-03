@@ -24,7 +24,8 @@ module.exports = {
         'public/lib/owasp-password-strength-test/owasp-password-strength-test.js',
         'public/js/my_cytoscape.js',
         'public/lib/cytoscape-edgehandles-old/cytoscape-edgehandles.js',
-        'public/lib/ng-context-menu/dist/ng-context-menu.min.js'
+        'public/lib/ng-context-menu/dist/ng-context-menu.min.js',
+        'public/lib/fabric.js/dist/fabric.js'
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']
     },

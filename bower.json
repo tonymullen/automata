@@ -20,7 +20,8 @@
     "jquery-ui": "~1.11.4",
     "jquery": "~2.1.4",
     "jqueryui-touch-punch": "*",
-    "cytoscape-edgehandles": "^2.3.2"
+    "cytoscape-edgehandles": "^2.3.2",
+    "fabric.js": "fabric#^1.6.2"
   },
   "resolutions": {
     "angular": "~1.3",
