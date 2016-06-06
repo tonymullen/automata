@@ -45,6 +45,7 @@ exports.read = function (req, res) {
  */
 exports.update = function (req, res) {
   var automaton = req.automaton;
+  automaton.title = req.body.title;
   automaton.eles = req.body.eles;
   automaton.tape = req.body.tape;
   automaton.save(function (err) {

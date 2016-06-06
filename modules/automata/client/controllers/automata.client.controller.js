@@ -63,6 +63,7 @@
       vm.automaton.eles.edges = cy.edges().jsons();
 
       // TODO: move create/update logic to service
+
       if (vm.automaton._id) {
         vm.automaton.$update(successCallback, errorCallback);
       } else {
@@ -259,7 +260,9 @@
       /* Set up Cytoscape graph */
       automatonGraph(vm.automaton.eles, vm.automaton.machine).then(function(automatonCy) {
         cy = automatonCy;
+
         vm.cyLoaded = true;
+
       });
     }());
   }

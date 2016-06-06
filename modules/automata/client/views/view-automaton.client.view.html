@@ -20,11 +20,18 @@
   <span class="saveIcon glyphicon glyphicon-cloud-upload" ng-click="vm.save(true)"  ng-show="vm.authentication.user;"></span>
   <span class="saveIcon logInToSave" ng-hide="vm.authentication.user;">Log in first to enable saving</span>
 </div>
-<span class="automaton_title noSelect">
-      {{vm.automaton.title}}
+
+
+<span class="automaton_title" ng-if="!vm.automaton.demo && vm.authentication.user">
+  <a href="#"  editable-text="vm.automaton.title" onaftersave="vm.automaton.$update(successCallback, errorCallback)">{{vm.automaton.title}}</a>
 </span>
 
+
+
+
 <section>
+
+
           <div style="height:300px; width:700px">
               <div id="cy" class="cy"></div>
             </div>

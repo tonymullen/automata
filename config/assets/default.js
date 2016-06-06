@@ -8,7 +8,8 @@ module.exports = {
         'public/fonts',
         'public/fonts/automaton-icons/fonts',
         'public/fonts/automaton-icons/styles.css',
-        'public/lib/bootstrap/dist/css/bootstrap.css'
+        'public/lib/bootstrap/dist/css/bootstrap.css',
+        'public/lib/angular-xeditable/dist/css/xeditable.css'
       ],
       js: [
         'public/lib/jquery/dist/jquery.js',
@@ -25,7 +26,7 @@ module.exports = {
         'public/js/my_cytoscape.js',
         'public/lib/cytoscape-edgehandles-old/cytoscape-edgehandles.js',
         'public/lib/ng-context-menu/dist/ng-context-menu.min.js',
-        'public/lib/fabric.js/dist/fabric.js'
+        'public/lib/angular-xeditable/dist/js/xeditable.js'
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']
     },
