@@ -70,7 +70,7 @@
 (function (app) {
   'use strict';
 
-  app.registerModule('automata', ['core', 'windows', 'ui.bootstrap']);// The core module is required for special route handling; see /core/client/config/core.client.routes
+  app.registerModule('automata', ['core', 'windows', 'ui.bootstrap', 'xeditable']);// The core module is required for special route handling; see /core/client/config/core.client.routes
   app.registerModule('automata.services');
   app.registerModule('automata.routes', ['ui.router', 'core.routes', 'automata.services']);
 
@@ -253,7 +253,7 @@
       eles: {
         nodes: [
           { data: { id: 'start' }, classes: 'startmarker' },
-          { data: { id: '0', label: 0, start: true }, classes: 'enode', position: { x: 0, y: 0 } }],
+          { data: { id: '0', label: '0', start: true }, classes: 'enode', position: { x: 0, y: 0 } }],
         edges: []
       },
       tape: {
@@ -367,7 +367,6 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
     // vm.remove = remove;
     vm.save = save;
 
-
     vm.automaton.machine = vm.automaton.machine || $state.current.data.type;
     vm.automaton.title = vm.automaton.title || (function() {
       if ($state.current.data.type === 'fsa') return 'Untitled Finite-State Automaton';
@@ -376,13 +375,16 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
     }());
 
     var cy; // ref to cy
-    var PAUSE = 1;
+    var pauses = {
+      'default': 500,
+      'fast': 1
+    };
 
-    vm.play = function () {
+    vm.play = function (speed) {
       if (vm.automaton.machine === 'fsa') {
-        vm.playFSM(cy, vm.automaton);
+        vm.playFSM(cy, vm.automaton, speed);
       } else if (vm.automaton.machine === 'tm') {
-        vm.playTM(cy, vm.automaton);
+        vm.playTM(cy, vm.automaton, speed);
       }
     };
 
@@ -407,7 +409,9 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
       vm.automaton.eles.nodes = cy.nodes().jsons();
       vm.automaton.eles.edges = cy.edges().jsons();
 
+
       // TODO: move create/update logic to service
+
       if (vm.automaton._id) {
         vm.automaton.$update(successCallback, errorCallback);
       } else {
@@ -509,7 +513,7 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
       }
     };
 
-    vm.playFSM = function(cy, automaton) {
+    vm.playFSM = function(cy, automaton, speed) {
       if (stopPlay) {
         vm.reset(cy, automaton);
         stopPlay = false;
@@ -517,7 +521,7 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
         cy.$('edge').addClass('running');
         var startNode = cy.getElementById('0');
         startNode.addClass('active');
-        var pause = PAUSE;
+        var pause = pauses[speed];
         vm.doNextStepFSM(startNode, 0, cy, null, pause, tape);
       }
     };
@@ -587,7 +591,7 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
     };
 
 
-    vm.playTM = function(cy, automaton) {
+    vm.playTM = function(cy, automaton, speed) {
       if (stopPlay) {
         vm.reset(cy, automaton);
         stopPlay = false;
@@ -595,7 +599,7 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
         cy.$('edge').addClass('running');
         var startNode = cy.getElementById('0');
         startNode.addClass('active');
-        var pause = PAUSE;
+        var pause = pauses[speed];
         vm.doNextStepTM(startNode, 0, cy, null, pause, tape);
       }
     };
@@ -604,7 +608,9 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
       /* Set up Cytoscape graph */
       automatonGraph(vm.automaton.eles, vm.automaton.machine).then(function(automatonCy) {
         cy = automatonCy;
+
         vm.cyLoaded = true;
+
       });
     }());
   }
@@ -905,17 +911,25 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
               })
             .selector('edge')
               .css({
+                'width': 1,
                 'label': 'data(label)',
                 'edge-text-rotation': 'none',
                 'curve-style': 'bezier',
                 'control-point-step-size': '70px',
-                'loop-direction': 'north',
                 'target-arrow-shape': 'triangle',
                 'line-color': 'black',
                 'target-arrow-color': 'black',
                 'color': 'white',
                 'text-outline-width': 2,
                 'text-outline-color': '#555'
+              })
+            .selector('edge[direction]')
+              .css({
+                'loop-direction': 'data(direction)'
+              })
+            .selector('.edgehandles-preview')
+              .css({
+                'loop-direction': 'north'
               })
             .selector(':selected')
               .css({
@@ -1111,8 +1125,6 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
                   classes: 'enode',
                   position: { x: e.cyPosition.x, y: e.cyPosition.y }
                 });
-
-              //  cy.elements().removeClass('faded');
               }
             });
 
@@ -1180,6 +1192,7 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
               },
               complete: function(sourceNode, targetNodes, addedEntities) {
                 resetElementColors();
+                addedEntities[0].data({ 'direction': 'north' });
                 angular.element('[ng-controller=AddEdgeModalController]').scope().open('sm', addedEntities);
               },
               stop: function(sourceNode) {
@@ -1191,7 +1204,6 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
           }
         });
       });
-
       return deferred.promise;
     };
     return automatonGraph;

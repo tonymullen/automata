@@ -2,7 +2,7 @@
 
 /*!
 
-Cytoscape.js snapshot-fe92658f0a-1465320032323 (MIT licensed)
+Cytoscape.js snapshot-0b88c954f1-1465369358848 (MIT licensed)
 
 Copyright (c) The Cytoscape Consortium
 
@@ -13363,7 +13363,6 @@ BRp.findEdgeControlPoints = function( edges ){
           loopDist = ctrlptDist;
         }
 
-
         if (loopDir === 'north') {
           if(!edgeIsUnbundled){
             j = dirCounts['north'];
@@ -13445,8 +13444,7 @@ BRp.findEdgeControlPoints = function( edges ){
             srcPos.y
           ];
         }
-          
-      dirCounts[edge.pstyle('loop-direction').value]++;
+        dirCounts[edge.pstyle('loop-direction').value]++;
 
       } else if(
         hasCompounds &&
@@ -19197,7 +19195,7 @@ CRp.bufferCanvasImage = function( options ){
       this.drawElements( buffCxt, zsortedEles );
     } else { // draw the current view
       var pan = cy.pan();
-
+      
       var translation = {
         x: pan.x * scale,
         y: pan.y * scale
@@ -25275,7 +25273,7 @@ styfn.getDefaultProperties = util.memoize( function(){
     'transition-delay': 0,
     'transition-timing-function': 'linear',
     'loop-direction': 'northwest',
-
+    
     // node props
     'background-blacken': 0,
     'background-color': '#999',
@@ -26956,9 +26954,10 @@ util.debounce = function( func, wait, options ){ // ported lodash debounce funct
 module.exports = util;
 
 },{"../is":83,"../window":107}],106:[function(_dereq_,module,exports){
-module.exports="snapshot-fe92658f0a-1465320032323"
+module.exports="snapshot-0b88c954f1-1465369358848"
 },{}],107:[function(_dereq_,module,exports){
 module.exports = ( typeof window === 'undefined' ? null : window );
 
 },{}]},{},[82])(82)
 });
+
