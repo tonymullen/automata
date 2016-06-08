@@ -37,16 +37,13 @@ span.automaton_title {
   left: 20px;
   bottom: 20px; }
 
-  a.editable-click {
-    color: black;
-    border-bottom: dotted 2px black;
-}
+a.editable-click {
+  color: black;
+  border-bottom: dotted 2px black; }
 
 a.editable-click:hover {
-    color: gray;
-    border-bottom: dotted 2px gray;
-}
-
+  color: gray;
+  border-bottom: dotted 2px gray; }
 
 /*
 #info {

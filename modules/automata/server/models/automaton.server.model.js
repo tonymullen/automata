@@ -60,7 +60,12 @@ var AutomatonSchema = new Schema({
           target: String,
           read: String,
           action: String,
-          label: String
+          label: String,
+          direction: {
+            type: String,
+            enum: ['north', 'south', 'west', 'east', 'northwest', 'southwest', 'northeast', 'southeast'],
+            default: 'north'
+          }
         }
       }
     ]

@@ -101,7 +101,7 @@
       eles: {
         nodes: [
           { data: { id: 'start' }, classes: 'startmarker' },
-          { data: { id: '0', label: 0, start: true }, classes: 'enode', position: { x: 0, y: 0 } }],
+          { data: { id: '0', label: '0', start: true }, classes: 'enode', position: { x: 0, y: 0 } }],
         edges: []
       },
       tape: {

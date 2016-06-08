@@ -8,10 +8,10 @@
     <span class="auticon-arrow-bold-right"></span>
     <span class="auticon-circle-with-cross"></span>
   -->
-    <span class="auticon-controller-play" ng-click="vm.play()"></span>
-    <span class="auticon-controller-step"></span>
+    <span class="auticon-controller-play" ng-click="vm.play('default')"></span>
+    <span class="auticon-controller-step" ng-click="vm.play('step')"></span>
     <span class="auticon-controller-pause"></span>
-    <span class="auticon-controller-fast-forward"></span>
+    <span class="auticon-controller-fast-forward" ng-click="vm.play('fast')"></span>
     <span class="auticon-controller-jump-to-start"></span>
     <span class="auticon-controller-next"></span>
   </span>
@@ -26,6 +26,9 @@
   <a href="#"  editable-text="vm.automaton.title" onaftersave="vm.automaton.$update(successCallback, errorCallback)">{{vm.automaton.title}}</a>
 </span>
 
+<span class="automaton_title" ng-if="vm.automaton.demo || !vm.authentication.user">
+  {{vm.automaton.title}}
+</span>
 
 
 

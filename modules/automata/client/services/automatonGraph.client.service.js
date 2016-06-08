@@ -66,17 +66,25 @@
               })
             .selector('edge')
               .css({
+                'width': 1,
                 'label': 'data(label)',
                 'edge-text-rotation': 'none',
                 'curve-style': 'bezier',
                 'control-point-step-size': '70px',
-                'loop-direction': 'north',
                 'target-arrow-shape': 'triangle',
                 'line-color': 'black',
                 'target-arrow-color': 'black',
                 'color': 'white',
                 'text-outline-width': 2,
                 'text-outline-color': '#555'
+              })
+            .selector('edge[direction]')
+              .css({
+                'loop-direction': 'data(direction)'
+              })
+            .selector('.edgehandles-preview')
+              .css({
+                'loop-direction': 'north'
               })
             .selector(':selected')
               .css({
@@ -272,8 +280,6 @@
                   classes: 'enode',
                   position: { x: e.cyPosition.x, y: e.cyPosition.y }
                 });
-
-              //  cy.elements().removeClass('faded');
               }
             });
 
@@ -341,6 +347,7 @@
               },
               complete: function(sourceNode, targetNodes, addedEntities) {
                 resetElementColors();
+                addedEntities[0].data({ 'direction': 'north' });
                 angular.element('[ng-controller=AddEdgeModalController]').scope().open('sm', addedEntities);
               },
               stop: function(sourceNode) {
@@ -352,7 +359,6 @@
           }
         });
       });
-
       return deferred.promise;
     };
     return automatonGraph;

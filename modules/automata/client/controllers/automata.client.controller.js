@@ -22,7 +22,6 @@
     // vm.remove = remove;
     vm.save = save;
 
-
     vm.automaton.machine = vm.automaton.machine || $state.current.data.type;
     vm.automaton.title = vm.automaton.title || (function() {
       if ($state.current.data.type === 'fsa') return 'Untitled Finite-State Automaton';
@@ -31,13 +30,16 @@
     }());
 
     var cy; // ref to cy
-    var PAUSE = 1;
+    var pauses = {
+      'default': 500,
+      'fast': 1
+    };
 
-    vm.play = function () {
+    vm.play = function (speed) {
       if (vm.automaton.machine === 'fsa') {
-        vm.playFSM(cy, vm.automaton);
+        vm.playFSM(cy, vm.automaton, speed);
       } else if (vm.automaton.machine === 'tm') {
-        vm.playTM(cy, vm.automaton);
+        vm.playTM(cy, vm.automaton, speed);
       }
     };
 
@@ -61,6 +63,7 @@
 
       vm.automaton.eles.nodes = cy.nodes().jsons();
       vm.automaton.eles.edges = cy.edges().jsons();
+
 
       // TODO: move create/update logic to service
 
@@ -165,7 +168,7 @@
       }
     };
 
-    vm.playFSM = function(cy, automaton) {
+    vm.playFSM = function(cy, automaton, speed) {
       if (stopPlay) {
         vm.reset(cy, automaton);
         stopPlay = false;
@@ -173,7 +176,7 @@
         cy.$('edge').addClass('running');
         var startNode = cy.getElementById('0');
         startNode.addClass('active');
-        var pause = PAUSE;
+        var pause = pauses[speed];
         vm.doNextStepFSM(startNode, 0, cy, null, pause, tape);
       }
     };
@@ -243,7 +246,7 @@
     };
 
 
-    vm.playTM = function(cy, automaton) {
+    vm.playTM = function(cy, automaton, speed) {
       if (stopPlay) {
         vm.reset(cy, automaton);
         stopPlay = false;
@@ -251,7 +254,7 @@
         cy.$('edge').addClass('running');
         var startNode = cy.getElementById('0');
         startNode.addClass('active');
-        var pause = PAUSE;
+        var pause = pauses[speed];
         vm.doNextStepTM(startNode, 0, cy, null, pause, tape);
       }
     };
