@@ -29,7 +29,7 @@
         controller: 'AutomataController',
         controllerAs: 'vm',
         resolve: {
-          automatonResolve: newAutomaton
+          automatonResolve: newTM
         },
         data: {
 //          roles: ['user', 'admin'],
@@ -43,7 +43,7 @@
         controller: 'AutomataController',
         controllerAs: 'vm',
         resolve: {
-          automatonResolve: newAutomaton
+          automatonResolve: newFSA
         },
         data: {
 //          roles: ['user', 'admin'],
@@ -57,7 +57,7 @@
         controller: 'AutomataController',
         controllerAs: 'vm',
         resolve: {
-          automatonResolve: newAutomaton
+          automatonResolve: newPDA
         },
         data: {
 //          roles: ['user', 'admin'],
@@ -88,10 +88,32 @@
     }).$promise;
   }
 
-  newAutomaton.$inject = ['$state', 'AutomataService'];
+  newFSA.$inject = ['$state', 'AutomataService'];
+  function newFSA($state, AutomataService) {
+    return newAutomaton($state, AutomataService, 'fsa');
+  }
+  newPDA.$inject = ['$state', 'AutomataService'];
+  function newPDA($state, AutomataService) {
+    return newAutomaton($state, AutomataService, 'pda');
+  }
+  newTM.$inject = ['$state', 'AutomataService'];
+  function newTM($state, AutomataService) {
+    return newAutomaton($state, AutomataService, 'tm');
+  }
+  // newAutomaton.$inject = ['$state', 'AutomataService'];
 
-  function newAutomaton($state, AutomataService) {
+  function newAutomaton($state, AutomataService, machine) {
     // return new AutomataService();
+
+    var empty_stack = [];
+    // console.log($routeParams);
+
+    if (machine === 'pda') {
+      for (var j = 0; j < 20; j++) {
+        empty_stack.push(' ');
+      }
+    }
+
     var empty_tape = [];
     for (var i = 0; i < 50; i++) {
       empty_tape.push(' ');
@@ -108,6 +130,7 @@
         position: 0,
         contents: empty_tape
       },
+      stack: empty_stack,
       determ: true
     });
   }

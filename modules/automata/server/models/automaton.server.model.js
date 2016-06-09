@@ -36,6 +36,7 @@ var AutomatonSchema = new Schema({
     position: Number,
     contents: [String]
   },
+  stack: [String],
   eles: {
     nodes: [
       {
