@@ -105,7 +105,7 @@
   function newAutomaton($state, AutomataService, machine) {
     // return new AutomataService();
 
-    var empty_stack = [];
+    var empty_stack = ['X', 'X', 'X', 'X'];
     // console.log($routeParams);
 
     if (machine === 'pda') {

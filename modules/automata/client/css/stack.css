@@ -1,0 +1,60 @@
+#stack {
+  position: absolute;
+  width: 80px; }
+
+div.stackWindowBodyContent {
+  /*  min-height: 18px; */
+  /*  min-width: 220px; */
+  /*  height: calc(100% - 2px); */ }
+
+/** Scroll window content when necessary **/
+div.stackWindowBodyContent {
+  overflow-y: hidden;
+  max-height: calc(100% - 2px);
+  height: 300px;
+  margin: 5px 5px 2px 5px;
+  border: solid 1.5px lightGray;
+  padding: 2px; }
+
+div.stackWindowBody {
+  overflow: auto;
+  height: calc(100% - 30px); }
+
+.panel-heading.stack-window-heading {
+  background-color: #080808;
+  background-image: linear-gradient(to bottom, #353535 0%, #080808 100%);
+  border-color: #080808;
+  padding: 0;
+  height: 24px; }
+
+.panel.stack-window {
+  border-color: #080808;
+  background-color: white;
+  background-color: rgba(255, 255, 255, 0.5); }
+
+tr.stack-content > td {
+  background-color: white;
+  border: solid 1pt black;
+  margin: auto;
+  width: 32px; }
+
+tr.stack-content > td > div.stack-cell {
+  border: none;
+  margin: auto;
+  color: black;
+  padding: 0;
+  font-family: 'Francois One', sans-serif;
+  font-size: 2em;
+  text-transform: uppercase;
+  text-align: center;
+  height: 40px;
+  width: 30px; }
+
+tr.stack-content > td.active {
+  background-color: black; }
+
+tr.stack-content > td.active > div.stack-cell {
+  background-color: black;
+  color: white; }
+
+/*# sourceMappingURL=stack.css.map */

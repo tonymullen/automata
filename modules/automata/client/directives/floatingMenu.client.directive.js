@@ -154,7 +154,6 @@ angular.module('resizeIt', [])
 }]); // end resizeable
 
 angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
-
 .directive('window', ['$animate', function($animate) {
   return {
     restrict: 'E',
@@ -183,7 +182,35 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
   }; // end return
 }]) // end window
 
+.directive('stackWindow', ['$animate', function($animate) {
+  return {
+    restrict: 'E',
+    transclude: true,
+    replace: true,
+    templateUrl: 'modules/automata/client/partials/stack.html',
+    scope: {
+      id: '@id',
+      title: '@title'
+    },
+    link: function(scope, el, attr) {
+      scope.minimized = false;
+
+      /** Methods **/
+      scope.minimize = function() {
+        scope.minimized = !scope.minimized;
+
+        if (angular.equals(scope.minimized, true)) {
+          $animate.addClass(el, 'minimize');
+        } else {
+          $animate.removeClass(el, 'minimize');
+        }
+      }; // end minimize
+
+    } // end link
+  }; // end return
+}])
 
 .run(['$templateCache', '$http', function($templateCache, $http) {
   $http.get('modules/automata/client/partials/tape.html', { cache: $templateCache });
+  $http.get('modules/automata/client/partials/stack.html', { cache: $templateCache });
 }]); // end windows

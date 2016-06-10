@@ -59,14 +59,11 @@
    </window>
 
 
- <window id="stack" ng-if="'pda' === machine">
+ <stack-window id="stack" ng-if="'pda' === vm.automaton.machine">
    <table id="stack-table">
-     <tr class="stack-content">
-       <td ng-repeat="item in vm.automaton.stack.contents track by $index">
-          <input class="{{'stack-cell-'+$index}} stack-cell"
-              type="text"
-              name="input"
-              ng-model="item">
+     <tr class="stack-content" ng-repeat="item in vm.automaton.stack track by $index">
+       <td>
+        <div class="{{'cell-'+$index}} stack-cell noSelect" >{{item}}</div>
        </td>
      </tr>
    </table>
