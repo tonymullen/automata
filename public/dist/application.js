@@ -181,7 +181,7 @@
         controller: 'AutomataController',
         controllerAs: 'vm',
         resolve: {
-          automatonResolve: newAutomaton
+          automatonResolve: newTM
         },
         data: {
 //          roles: ['user', 'admin'],
@@ -195,7 +195,7 @@
         controller: 'AutomataController',
         controllerAs: 'vm',
         resolve: {
-          automatonResolve: newAutomaton
+          automatonResolve: newFSA
         },
         data: {
 //          roles: ['user', 'admin'],
@@ -209,7 +209,7 @@
         controller: 'AutomataController',
         controllerAs: 'vm',
         resolve: {
-          automatonResolve: newAutomaton
+          automatonResolve: newPDA
         },
         data: {
 //          roles: ['user', 'admin'],
@@ -240,10 +240,26 @@
     }).$promise;
   }
 
-  newAutomaton.$inject = ['$state', 'AutomataService'];
+  newFSA.$inject = ['$state', 'AutomataService'];
+  function newFSA($state, AutomataService) {
+    return newAutomaton($state, AutomataService, 'fsa');
+  }
+  newPDA.$inject = ['$state', 'AutomataService'];
+  function newPDA($state, AutomataService) {
+    return newAutomaton($state, AutomataService, 'pda');
+  }
+  newTM.$inject = ['$state', 'AutomataService'];
+  function newTM($state, AutomataService) {
+    return newAutomaton($state, AutomataService, 'tm');
+  }
+  // newAutomaton.$inject = ['$state', 'AutomataService'];
 
-  function newAutomaton($state, AutomataService) {
+  function newAutomaton($state, AutomataService, machine) {
     // return new AutomataService();
+
+    var empty_stack = [];
+    // console.log($routeParams);
+
     var empty_tape = [];
     for (var i = 0; i < 50; i++) {
       empty_tape.push(' ');
@@ -260,6 +276,7 @@
         position: 0,
         contents: empty_tape
       },
+      stack: empty_stack,
       determ: true
     });
   }
@@ -308,28 +325,43 @@ angular.module('automata').controller('AddEdgeModalInstanceCtrl',
 function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
   $scope.alphabet = alphabet;
   $scope.read_alph = $scope.alphabet.slice();
+  $scope.read_stack_alph = alphabet.concat(['-']);
+  $scope.stack_act_alph = alphabet.concat(['^']);
   $scope.machine = machine;
   $scope.addedEntities = addedEntities;
   $scope.act_alph = alphabet.concat(['<', '>']);
+
   if (determ) { // ensures only available out symbols
-    var fromNode = $scope.addedEntities.source();
-    fromNode.outgoers().forEach(function(el) {
-      if (el.isEdge() && el.data().read) {
-        for (var i = 0; i < $scope.read_alph.length; i++) {
-          if (el.data().read === $scope.read_alph[i]) {
-            $scope.read_alph.splice(i, 1);
+    if (machine !== 'pda') {
+      var fromNode = $scope.addedEntities.source();
+      fromNode.outgoers().forEach(function(el) {
+        if (el.isEdge() && el.data().read) {
+          for (var i = 0; i < $scope.read_alph.length; i++) {
+            if (el.data().read === $scope.read_alph[i]) {
+              $scope.read_alph.splice(i, 1);
+            }
           }
         }
-      }
-    });
+      });
+    } else {
+      // TODO: deal with deterministic selections for
+      // the PDA case
+    }
   }
   $scope.ok = function () {
-    var read = $scope.labels.read.toUpperCase();
+    var read = $scope.labels.read;
+    var act;
     addedEntities.data('read', read);
     if (machine === 'tm') {
-      var act = $scope.labels.act.toUpperCase();
+      act = $scope.labels.act;
       addedEntities.data('action', act);
       addedEntities.data('label', read + ':' + act);
+    } else if (machine === 'pda') {
+      var read_stack = $scope.labels.read_stack;
+      act = $scope.labels.act;
+      addedEntities.data('read_stack', read_stack);
+      addedEntities.data('action', act);
+      addedEntities.data('label', read + ':' + read_stack + ':' + act);
     } else {
       addedEntities.data('label', read);
     }
@@ -380,11 +412,38 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
       'fast': 1
     };
 
+    var stopPlay = true;
+
     vm.play = function (speed) {
-      if (vm.automaton.machine === 'fsa') {
-        vm.playFSM(cy, vm.automaton, speed);
-      } else if (vm.automaton.machine === 'tm') {
-        vm.playTM(cy, vm.automaton, speed);
+      vm.playAutomaton(cy, vm.automaton, speed);
+    };
+
+    function resetStack() {
+      if (vm.automaton.machine === 'pda') {
+        vm.automaton.stack = [];
+        for (var j = 0; j < 20; j++) {
+          vm.automaton.stack.push(' ');
+        }
+      }
+    }
+
+    vm.playAutomaton = function(cy, automaton, speed) {
+      if (stopPlay) {
+        vm.reset(cy, automaton);
+        stopPlay = false;
+        resetStack();
+        cy.$('node').addClass('running');
+        cy.$('edge').addClass('running');
+        var startNode = cy.getElementById('0');
+        startNode.addClass('active');
+        var pause = pauses[speed];
+        if (vm.automaton.machine === 'fsa') {
+          vm.doNextStepFSA(startNode, 0, cy, null, pause, tape);
+        } else if (vm.automaton.machine === 'pda') {
+          vm.doNextStepPDA(startNode, 0, cy, null, pause, tape);
+        } else if (vm.automaton.machine === 'tm') {
+          vm.doNextStepTM(startNode, 0, cy, null, pause, tape);
+        }
       }
     };
 
@@ -430,9 +489,9 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
     vm.focusNext = tape.focusNext;
     // play is currently stopped. prevents play when
     // play is already in progress
-    var stopPlay = true;
 
     vm.resetElementColors = function() {
+      resetStack();
       cy.$('node').removeClass('running');
       cy.$('edge').removeClass('running');
       cy.$('node').removeClass('active');
@@ -456,7 +515,7 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
       vm.resetElementColors();
     };
 
-    vm.doNextStepFSM = function(node, pos, cy, prevEdge, pause, t) {
+    vm.doNextStepFSA = function(node, pos, cy, prevEdge, pause, t) {
       if (!stopPlay) {
         if ((!!vm.automaton.tape.contents[pos])
           && (vm.automaton.tape.contents[pos] !== ' ')
@@ -477,7 +536,7 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
                   $scope.$apply(
                     t.movePosition(1, vm.automaton)
                   );
-                  vm.doNextStepFSM(nextNode, pos + 1, cy, edge, pause, t);
+                  vm.doNextStepFSA(nextNode, pos + 1, cy, edge, pause, t);
                 } else {
                   vm.resetElementColors();
                 }
@@ -513,18 +572,95 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
       }
     };
 
-    vm.playFSM = function(cy, automaton, speed) {
-      if (stopPlay) {
-        vm.reset(cy, automaton);
-        stopPlay = false;
-        cy.$('node').addClass('running');
-        cy.$('edge').addClass('running');
-        var startNode = cy.getElementById('0');
-        startNode.addClass('active');
-        var pause = pauses[speed];
-        vm.doNextStepFSM(startNode, 0, cy, null, pause, tape);
-      }
+    vm.doNextStepPDA = function(node, pos, cy, prevEdge, pause, t) {
+      if (!stopPlay) {
+        if ((!!vm.automaton.tape.contents[pos])
+          && (vm.automaton.tape.contents[pos] !== ' ')
+          && (vm.automaton.tape.contents[pos].length > 0)) { // if we're reading a character
+          setTimeout(function() {
+            var action = null;
+            var read = null;
+            var read_stack = null;
+            var noOutgoing = true;
+            node.outgoers().forEach(function(edge) {
+              if (edge.data().read === '_') {
+                read = ' ';
+              } else {
+                read = edge.data().read;
+              }
+              if (edge.data().read_stack === '_') {
+                read_stack = ' ';
+              } else {
+                read_stack = edge.data().read_stack;
+              }
+              if (edge.data().action === '_') {
+                action = ' ';
+              } else {
+                action = edge.data().read;
+              }
+              if (read === vm.automaton.tape.contents[pos]
+                  && (read_stack === vm.automaton.stack[0] // read the stack
+                      || read_stack === '-')) { // or ignore the stack
+                noOutgoing = false;
+                edge.addClass('active');
+                var nextNode = edge.target();
+                node.removeClass('active');
+                nextNode.addClass('active');
+                if (edge.data().action !== '-') { // '-' is no action on stack
+                  if (edge.data().action === '^') {
+                    vm.automaton.stack.shift();
+                  } else {
+                    console.log(action);
+                    vm.automaton.stack.unshift(action);
+                  }
+                }
+                if (prevEdge && prevEdge !== edge) {
+                  prevEdge.removeClass('active');
+                }
+                if (!stopPlay) {
+                  $scope.$apply(
+                    t.movePosition(1, vm.automaton)
+                  );
+                  vm.doNextStepPDA(nextNode, pos + 1, cy, edge, pause, t);
+                } else {
+                  vm.resetElementColors();
+                }
+              }
+            });
+            if (noOutgoing) {
+              stopPlay = true;
+              if (prevEdge) prevEdge.removeClass('active');
+              cy.$('node').removeClass('running');
+              cy.$('edge').removeClass('running');
+              angular.element(document.querySelector('.tape-content')).addClass('rejected');
+              node.removeClass('active');
+              node.addClass('rejected');
+            }
+          }, pause);
+        } else if (prevEdge) {
+          stopPlay = true;
+          setTimeout(function() {
+            prevEdge.removeClass('active');
+            cy.$('node').removeClass('running');
+            cy.$('edge').removeClass('running');
+            if (node.hasClass('accept') && vm.automaton.stack[0] === ' ') {
+              angular.element(document.querySelector('.tape-content')).addClass('accepted');
+              node.removeClass('active');
+              node.addClass('accepting');
+            } else {
+              angular.element(document.querySelector('.tape-content')).addClass('rejected');
+              node.removeClass('active');
+              node.addClass('rejected');
+              if (vm.automaton.stack[0] !== ' ') {
+                console.log("huh");
+                angular.element(document.querySelector('.stack-table')).addClass('rejected');
+              }
+            }
+          }, pause);
+        }
+      } // if (!stopPlay) {
     };
+
 
     vm.doNextStepTM = function(node, pos, cy, prevEdge, pause, t) {
       if (!stopPlay) {
@@ -587,20 +723,6 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
             cy.$('edge').removeClass('running');
           }
         }, pause);
-      }
-    };
-
-
-    vm.playTM = function(cy, automaton, speed) {
-      if (stopPlay) {
-        vm.reset(cy, automaton);
-        stopPlay = false;
-        cy.$('node').addClass('running');
-        cy.$('edge').addClass('running');
-        var startNode = cy.getElementById('0');
-        startNode.addClass('active');
-        var pause = pauses[speed];
-        vm.doNextStepTM(startNode, 0, cy, null, pause, tape);
       }
     };
 
@@ -789,7 +911,6 @@ angular.module('resizeIt', [])
 }]); // end resizeable
 
 angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
-
 .directive('window', ['$animate', function($animate) {
   return {
     restrict: 'E',
@@ -818,9 +939,37 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
   }; // end return
 }]) // end window
 
+.directive('stackWindow', ['$animate', function($animate) {
+  return {
+    restrict: 'E',
+    transclude: true,
+    replace: true,
+    templateUrl: 'modules/automata/client/partials/stack.html',
+    scope: {
+      id: '@id',
+      title: '@title'
+    },
+    link: function(scope, el, attr) {
+      scope.minimized = false;
+
+      /** Methods **/
+      scope.minimize = function() {
+        scope.minimized = !scope.minimized;
+
+        if (angular.equals(scope.minimized, true)) {
+          $animate.addClass(el, 'minimize');
+        } else {
+          $animate.removeClass(el, 'minimize');
+        }
+      }; // end minimize
+
+    } // end link
+  }; // end return
+}])
 
 .run(['$templateCache', '$http', function($templateCache, $http) {
   $http.get('modules/automata/client/partials/tape.html', { cache: $templateCache });
+  $http.get('modules/automata/client/partials/stack.html', { cache: $templateCache });
 }]); // end windows
 
 (function () {
