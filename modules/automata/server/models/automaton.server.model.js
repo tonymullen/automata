@@ -60,6 +60,7 @@ var AutomatonSchema = new Schema({
           source: String,
           target: String,
           read: String,
+          read_stack: String,
           action: String,
           label: String,
           direction: {

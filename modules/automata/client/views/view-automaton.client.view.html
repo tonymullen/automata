@@ -60,7 +60,7 @@
 
 
  <stack-window id="stack" ng-if="'pda' === vm.automaton.machine">
-   <table id="stack-table">
+   <table class="stack-table">
      <tr class="stack-content" ng-repeat="item in vm.automaton.stack track by $index">
        <td>
         <div class="{{'cell-'+$index}} stack-cell noSelect" >{{item}}</div>
@@ -100,7 +100,7 @@
       <div class="form-group">
         <label for="stack_action">Stack action</label>
         <form name="stackActionForm">
-          <select name="stack_action" id="stack_action" ng-model="labels.stack_action" class="form-control edgeLabelSymbolInput" >
+          <select name="stack_action" id="stack_action" ng-model="labels.act" class="form-control edgeLabelSymbolInput" >
           <option ng-repeat="symbol in stack_act_alph" value="{{ symbol }}">{{ symbol }}</option>
         </select>
         </form>

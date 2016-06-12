@@ -105,14 +105,8 @@
   function newAutomaton($state, AutomataService, machine) {
     // return new AutomataService();
 
-    var empty_stack = ['X', 'X', 'X', 'X'];
+    var empty_stack = [];
     // console.log($routeParams);
-
-    if (machine === 'pda') {
-      for (var j = 0; j < 20; j++) {
-        empty_stack.push(' ');
-      }
-    }
 
     var empty_tape = [];
     for (var i = 0; i < 50; i++) {

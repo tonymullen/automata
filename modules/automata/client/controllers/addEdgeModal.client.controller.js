@@ -41,7 +41,7 @@ angular.module('automata').controller('AddEdgeModalInstanceCtrl',
 function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
   $scope.alphabet = alphabet;
   $scope.read_alph = $scope.alphabet.slice();
-  $scope.read_stack_alph = $scope.alphabet.slice();
+  $scope.read_stack_alph = alphabet.concat(['-']);
   $scope.stack_act_alph = alphabet.concat(['^']);
   $scope.machine = machine;
   $scope.addedEntities = addedEntities;
@@ -66,16 +66,18 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
   }
   $scope.ok = function () {
     var read = $scope.labels.read;
+    var act;
     addedEntities.data('read', read);
     if (machine === 'tm') {
-      var act = $scope.labels.act;
+      act = $scope.labels.act;
       addedEntities.data('action', act);
       addedEntities.data('label', read + ':' + act);
     } else if (machine === 'pda') {
       var read_stack = $scope.labels.read_stack;
-      var stack_action = $scope.labels.stack_action;
+      act = $scope.labels.act;
       addedEntities.data('read_stack', read_stack);
-      addedEntities.data('label', read + ':' + read_stack + ':' + stack_action);
+      addedEntities.data('action', act);
+      addedEntities.data('label', read + ':' + read_stack + ':' + act);
     } else {
       addedEntities.data('label', read);
     }

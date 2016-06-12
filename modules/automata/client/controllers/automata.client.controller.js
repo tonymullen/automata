@@ -35,11 +35,38 @@
       'fast': 1
     };
 
+    var stopPlay = true;
+
     vm.play = function (speed) {
-      if (vm.automaton.machine === 'fsa') {
-        vm.playFSM(cy, vm.automaton, speed);
-      } else if (vm.automaton.machine === 'tm') {
-        vm.playTM(cy, vm.automaton, speed);
+      vm.playAutomaton(cy, vm.automaton, speed);
+    };
+
+    function resetStack() {
+      if (vm.automaton.machine === 'pda') {
+        vm.automaton.stack = [];
+        for (var j = 0; j < 20; j++) {
+          vm.automaton.stack.push(' ');
+        }
+      }
+    }
+
+    vm.playAutomaton = function(cy, automaton, speed) {
+      if (stopPlay) {
+        vm.reset(cy, automaton);
+        stopPlay = false;
+        resetStack();
+        cy.$('node').addClass('running');
+        cy.$('edge').addClass('running');
+        var startNode = cy.getElementById('0');
+        startNode.addClass('active');
+        var pause = pauses[speed];
+        if (vm.automaton.machine === 'fsa') {
+          vm.doNextStepFSA(startNode, 0, cy, null, pause, tape);
+        } else if (vm.automaton.machine === 'pda') {
+          vm.doNextStepPDA(startNode, 0, cy, null, pause, tape);
+        } else if (vm.automaton.machine === 'tm') {
+          vm.doNextStepTM(startNode, 0, cy, null, pause, tape);
+        }
       }
     };
 
@@ -85,9 +112,9 @@
     vm.focusNext = tape.focusNext;
     // play is currently stopped. prevents play when
     // play is already in progress
-    var stopPlay = true;
 
     vm.resetElementColors = function() {
+      resetStack();
       cy.$('node').removeClass('running');
       cy.$('edge').removeClass('running');
       cy.$('node').removeClass('active');
@@ -111,7 +138,7 @@
       vm.resetElementColors();
     };
 
-    vm.doNextStepFSM = function(node, pos, cy, prevEdge, pause, t) {
+    vm.doNextStepFSA = function(node, pos, cy, prevEdge, pause, t) {
       if (!stopPlay) {
         if ((!!vm.automaton.tape.contents[pos])
           && (vm.automaton.tape.contents[pos] !== ' ')
@@ -132,7 +159,7 @@
                   $scope.$apply(
                     t.movePosition(1, vm.automaton)
                   );
-                  vm.doNextStepFSM(nextNode, pos + 1, cy, edge, pause, t);
+                  vm.doNextStepFSA(nextNode, pos + 1, cy, edge, pause, t);
                 } else {
                   vm.resetElementColors();
                 }
@@ -168,18 +195,95 @@
       }
     };
 
-    vm.playFSM = function(cy, automaton, speed) {
-      if (stopPlay) {
-        vm.reset(cy, automaton);
-        stopPlay = false;
-        cy.$('node').addClass('running');
-        cy.$('edge').addClass('running');
-        var startNode = cy.getElementById('0');
-        startNode.addClass('active');
-        var pause = pauses[speed];
-        vm.doNextStepFSM(startNode, 0, cy, null, pause, tape);
-      }
+    vm.doNextStepPDA = function(node, pos, cy, prevEdge, pause, t) {
+      if (!stopPlay) {
+        if ((!!vm.automaton.tape.contents[pos])
+          && (vm.automaton.tape.contents[pos] !== ' ')
+          && (vm.automaton.tape.contents[pos].length > 0)) { // if we're reading a character
+          setTimeout(function() {
+            var action = null;
+            var read = null;
+            var read_stack = null;
+            var noOutgoing = true;
+            node.outgoers().forEach(function(edge) {
+              if (edge.data().read === '_') {
+                read = ' ';
+              } else {
+                read = edge.data().read;
+              }
+              if (edge.data().read_stack === '_') {
+                read_stack = ' ';
+              } else {
+                read_stack = edge.data().read_stack;
+              }
+              if (edge.data().action === '_') {
+                action = ' ';
+              } else {
+                action = edge.data().read;
+              }
+              if (read === vm.automaton.tape.contents[pos]
+                  && (read_stack === vm.automaton.stack[0] // read the stack
+                      || read_stack === '-')) { // or ignore the stack
+                noOutgoing = false;
+                edge.addClass('active');
+                var nextNode = edge.target();
+                node.removeClass('active');
+                nextNode.addClass('active');
+                if (edge.data().action !== '-') { // '-' is no action on stack
+                  if (edge.data().action === '^') {
+                    vm.automaton.stack.shift();
+                  } else {
+                    console.log(action);
+                    vm.automaton.stack.unshift(action);
+                  }
+                }
+                if (prevEdge && prevEdge !== edge) {
+                  prevEdge.removeClass('active');
+                }
+                if (!stopPlay) {
+                  $scope.$apply(
+                    t.movePosition(1, vm.automaton)
+                  );
+                  vm.doNextStepPDA(nextNode, pos + 1, cy, edge, pause, t);
+                } else {
+                  vm.resetElementColors();
+                }
+              }
+            });
+            if (noOutgoing) {
+              stopPlay = true;
+              if (prevEdge) prevEdge.removeClass('active');
+              cy.$('node').removeClass('running');
+              cy.$('edge').removeClass('running');
+              angular.element(document.querySelector('.tape-content')).addClass('rejected');
+              node.removeClass('active');
+              node.addClass('rejected');
+            }
+          }, pause);
+        } else if (prevEdge) {
+          stopPlay = true;
+          setTimeout(function() {
+            prevEdge.removeClass('active');
+            cy.$('node').removeClass('running');
+            cy.$('edge').removeClass('running');
+            if (node.hasClass('accept') && vm.automaton.stack[0] === ' ') {
+              angular.element(document.querySelector('.tape-content')).addClass('accepted');
+              node.removeClass('active');
+              node.addClass('accepting');
+            } else {
+              angular.element(document.querySelector('.tape-content')).addClass('rejected');
+              node.removeClass('active');
+              node.addClass('rejected');
+              if (vm.automaton.stack[0] !== ' ') {
+                console.log("huh");
+                angular.element(document.querySelector('.stack-table')).addClass('rejected');
+              }
+            }
+          }, pause);
+        }
+      } // if (!stopPlay) {
     };
+
 
     vm.doNextStepTM = function(node, pos, cy, prevEdge, pause, t) {
       if (!stopPlay) {
@@ -242,20 +346,6 @@
             cy.$('edge').removeClass('running');
           }
         }, pause);
-      }
-    };
-
-
-    vm.playTM = function(cy, automaton, speed) {
-      if (stopPlay) {
-        vm.reset(cy, automaton);
-        stopPlay = false;
-        cy.$('node').addClass('running');
-        cy.$('edge').addClass('running');
-        var startNode = cy.getElementById('0');
-        startNode.addClass('active');
-        var pause = pauses[speed];
-        vm.doNextStepTM(startNode, 0, cy, null, pause, tape);
       }
     };
 

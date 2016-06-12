@@ -1,20 +1,23 @@
 
+
 #stack {
   position: absolute;
   width: 80px;
 }
 
+/*
 div.stackWindowBodyContent {
-/*  min-height: 18px; */
-/*  min-width: 220px; */
-/*  height: calc(100% - 2px); */
+ min-height: 18px;
+ min-width: 220px;
+ height: calc(100% - 2px);
 }
+*/
 
 /** Scroll window content when necessary **/
 div.stackWindowBodyContent {
-  overflow-y: hidden;
-  max-height: calc(100% - 2px);
-  height: 300px;
+  overflow-y: auto;
+  /*max-height: calc(100% - 2px);*/
+  height: calc(100% - 10px);
   margin: 5px 5px 2px 5px;
   border: solid 1.5px lightGray;
   padding: 2px;
@@ -33,7 +36,9 @@ div.stackWindowBody {
     height: 24px;
 }
 
-.panel.stack-window {
+.floating-window > .panel.stack-window {
+    height: 400px;
+    width: 68px;
     border-color: #080808;
     background-color: rgb(255,255,255);
     background-color: rgba(255,255,255,0.5);
@@ -60,11 +65,13 @@ tr.stack-content > td > div.stack-cell{
   width:30px;
 }
 
-tr.stack-content > td.active{
-  background-color: black;
+
+table.stack-table.rejected > tbody > tr.stack-content > td > div.stack-cell{
+  color: red;
 }
 
-tr.stack-content > td.active > div.stack-cell{
+
+tr.stack-content > td > div.stack-cell.cell-0{
   background-color: black;
   color: white
 }
