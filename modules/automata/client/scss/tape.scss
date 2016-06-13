@@ -31,8 +31,15 @@ div.tapeWindowBodyContent {
   min-width: 220px;
   padding: 2px;
 }
+
+div.floating-window {
+  width: 100%;
+}
+
+
 .floating-window > .panel {
-  width: 80%;
+  max-width: 99%;
+  width: calc(100% - 100px);
 }
 
 /** Appropriate mouse cursors **/
