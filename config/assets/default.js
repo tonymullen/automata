@@ -27,7 +27,7 @@ module.exports = {
         'public/lib/cytoscape-edgehandles-old/cytoscape-edgehandles.js',
         'public/lib/ng-context-menu/dist/ng-context-menu.min.js',
         'public/lib/angular-xeditable/dist/js/xeditable.js',
-        'public/lib/jsPDF/dist/jspdf.min.js'
+        'public/js/jsPDF/dist/jspdf.min.js'
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']
     },
