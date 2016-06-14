@@ -458,6 +458,32 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
     }
     */
 
+    vm.fileExport = function(isValid) {
+      var image = document.createElement('img');
+
+      image.addEventListener('load', function() {
+        var doc = new jsPDF(); // eslint-disable-line
+
+        doc.setFontSize(18);
+        doc.text(25, 25, vm.automaton.title);
+
+        doc.setFontSize(12);
+        if (vm.automaton.demo) {
+          doc.text(25, 33, 'Demo');
+        } else if (vm.authentication.user) {
+          doc.text(25, 33, vm.authentication.user.firstName + ' '
+                          + vm.authentication.user.lastName);
+        }
+
+        doc.addImage(image.src, 'PNG', 15, 50, image.width / 10, image.height / 10);
+
+        var filename = vm.automaton.title.replace(/\/|\\|\?|\%|\*|\:|\||\"|\<|\>|\.| /gi, '_');
+        doc.save(filename + '.pdf');
+      });
+      image.src = cy.png({ full: true, maxWidth: 1800 });
+    };
+
+
     // Save Automaton
     function save(isValid) {
       if (!isValid) {
@@ -652,7 +678,6 @@ function ($scope, $uibModalInstance, machine, determ, addedEntities, alphabet) {
               node.removeClass('active');
               node.addClass('rejected');
               if (vm.automaton.stack[0] !== ' ') {
-                console.log("huh");
                 angular.element(document.querySelector('.stack-table')).addClass('rejected');
               }
             }
