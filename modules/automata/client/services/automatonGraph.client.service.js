@@ -34,7 +34,7 @@
       $(function() { // on dom ready
         cy = cytoscape({
           container: $('#cy')[0],
-          boxSelectionEnabled: true,
+          boxSelectionEnabled: false,
           autounselectify: true,
           layout: {
             // name: 'cose',
@@ -54,6 +54,16 @@
                 'background-color': 'white',
                 'border-style': 'solid',
                 'border-width': '2px'
+              })
+            .selector('node.submachine')
+              .css({
+                'content': 'data(label)',
+                'text-valign': 'center',
+                'color': 'black',
+                'background-color': 'white',
+                'border-style': 'solid',
+                'border-width': '2px',
+                'shape': 'rectangle'
               })
             .selector('.accept')
               .css({
@@ -153,9 +163,14 @@
             var clickstop = 0;
             var del = false;
 
+            var tapx;
+            var tapy;
+
             this.on('vmousedown', function(e) {
-              // var node = e.cyTarget;
+              // for node placment with context menu
               clickstart = e.timeStamp;
+              tapx = e.cyPosition.x;
+              tapy = e.cyPosition.y;
             });
 
             function doMouseUp(e) {
@@ -221,54 +236,53 @@
               }
             });
 
+            function toggleAccept(node) {
+              if (!node.data().accept) {
+                node.data().accept = true;
+                node.addClass('accept');
+                resetElementColors();
+                if (node.data().start) {
+                  cy.$('#start').position({
+                    x: cy.$('#start').position('x') - 2
+                  });
+                }
+              } else {
+                node.data().accept = false;
+                node.removeClass('accept');
+                resetElementColors();
+                if (node.data().start) {
+                  cy.$('#start').position({
+                    x: cy.$('#start').position('x') + 2
+                  });
+                }
+              }
+            }
+
+            function editSubmachine(node) {
+              console.log('gonna edit the submachine for ' + node);
+            }
+
             if (machine !== 'tm') { // accept states only for FSAs and PDAs
               this.on('click', 'node', function(e) {
                 var node = e.cyTarget;
-                if (!node.data().accept) {
-                  node.data().accept = true;
-                  node.addClass('accept');
-                  resetElementColors();
-                  if (node.data().start) {
-                    cy.$('#start').position({
-                      x: cy.$('#start').position('x') - 2
-                    });
-                  }
+                if (!node.data().submachine) {
+                  toggleAccept(node);
                 } else {
-                  node.data().accept = false;
-                  node.removeClass('accept');
-                  resetElementColors();
-                  if (node.data().start) {
-                    cy.$('#start').position({
-                      x: cy.$('#start').position('x') + 2
-                    });
-                  }
+                  editSubmachine(node);
                 }
               });
 
               this.on('doubleTap', function(e) {
                 var node = e.cyTarget;
-                if (!node.data().accept) {
-                  node.data().accept = true;
-                  node.addClass('accept');
-                  resetElementColors();
-                  if (node.data().start) {
-                    cy.$('#start').position({
-                      x: cy.$('#start').position('x') - 2
-                    });
-                  }
+                if (!node.data().submachine) {
+                  toggleAccept(node);
                 } else {
-                  node.data().accept = false;
-                  node.removeClass('accept');
-                  resetElementColors();
-                  if (node.data().start) {
-                    cy.$('#start').position({
-                      x: cy.$('#start').position('x') + 2
-                    });
-                  }
+                  editSubmachine(node);
                 }
               });
             }
 
+/*
             this.on('tap', function(e) {
               resetElementColors();
               if (e.cyTarget === cy) {
@@ -282,7 +296,7 @@
                 });
               }
             });
-
+*/
             this.on('cxttap', 'node', function(e) {
               var node = e.cyTarget;
               node.removeClass('toDelete');
@@ -356,6 +370,72 @@
               }
             };
             this.edgehandles(defaults);
+
+            var menuDefaults = {
+              menuRadius: 100, // the radius of the circular menu in pixels
+              selector: 'core', // elements matching this Cytoscape.js selector will trigger cxtmenus
+              commands: [ // an array of commands to list in the menu or a function that returns the array
+                { // example command
+                  fillColor: 'rgba(100, 100, 100, 0.75)', // optional: custom background color for item
+                  content: '<span class="cxtmenutext">Add<br>node</span>', // html/text content to be displayed in the menu
+                  select: function(e) { // a function to execute when the command is selected
+                    resetElementColors();
+                    if (e === cy) {
+                      var ind = cy.nodes('.nnode').length;
+                      cy.add({
+                        group: 'nodes',
+                        data: { label: ind,
+                                weight: 75 },
+                        classes: 'enode nnode',
+                        position: { x: tapx, y: tapy }
+                      });
+                    }// `ele` holds the reference to the active element
+                    // necessary hack to ensure that newly created
+                    // nodes don't flicker. Toggles accept state on start state
+                    toggleAccept(cy.nodes().eq(1));
+                    toggleAccept(cy.nodes().eq(1));
+                  }
+                },
+                { // example command
+                  fillColor: 'rgba(100, 100, 100, 0.75)', // optional: custom background color for item
+                  content: '<span class="cxtmenutext">Add<br>comment</span>', // html/text content to be displayed in the menu
+                  select: function(e) { // a function to execute when the command is selected
+                    console.log('comment'); // `ele` holds the reference to the active element
+                  }
+                },
+                { // example command
+                  fillColor: 'rgba(100, 100, 100, 0.75)', // optional: custom background color for item
+                  content: '<span class="cxtmenutext">Add<br>submachine</span>', // html/text content to be displayed in the menu
+                  select: function(e) { // a function to execute when the command is selected
+                    resetElementColors();
+                    if (e === cy) {
+                      var ind = cy.nodes('.submachine').length;
+                      cy.add({
+                        group: 'nodes',
+                        data: { label: 'M' + ind,
+                                weight: 75,
+                                submachine: true },
+                        classes: 'submachine enode',
+                        position: { x: tapx, y: tapy }
+                      });
+                    }// `ele` holds the reference to the active element
+                  }
+                }
+              ], // function( ele ){ return [  ] }, // example function for commands
+              fillColor: 'rgba(0, 0, 0, 0.75)', // the background colour of the menu
+              activeFillColor: 'rgba(0, 0, 0, 0.50)', // the colour used to indicate the selected command
+              activePadding: 20, // additional size in pixels for the active command
+              indicatorSize: 24, // the size in pixels of the pointer to the active command
+              separatorWidth: 3, // the empty spacing in pixels between successive commands
+              spotlightPadding: 4, // extra spacing in pixels between the element and the spotlight
+              minSpotlightRadius: 24, // the minimum radius in pixels of the spotlight
+              maxSpotlightRadius: 38, // the maximum radius in pixels of the spotlight
+              openMenuEvents: 'cxttapstart taphold', // cytoscape events that will open the menu (space separated)
+              itemColor: 'white', // the colour of text in the command's content
+              itemTextShadowColor: 'black', // the text shadow colour of the command's content
+              zIndex: 9999 // the z-index of the ui div
+            };
+            var cxtmenuApi = this.cxtmenu(menuDefaults);
           }
         });
       });

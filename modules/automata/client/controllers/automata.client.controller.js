@@ -82,6 +82,7 @@
     */
 
     vm.fileExport = function(isValid) {
+      vm.resetElementColors();
       var image = document.createElement('img');
 
       image.addEventListener('load', function() {

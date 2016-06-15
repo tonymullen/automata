@@ -21,7 +21,8 @@
     "jquery": "~2.1.4",
     "jqueryui-touch-punch": "*",
     "cytoscape-edgehandles": "^2.3.2",
-    "angular-xeditable": "^0.1.12"
+    "angular-xeditable": "^0.1.12",
+    "cytoscape-cxtmenu": "^2.7.1"
   },
   "resolutions": {
     "angular": "~1.3",
