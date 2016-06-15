@@ -327,7 +327,7 @@
               preview: true, // whether to show added edges preview before releasing selection
               stackOrder: 4, // Controls stack order of edgehandles canvas element by setting it's z-index
               handleSize: 15, // the size of the edge handle put on nodes
-              handleColor: '#A7A6A0', // the colour of the handle and the line drawn from it
+              handleColor: 'rgba(167, 164, 138, 0.70)', // the colour of the handle and the line drawn from it
               handleLineType: 'ghost', // can be 'ghost' for real edge, 'straight' for a straight line, or 'draw' for a draw-as-you-go line
               handleLineWidth: 1, // width of handle line in pixels
               handleNodes: '.enode', // selector/filter function for whether edges can be made from a given node
@@ -376,7 +376,7 @@
               selector: 'core', // elements matching this Cytoscape.js selector will trigger cxtmenus
               commands: [ // an array of commands to list in the menu or a function that returns the array
                 { // example command
-                  fillColor: 'rgba(100, 100, 100, 0.75)', // optional: custom background color for item
+                  // fillColor: 'rgba(100, 100, 100, 0.75)', // optional: custom background color for item
                   content: '<span class="cxtmenutext">Add<br>node</span>', // html/text content to be displayed in the menu
                   select: function(e) { // a function to execute when the command is selected
                     resetElementColors();
@@ -397,14 +397,14 @@
                   }
                 },
                 { // example command
-                  fillColor: 'rgba(100, 100, 100, 0.75)', // optional: custom background color for item
+                  // fillColor: 'rgba(100, 100, 100, 0.75)', // optional: custom background color for item
                   content: '<span class="cxtmenutext">Add<br>comment</span>', // html/text content to be displayed in the menu
                   select: function(e) { // a function to execute when the command is selected
                     console.log('comment'); // `ele` holds the reference to the active element
                   }
                 },
                 { // example command
-                  fillColor: 'rgba(100, 100, 100, 0.75)', // optional: custom background color for item
+                  // fillColor: 'rgba(100, 100, 100, 0.75)', // optional: custom background color for item
                   content: '<span class="cxtmenutext">Add<br>submachine</span>', // html/text content to be displayed in the menu
                   select: function(e) { // a function to execute when the command is selected
                     resetElementColors();
@@ -423,7 +423,7 @@
                 }
               ], // function( ele ){ return [  ] }, // example function for commands
               fillColor: 'rgba(0, 0, 0, 0.75)', // the background colour of the menu
-              activeFillColor: 'rgba(0, 0, 0, 0.50)', // the colour used to indicate the selected command
+              activeFillColor: 'rgba(167, 164, 138, 0.50)', // the colour used to indicate the selected command
               activePadding: 20, // additional size in pixels for the active command
               indicatorSize: 24, // the size in pixels of the pointer to the active command
               separatorWidth: 3, // the empty spacing in pixels between successive commands
