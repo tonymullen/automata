@@ -332,7 +332,7 @@
               handleLineWidth: 1, // width of handle line in pixels
               handleNodes: '.enode', // selector/filter function for whether edges can be made from a given node
               hoverDelay: 150, // time spend over a target node before it is considered a target selection
-              cxt: true, // whether cxt events trigger edgehandles (useful on touch)
+              cxt: false, // whether cxt events trigger edgehandles (useful on touch)
               enabled: true, // whether to start the plugin in the enabled state
               toggleOffOnLeave: true, // whether an edge is cancelled by leaving a node (true), or whether you need to go over again to cancel (false; allows multiple edges in one pass)
               edgeType: function(sourceNode, targetNode) {
@@ -377,7 +377,7 @@
               commands: [ // an array of commands to list in the menu or a function that returns the array
                 { // example command
                   // fillColor: 'rgba(100, 100, 100, 0.75)', // optional: custom background color for item
-                  content: '<span class="cxtmenutext">Add<br>node</span>', // html/text content to be displayed in the menu
+                  content: '<span class="cxtmenutext noSelect">Add<br>node</span>', // html/text content to be displayed in the menu
                   select: function(e) { // a function to execute when the command is selected
                     resetElementColors();
                     if (e === cy) {
@@ -398,14 +398,14 @@
                 },
                 { // example command
                   // fillColor: 'rgba(100, 100, 100, 0.75)', // optional: custom background color for item
-                  content: '<span class="cxtmenutext">Add<br>comment</span>', // html/text content to be displayed in the menu
+                  content: '<span class="cxtmenutext noSelect">Add<br>comment</span>', // html/text content to be displayed in the menu
                   select: function(e) { // a function to execute when the command is selected
                     console.log('comment'); // `ele` holds the reference to the active element
                   }
                 },
                 { // example command
                   // fillColor: 'rgba(100, 100, 100, 0.75)', // optional: custom background color for item
-                  content: '<span class="cxtmenutext">Add<br>submachine</span>', // html/text content to be displayed in the menu
+                  content: '<span class="cxtmenutext noSelect">Add<br>submachine</span>', // html/text content to be displayed in the menu
                   select: function(e) { // a function to execute when the command is selected
                     resetElementColors();
                     if (e === cy) {
