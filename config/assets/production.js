@@ -21,7 +21,7 @@ module.exports = {
         'public/lib/angular-bootstrap/ui-bootstrap-tpls.min.js',
         'public/lib/angular-file-upload/dist/angular-file-upload.min.js',
         'public/lib/owasp-password-strength-test/owasp-password-strength-test.js',
-        'public/js/test_cytoscape.min.js',
+        'public/js/my_cytoscape.min.js',
         'public/lib/cytoscape-edgehandles/cytoscape-edgehandles.js',
         'public/lib/ng-context-menu/dist/ng-context-menu.min.js'
       ]
