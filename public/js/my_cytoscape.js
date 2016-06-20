@@ -12711,6 +12711,9 @@ BRp.findEdgeControlPoints = function(edges) {
     var edge_p;
     var rs;
 
+    var dirCounts = {};
+
+
     for (var i = 0; i < pairEdges.length; i++) {
       edge = pairEdges[i];
       edge_p = edge._private;
@@ -12726,7 +12729,9 @@ BRp.findEdgeControlPoints = function(edges) {
       var style = eStyle;
       var curveStyle = eStyle['curve-style'].value;
       var ctrlptDists = eStyle['control-point-distances'];
-      var loopDir = eStyle['loop-direction'] ? eStyle['loop-direction'].value : 'northwest';
+      var loopDir = eStyle['loop-direction'] ? eStyle['loop-direction'].value : -135; // defaults match previous behavior
+      var loopSwp = eStyle['loop-sweep'] ? eStyle['loop-sweep'].value : -90;          // looping to northwest
+
       var ctrlptWs = eStyle['control-point-weights'];
       var bezierN = ctrlptDists && ctrlptWs ? Math.min( ctrlptDists.value.length, ctrlptWs.value.length ) : 1;
       var stepSize = eStyle['control-point-step-size'].pfValue;
@@ -12801,75 +12806,23 @@ BRp.findEdgeControlPoints = function(edges) {
           loopDist = ctrlptDist;
         }
 
-        /*
+        //var loopDirection = 90    // -135 default
+        //var loopSweep = 60;       // -90 default
+
+        var ldr = loopDir * Math.PI / 180;
+        var lsr = loopSwp * Math.PI / 180;
+        var outAngle =  ldr - lsr / 2;
+        var inAngle  =  ldr + lsr / 2;
+
+        var dc = String(loopDir + '_' + loopSwp);
+        j = dirCounts[dc] === undefined ? dirCounts[dc] = 0 : ++dirCounts[dc];
+
         rs.ctrlpts = [
-          srcPos.x,
-          srcPos.y - (1 + Math.pow(srcH, 1.12) / 100) * loopDist * (j / 3 + 1),
-          srcPos.x - (1 + Math.pow(srcW, 1.12) / 100) * loopDist * (j / 3 + 1),
-          srcPos.y
+          srcPos.x + Math.cos(outAngle) * 1.4 * loopDist * (j / 3 + 1),
+          srcPos.y + Math.sin(outAngle) * 1.4 * loopDist * (j / 3 + 1),
+          srcPos.x + Math.cos(inAngle) * 1.4 * loopDist * (j / 3 + 1),
+          srcPos.y + Math.sin(inAngle) * 1.4 * loopDist * (j / 3 + 1)
         ];
-        */
-
-
-        if (loopDir === 'north') {
-        // my loop alteration
-          rs.ctrlpts = [
-            srcPos.x + (0.4)*(1 + Math.pow(srcH, 1.12) / 100) * loopDist * (j / 3 + 1),
-            srcPos.y - (0.67)*(1 + Math.pow(srcH, 1.12) / 100) * loopDist * (j / 3 + 1),
-            srcPos.x - (0.4)*(1 + Math.pow(srcW, 1.12) / 100) * loopDist * (j / 3 + 1),
-            srcPos.y - (0.67)*(1 + Math.pow(srcW, 1.12) / 100) * loopDist * (j / 3 + 1)
-          ];
-        } else if (loopDir === 'south'){
-          rs.ctrlpts = [
-            srcPos.x + (0.4)*(1 + Math.pow(srcH, 1.12) / 100) * loopDist * (j / 3 + 1),
-            srcPos.y + (0.67)*(1 + Math.pow(srcH, 1.12) / 100) * loopDist * (j / 3 + 1),
-            srcPos.x - (0.4)*(1 + Math.pow(srcW, 1.12) / 100) * loopDist * (j / 3 + 1),
-            srcPos.y + (0.67)*(1 + Math.pow(srcW, 1.12) / 100) * loopDist * (j / 3 + 1)
-          ];
-        } else if (loopDir === 'east'){
-          rs.ctrlpts = [
-            srcPos.x + (0.67)*(1 + Math.pow(srcH, 1.12) / 100) * loopDist * (j / 3 + 1),
-            srcPos.y + (0.4)*(1 + Math.pow(srcH, 1.12) / 100) * loopDist * (j / 3 + 1),
-            srcPos.x + (0.67)*(1 + Math.pow(srcW, 1.12) / 100) * loopDist * (j / 3 + 1),
-            srcPos.y - (0.4)*(1 + Math.pow(srcW, 1.12) / 100) * loopDist * (j / 3 + 1)
-          ];
-        } else if (loopDir === 'west'){
-          rs.ctrlpts = [
-            srcPos.x - (0.67)*(1 + Math.pow(srcH, 1.12) / 100) * loopDist * (j / 3 + 1),
-            srcPos.y + (0.4)*(1 + Math.pow(srcH, 1.12) / 100) * loopDist * (j / 3 + 1),
-            srcPos.x - (0.67)*(1 + Math.pow(srcW, 1.12) / 100) * loopDist * (j / 3 + 1),
-            srcPos.y - (0.4)*(1 + Math.pow(srcW, 1.12) / 100) * loopDist * (j / 3 + 1)
-          ];
-        } else if (loopDir === 'northeast'){
-          rs.ctrlpts = [
-            srcPos.x,
-            srcPos.y - (1 + Math.pow(srcH, 1.12) / 100) * loopDist * (j / 3 + 1),
-            srcPos.x + (1 + Math.pow(srcW, 1.12) / 100) * loopDist * (j / 3 + 1),
-            srcPos.y
-          ];
-        } else if (loopDir === 'southeast'){
-          rs.ctrlpts = [
-            srcPos.x,
-            srcPos.y + (1 + Math.pow(srcH, 1.12) / 100) * loopDist * (j / 3 + 1),
-            srcPos.x + (1 + Math.pow(srcW, 1.12) / 100) * loopDist * (j / 3 + 1),
-            srcPos.y
-          ];
-        } else if (loopDir === 'southwest'){
-          rs.ctrlpts = [
-            srcPos.x,
-            srcPos.y + (1 + Math.pow(srcH, 1.12) / 100) * loopDist * (j / 3 + 1),
-            srcPos.x - (1 + Math.pow(srcW, 1.12) / 100) * loopDist * (j / 3 + 1),
-            srcPos.y
-          ];
-        } else {  //northwest is default
-           rs.ctrlpts = [
-            srcPos.x,
-            srcPos.y - (1 + Math.pow(srcH, 1.12) / 100) * loopDist * (j / 3 + 1),
-            srcPos.x - (1 + Math.pow(srcW, 1.12) / 100) * loopDist * (j / 3 + 1),
-            srcPos.y
-          ];
-        }
-
       } else if(
         hasCompounds &&
         ( src.isParent() || src.isChild() || tgt.isParent() || tgt.isChild() ) &&
@@ -22785,7 +22738,8 @@ var styfn = {};
     borderStyle: { enums: ['solid', 'dotted', 'dashed', 'double'] },
     curveStyle: { enums: ['bezier', 'unbundled-bezier', 'haystack', 'segments'] },
 
-    loopDirection: { enums: ['north', 'south', 'east', 'west', 'northwest', 'southwest', 'northeast', 'southeast'] },
+    loopDirection: { number: true },
+    loopSweep: { number: true },
 
     fontFamily: { regex: '^([\\w- \\"]+(?:\\s*,\\s*[\\w- \\"]+)*)$' },
     fontVariant: { enums: ['small-caps', 'normal'] },
@@ -22948,6 +22902,7 @@ var styfn = {};
     { name: 'segment-distances', type: t.bidirectionalSizes },
     { name: 'segment-weights', type: t.numbers },
     { name: 'loop-direction', type: t.loopDirection },
+    { name: 'loop-sweep', type: t.loopSweep },
 
     // these are just for the core
     { name: 'selection-box-color', type: t.color },

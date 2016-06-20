@@ -86,15 +86,22 @@
                 'target-arrow-color': 'black',
                 'color': 'white',
                 'text-outline-width': 2,
-                'text-outline-color': '#555'
+                'text-outline-color': '#555',
+                'loop-direction': '-90',
+                'loop-sweep': '60'
               })
             .selector('edge[direction]')
               .css({
                 'loop-direction': 'data(direction)'
               })
+            .selector('edge[sweep]')
+              .css({
+                'loop-sweep': 'data(sweep)'
+              })
             .selector('.edgehandles-preview')
               .css({
-                'loop-direction': 'north'
+                'loop-direction': '-90',
+                'loop-sweep': '60'
               })
             .selector(':selected')
               .css({
@@ -202,6 +209,49 @@
               doMouseUp(e);
             });
 
+            var edgedrag = false;
+            var draggedEdge;
+            this.on('vmousedown', 'edge', function(e) {
+              cy.panningEnabled(false);
+              draggedEdge = e.cyTarget;
+              edgedrag = true;
+            });
+
+            this.on('vmousemove', function(e) {
+              if (edgedrag) {
+                var dx = e.cyPosition.x - draggedEdge.source().position().x;
+                var dy = e.cyPosition.y - draggedEdge.source().position().y;
+                var angle = Math.atan2(dy, dx);
+                if (angle > -Math.PI/8 || (angle >= 0 && angle <= Math.PI/8)) {
+                  draggedEdge.data.direction = 0;
+                  draggedEdge.css({ 'loop-direction' : '0' });
+                } else if (angle >= -Math.PI*3/8 ) {
+                  draggedEdge.data.direction = -45;
+                  draggedEdge.css({ 'loop-direction' : '-45' });
+                } else if (angle >= -Math.PI*5/8 ) {
+                  draggedEdge.data.direction = -90;
+                  draggedEdge.css({ 'loop-direction' : '-90' });
+                } else if (angle >= -Math.PI*7/8 ) {
+                  draggedEdge.css({ 'loop-direction' : '-135' });
+                } else if (angle < -Math.PI*7/8 || angle > Math.PI*7/8 ) {
+                  draggedEdge.css({ 'loop-direction' : '-180' });
+                }
+                if (angle >= Math.PI*5/8 ) {
+                 draggedEdge.css({ 'loop-direction' : '135' });
+                } else if (angle >= Math.PI*3/8 ) {
+                 draggedEdge.css({ 'loop-direction' : '90' });
+                } else if (angle >= Math.PI/8 ) {
+                 draggedEdge.css({ 'loop-direction' : '45' });
+                }
+              }
+            });
+
+            this.on('vmouseup', function(e) {
+              edgedrag = false;
+              cy.panningEnabled(true);
+            });
+
+
             function doTapHold(e) {
               var element = e.cyTarget;
               if (!(element.id() === 'start' || element.id() === '0')) {
@@ -209,6 +259,11 @@
                 del = true;
               }
             }
+
+            this.on('drag', 'node', function(e) {
+              var node = e.cyTarget;
+              node.removeClass('toDelete');
+            });
 
             this.on('taphold', 'node', function(e) {
               doTapHold(e);
@@ -279,6 +334,7 @@
                 } else {
                   editSubmachine(node);
                 }
+                node.trigger('mouseout');
               });
             }
 
@@ -361,12 +417,13 @@
               },
               complete: function(sourceNode, targetNodes, addedEntities) {
                 resetElementColors();
-                addedEntities[0].data({ 'direction': 'north' });
+                addedEntities[0].data({ 'direction': '-90', 'sweep': '60' });
                 angular.element('[ng-controller=AddEdgeModalController]').scope().open('sm', addedEntities);
               },
               stop: function(sourceNode) {
                 // fired when edgehandles interaction is stopped
                 // (either complete with added edges or incomplete)
+
               }
             };
             this.edgehandles(defaults);

@@ -4,6 +4,14 @@ $assetPath: "/images";
     $assetPath: "/images";
 }
 
+/* Disable selection/copy in UIWebView */
+
+div.cy * {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+}
+
+
 html,body
 {
     width: 100%;
