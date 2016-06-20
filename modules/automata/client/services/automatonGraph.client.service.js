@@ -222,26 +222,31 @@
                 var dx = e.cyPosition.x - draggedEdge.source().position().x;
                 var dy = e.cyPosition.y - draggedEdge.source().position().y;
                 var angle = Math.atan2(dy, dx);
-                if (angle > -Math.PI/8 || (angle >= 0 && angle <= Math.PI/8)) {
-                  draggedEdge.data.direction = 0;
-                  draggedEdge.css({ 'loop-direction' : '0' });
-                } else if (angle >= -Math.PI*3/8 ) {
-                  draggedEdge.data.direction = -45;
-                  draggedEdge.css({ 'loop-direction' : '-45' });
-                } else if (angle >= -Math.PI*5/8 ) {
-                  draggedEdge.data.direction = -90;
-                  draggedEdge.css({ 'loop-direction' : '-90' });
-                } else if (angle >= -Math.PI*7/8 ) {
-                  draggedEdge.css({ 'loop-direction' : '-135' });
-                } else if (angle < -Math.PI*7/8 || angle > Math.PI*7/8 ) {
-                  draggedEdge.css({ 'loop-direction' : '-180' });
+                if (angle > -Math.PI / 8 || (angle >= 0 && angle <= Math.PI / 8)) {
+                  draggedEdge.data({ 'direction': '0' });
+                  draggedEdge.css({ 'loop-direction': '0' });
+                } else if (angle >= -Math.PI * 3 / 8) {
+                  draggedEdge.data({ 'direction': '-45' });
+                  draggedEdge.css({ 'loop-direction': '-45' });
+                } else if (angle >= -Math.PI * 5 / 8) {
+                  draggedEdge.data({ 'direction': '-90' });
+                  draggedEdge.css({ 'loop-direction': '-90' });
+                } else if (angle >= -Math.PI * 7 / 8) {
+                  draggedEdge.data({ 'direction': '-135' });
+                  draggedEdge.css({ 'loop-direction': '-135' });
+                } else if (angle < -Math.PI * 7 / 8 || angle > Math.PI * 7 / 8) {
+                  draggedEdge.data({ 'direction': '-180' });
+                  draggedEdge.css({ 'loop-direction': '-180' });
                 }
-                if (angle >= Math.PI*5/8 ) {
-                 draggedEdge.css({ 'loop-direction' : '135' });
-                } else if (angle >= Math.PI*3/8 ) {
-                 draggedEdge.css({ 'loop-direction' : '90' });
-                } else if (angle >= Math.PI/8 ) {
-                 draggedEdge.css({ 'loop-direction' : '45' });
+                if (angle >= Math.PI * 5 / 8) {
+                  draggedEdge.data({ 'direction': '135' });
+                  draggedEdge.css({ 'loop-direction': '135' });
+                } else if (angle >= Math.PI * 3 / 8) {
+                  draggedEdge.data({ 'direction': '90' });
+                  draggedEdge.css({ 'loop-direction': '90' });
+                } else if (angle >= Math.PI / 8) {
+                  draggedEdge.data({ 'direction': '45' });
+                  draggedEdge.css({ 'loop-direction': '45' });
                 }
               }
             });
