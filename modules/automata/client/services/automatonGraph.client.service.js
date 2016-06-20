@@ -187,10 +187,19 @@
                 resetElementColors();
                 cy.remove('.toDelete');
                 var deleted = element.data('label');
-                if (del && element.isNode()) {
-                  cy.nodes().forEach(function(n) {
+                if (del && element.isNode() && element.hasClass('nnode')) {
+                  cy.nodes('.nnode').forEach(function(n) {
                     if (n.data('label') && n.data('label') > deleted) {
                       var newLabel = n.data('label') - 1;
+                      n.data('label', newLabel);
+                    }
+                  });
+                }
+                if (del && element.isNode() && element.hasClass('submachine')) {
+                  cy.nodes('.submachine').forEach(function(n) {
+                    if (n.data('label') &&
+                      Number(n.data('label').replace("M", "")) > Number(deleted.replace("M", ""))) {
+                      var newLabel = "M" + String(Number(n.data('label').replace("M", "")) - 1);
                       n.data('label', newLabel);
                     }
                   });
@@ -325,7 +334,7 @@
             if (machine !== 'tm') { // accept states only for FSAs and PDAs
               this.on('click', 'node', function(e) {
                 var node = e.cyTarget;
-                if (!node.data().submachine) {
+                if (!node.hasClass('submachine')) {
                   toggleAccept(node);
                 } else {
                   editSubmachine(node);
@@ -334,7 +343,7 @@
 
               this.on('doubleTap', function(e) {
                 var node = e.cyTarget;
-                if (!node.data().submachine) {
+                if (!node.hasClass('submachine')) {
                   toggleAccept(node);
                 } else {
                   editSubmachine(node);
