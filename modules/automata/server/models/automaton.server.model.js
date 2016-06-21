@@ -31,6 +31,11 @@ var AutomatonSchema = new Schema({
     type: String,
     enum: ['tm', 'fsa', 'pda']
   },
+  submachine: { type: Boolean, default: false },
+  parent_machine: {
+    type: Schema.ObjectId,
+    ref: 'Automaton'
+  },
   determ: { type: Boolean, default: true },
   tape: {
     position: Number,
@@ -50,7 +55,11 @@ var AutomatonSchema = new Schema({
           x: Number,
           y: Number
         },
-        classes: String
+        classes: String,
+        submachine: {
+          type: Schema.ObjectId,
+          ref: 'Automaton'
+        }
       }
     ],
     edges: [
@@ -64,12 +73,12 @@ var AutomatonSchema = new Schema({
           action: String,
           label: String,
           direction: {
-            type: Number,
-            default: -90
+            type: String,
+            default: '-90deg'
           },
           sweep: {
-            type: Number,
-            default: 60
+            type: String,
+            default: '60deg'
           }
         }
       }

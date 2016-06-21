@@ -30,7 +30,7 @@
 </div>
 
 <span class="automaton_title" ng-if="!vm.automaton.demo && vm.authentication.user">
-  <a href="#"  editable-text="vm.automaton.title" onaftersave="vm.automaton.$update(successCallback, errorCallback)">{{vm.automaton.title}}</a>
+  <a href="#"  editable-text="vm.automaton.title" onaftersave="vm.save(true)">{{vm.automaton.title}}</a>
 </span>
 
 <span class="automaton_title" ng-if="vm.automaton.demo || !vm.authentication.user">

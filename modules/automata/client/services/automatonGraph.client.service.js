@@ -198,8 +198,8 @@
                 if (del && element.isNode() && element.hasClass('submachine')) {
                   cy.nodes('.submachine').forEach(function(n) {
                     if (n.data('label') &&
-                      Number(n.data('label').replace("M", "")) > Number(deleted.replace("M", ""))) {
-                      var newLabel = "M" + String(Number(n.data('label').replace("M", "")) - 1);
+                      Number(n.data('label').replace('M', '')) > Number(deleted.replace('M', ''))) {
+                      var newLabel = 'M' + String(Number(n.data('label').replace('M', '')) - 1);
                       n.data('label', newLabel);
                     }
                   });
@@ -235,27 +235,27 @@
                   draggedEdge.data({ 'direction': '0' });
                   draggedEdge.css({ 'loop-direction': '0' });
                 } else if (angle >= -Math.PI * 3 / 8) {
-                  draggedEdge.data({ 'direction': '-45' });
-                  draggedEdge.css({ 'loop-direction': '-45' });
+                  draggedEdge.data({ 'direction': '-45deg' });
+                  draggedEdge.css({ 'loop-direction': '-45deg' });
                 } else if (angle >= -Math.PI * 5 / 8) {
-                  draggedEdge.data({ 'direction': '-90' });
-                  draggedEdge.css({ 'loop-direction': '-90' });
+                  draggedEdge.data({ 'direction': '-90deg' });
+                  draggedEdge.css({ 'loop-direction': '-90deg' });
                 } else if (angle >= -Math.PI * 7 / 8) {
-                  draggedEdge.data({ 'direction': '-135' });
-                  draggedEdge.css({ 'loop-direction': '-135' });
+                  draggedEdge.data({ 'direction': '-135deg' });
+                  draggedEdge.css({ 'loop-direction': '-135deg' });
                 } else if (angle < -Math.PI * 7 / 8 || angle > Math.PI * 7 / 8) {
-                  draggedEdge.data({ 'direction': '-180' });
-                  draggedEdge.css({ 'loop-direction': '-180' });
+                  draggedEdge.data({ 'direction': '-180deg' });
+                  draggedEdge.css({ 'loop-direction': '-180deg' });
                 }
                 if (angle >= Math.PI * 5 / 8) {
-                  draggedEdge.data({ 'direction': '135' });
-                  draggedEdge.css({ 'loop-direction': '135' });
+                  draggedEdge.data({ 'direction': '135deg' });
+                  draggedEdge.css({ 'loop-direction': '135deg' });
                 } else if (angle >= Math.PI * 3 / 8) {
-                  draggedEdge.data({ 'direction': '90' });
-                  draggedEdge.css({ 'loop-direction': '90' });
+                  draggedEdge.data({ 'direction': '90deg' });
+                  draggedEdge.css({ 'loop-direction': '90deg' });
                 } else if (angle >= Math.PI / 8) {
-                  draggedEdge.data({ 'direction': '45' });
-                  draggedEdge.css({ 'loop-direction': '45' });
+                  draggedEdge.data({ 'direction': '45deg' });
+                  draggedEdge.css({ 'loop-direction': '45deg' });
                 }
               }
             });
@@ -490,6 +490,10 @@
                         position: { x: tapx, y: tapy }
                       });
                     }// `ele` holds the reference to the active element
+                    // necessary hack to ensure that newly created
+                    // nodes don't flicker. Toggles accept state on start state
+                    toggleAccept(cy.nodes().eq(1));
+                    toggleAccept(cy.nodes().eq(1));
                   }
                 }
               ], // function( ele ){ return [  ] }, // example function for commands

@@ -1110,15 +1110,22 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
                 'target-arrow-color': 'black',
                 'color': 'white',
                 'text-outline-width': 2,
-                'text-outline-color': '#555'
+                'text-outline-color': '#555',
+                'loop-direction': '-90',
+                'loop-sweep': '60'
               })
             .selector('edge[direction]')
               .css({
                 'loop-direction': 'data(direction)'
               })
+            .selector('edge[sweep]')
+              .css({
+                'loop-sweep': 'data(sweep)'
+              })
             .selector('.edgehandles-preview')
               .css({
-                'loop-direction': 'north'
+                'loop-direction': '-90',
+                'loop-sweep': '60'
               })
             .selector(':selected')
               .css({
@@ -1204,10 +1211,19 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
                 resetElementColors();
                 cy.remove('.toDelete');
                 var deleted = element.data('label');
-                if (del && element.isNode()) {
-                  cy.nodes().forEach(function(n) {
+                if (del && element.isNode() && element.hasClass('nnode')) {
+                  cy.nodes('.nnode').forEach(function(n) {
                     if (n.data('label') && n.data('label') > deleted) {
                       var newLabel = n.data('label') - 1;
+                      n.data('label', newLabel);
+                    }
+                  });
+                }
+                if (del && element.isNode() && element.hasClass('submachine')) {
+                  cy.nodes('.submachine').forEach(function(n) {
+                    if (n.data('label') &&
+                      Number(n.data('label').replace('M', '')) > Number(deleted.replace('M', ''))) {
+                      var newLabel = 'M' + String(Number(n.data('label').replace('M', '')) - 1);
                       n.data('label', newLabel);
                     }
                   });
@@ -1226,6 +1242,54 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
               doMouseUp(e);
             });
 
+            var edgedrag = false;
+            var draggedEdge;
+            this.on('vmousedown', 'edge', function(e) {
+              cy.panningEnabled(false);
+              draggedEdge = e.cyTarget;
+              edgedrag = true;
+            });
+
+            this.on('vmousemove', function(e) {
+              if (edgedrag) {
+                var dx = e.cyPosition.x - draggedEdge.source().position().x;
+                var dy = e.cyPosition.y - draggedEdge.source().position().y;
+                var angle = Math.atan2(dy, dx);
+                if (angle > -Math.PI / 8 || (angle >= 0 && angle <= Math.PI / 8)) {
+                  draggedEdge.data({ 'direction': '0' });
+                  draggedEdge.css({ 'loop-direction': '0' });
+                } else if (angle >= -Math.PI * 3 / 8) {
+                  draggedEdge.data({ 'direction': '-45deg' });
+                  draggedEdge.css({ 'loop-direction': '-45deg' });
+                } else if (angle >= -Math.PI * 5 / 8) {
+                  draggedEdge.data({ 'direction': '-90deg' });
+                  draggedEdge.css({ 'loop-direction': '-90deg' });
+                } else if (angle >= -Math.PI * 7 / 8) {
+                  draggedEdge.data({ 'direction': '-135deg' });
+                  draggedEdge.css({ 'loop-direction': '-135deg' });
+                } else if (angle < -Math.PI * 7 / 8 || angle > Math.PI * 7 / 8) {
+                  draggedEdge.data({ 'direction': '-180deg' });
+                  draggedEdge.css({ 'loop-direction': '-180deg' });
+                }
+                if (angle >= Math.PI * 5 / 8) {
+                  draggedEdge.data({ 'direction': '135deg' });
+                  draggedEdge.css({ 'loop-direction': '135deg' });
+                } else if (angle >= Math.PI * 3 / 8) {
+                  draggedEdge.data({ 'direction': '90deg' });
+                  draggedEdge.css({ 'loop-direction': '90deg' });
+                } else if (angle >= Math.PI / 8) {
+                  draggedEdge.data({ 'direction': '45deg' });
+                  draggedEdge.css({ 'loop-direction': '45deg' });
+                }
+              }
+            });
+
+            this.on('vmouseup', function(e) {
+              edgedrag = false;
+              cy.panningEnabled(true);
+            });
+
+
             function doTapHold(e) {
               var element = e.cyTarget;
               if (!(element.id() === 'start' || element.id() === '0')) {
@@ -1233,6 +1297,11 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
                 del = true;
               }
             }
+
+            this.on('drag', 'node', function(e) {
+              var node = e.cyTarget;
+              node.removeClass('toDelete');
+            });
 
             this.on('taphold', 'node', function(e) {
               doTapHold(e);
@@ -1289,7 +1358,7 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
             if (machine !== 'tm') { // accept states only for FSAs and PDAs
               this.on('click', 'node', function(e) {
                 var node = e.cyTarget;
-                if (!node.data().submachine) {
+                if (!node.hasClass('submachine')) {
                   toggleAccept(node);
                 } else {
                   editSubmachine(node);
@@ -1298,11 +1367,12 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
 
               this.on('doubleTap', function(e) {
                 var node = e.cyTarget;
-                if (!node.data().submachine) {
+                if (!node.hasClass('submachine')) {
                   toggleAccept(node);
                 } else {
                   editSubmachine(node);
                 }
+                node.trigger('mouseout');
               });
             }
 
@@ -1385,12 +1455,13 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
               },
               complete: function(sourceNode, targetNodes, addedEntities) {
                 resetElementColors();
-                addedEntities[0].data({ 'direction': 'north' });
+                addedEntities[0].data({ 'direction': '-90', 'sweep': '60' });
                 angular.element('[ng-controller=AddEdgeModalController]').scope().open('sm', addedEntities);
               },
               stop: function(sourceNode) {
                 // fired when edgehandles interaction is stopped
                 // (either complete with added edges or incomplete)
+
               }
             };
             this.edgehandles(defaults);
@@ -1443,6 +1514,10 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
                         position: { x: tapx, y: tapy }
                       });
                     }// `ele` holds the reference to the active element
+                    // necessary hack to ensure that newly created
+                    // nodes don't flicker. Toggles accept state on start state
+                    toggleAccept(cy.nodes().eq(1));
+                    toggleAccept(cy.nodes().eq(1));
                   }
                 }
               ], // function( ele ){ return [  ] }, // example function for commands
