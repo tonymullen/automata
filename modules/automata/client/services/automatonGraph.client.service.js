@@ -87,8 +87,8 @@
                 'color': 'white',
                 'text-outline-width': 2,
                 'text-outline-color': '#555',
-                'loop-direction': '-90',
-                'loop-sweep': '60'
+                'loop-direction': '-90deg',
+                'loop-sweep': '1rad'
               })
             .selector('edge[direction]')
               .css({
@@ -100,8 +100,8 @@
               })
             .selector('.edgehandles-preview')
               .css({
-                'loop-direction': '-90',
-                'loop-sweep': '60'
+                'loop-direction': '-90deg',
+                'loop-sweep': '1rad'
               })
             .selector(':selected')
               .css({
@@ -352,21 +352,6 @@
               });
             }
 
-/*
-            this.on('tap', function(e) {
-              resetElementColors();
-              if (e.cyTarget === cy) {
-                var ind = cy.nodes().length - 1;
-                cy.add({
-                  group: 'nodes',
-                  data: { label: ind,
-                          weight: 75 },
-                  classes: 'enode',
-                  position: { x: e.cyPosition.x, y: e.cyPosition.y }
-                });
-              }
-            });
-*/
             this.on('cxttap', 'node', function(e) {
               var node = e.cyTarget;
               node.removeClass('toDelete');
@@ -431,7 +416,7 @@
               },
               complete: function(sourceNode, targetNodes, addedEntities) {
                 resetElementColors();
-                addedEntities[0].data({ 'direction': '-90', 'sweep': '60' });
+                addedEntities[0].data({ 'direction': '-90deg', 'sweep': '1rad' });
                 angular.element('[ng-controller=AddEdgeModalController]').scope().open('sm', addedEntities);
               },
               stop: function(sourceNode) {
