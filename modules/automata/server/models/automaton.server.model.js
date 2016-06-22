@@ -31,11 +31,15 @@ var AutomatonSchema = new Schema({
     type: String,
     enum: ['tm', 'fsa', 'pda']
   },
-  submachine: { type: Boolean, default: false },
+  isSubmachine: { type: Boolean, default: false },
   parent_machine: {
     type: Schema.ObjectId,
     ref: 'Automaton'
   },
+  submachines: [{
+    type: Schema.ObjectId,
+    ref: 'Automaton'
+  }],
   determ: { type: Boolean, default: true },
   tape: {
     position: Number,

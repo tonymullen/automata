@@ -466,11 +466,11 @@
                     resetElementColors();
                     if (e === cy) {
                       var ind = cy.nodes('.submachine').length;
+                      var smlabel = 'M' + ind;
                       cy.add({
                         group: 'nodes',
-                        data: { label: 'M' + ind,
-                                weight: 75,
-                                submachine: true },
+                        data: { label: smlabel,
+                                weight: 75 },
                         classes: 'submachine enode',
                         position: { x: tapx, y: tapy }
                       });
