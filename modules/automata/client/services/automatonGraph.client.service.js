@@ -6,9 +6,9 @@
     .module('automata.services')
     .factory('automatonGraph', automatonGraph);
 
-  automatonGraph.$inject = ['$q'];
+  automatonGraph.$inject = ['$q', 'AutomataService'];
 
-  function automatonGraph($q) {
+  function automatonGraph($q, AutomataService) {
 
     /*  use a factory instead of a directive,
     *   because cy.js is not just for visualisation;

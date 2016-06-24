@@ -6,8 +6,8 @@ div.cy * {
 html, body {
   width: 100%;
   height: 100%;
-  margin: 0px;
-  padding: 0px;
+  margin: 0;
+  padding: 0;
   overflow-x: hidden;
   position: fixed; }
 
@@ -104,6 +104,4 @@ th {
   /* IE/Edge */
   user-select: none;
   /* non-prefixed version, currently
-     not supported by any browser */ }
-
-/*# sourceMappingURL=automaton.css.map */
+                                  not supported by any browser */ }

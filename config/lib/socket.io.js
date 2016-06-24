@@ -19,11 +19,20 @@ module.exports = function (app, db) {
     // Load SSL key and certificate
     var privateKey = fs.readFileSync(path.resolve(config.secure.privateKey), 'utf8');
     var certificate = fs.readFileSync(path.resolve(config.secure.certificate), 'utf8');
+    var caBundle;
+
+    try {
+      caBundle = fs.readFileSync(path.resolve(config.secure.caBundle), 'utf8');
+    } catch (err) {
+      console.log('Warning: couldn\'t find or read caBundle file');
+    }
+
     var options = {
       key: privateKey,
       cert: certificate,
-      //  requestCert: true,
-      //  rejectUnauthorized: true,
+      ca: caBundle,
+      //  requestCert : true,
+      //  rejectUnauthorized : true,
       secureProtocol: 'TLSv1_method',
       ciphers: [
         'ECDHE-RSA-AES128-GCM-SHA256',

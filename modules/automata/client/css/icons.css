@@ -12,6 +12,7 @@ div.playIcons {
   div.playIcons {
     font-size: 2.5em;
     width: 1px; } }
+
 span.playIconSpan::selection {
   background: white;
   background: rgba(255, 255, 255, 0); }
@@ -50,5 +51,3 @@ span.playIcons > span:active {
   -webkit-background-clip: text;
   -moz-background-clip: text;
   background-clip: text; }
-
-/*# sourceMappingURL=icons.css.map */

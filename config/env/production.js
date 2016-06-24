@@ -4,7 +4,8 @@ module.exports = {
   secure: {
     ssl: true,
     privateKey: './config/sslcerts/key.pem',
-    certificate: './config/sslcerts/cert.pem'
+    certificate: './config/sslcerts/cert.pem',
+    caBundle: './config/sslcerts/cabundle.crt'
   },
   sessionSecret: process.env.SESSION_SECRET || 'super amazing secret',
   port: process.env.PORT || 8443,
