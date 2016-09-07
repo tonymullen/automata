@@ -1,6 +1,7 @@
 'use strict';
 
-var should = require('should'),
+var semver = require('semver'),
+  should = require('should'),
   request = require('supertest'),
   path = require('path'),
   mongoose = require('mongoose'),
@@ -104,7 +105,7 @@ describe('User CRUD tests', function () {
 
             // NodeJS v4 changed the status code representation so we must check
             // before asserting, to be comptabile with all node versions.
-            if (process.version.indexOf('v4') === 0 || process.version.indexOf('v5') === 0) {
+            if (semver.satisfies(process.versions.node, '>=4.0.0')) {
               signoutRes.text.should.equal('Found. Redirecting to /');
             } else {
               signoutRes.text.should.equal('Moved Temporarily. Redirecting to /');
@@ -802,6 +803,54 @@ describe('User CRUD tests', function () {
               userInfoRes.body.message.should.equal('Email already exists');
 
               return done();
+            });
+        });
+    });
+  });
+
+  it('should not be able to update secure fields', function (done) {
+    var resetPasswordToken = 'password-reset-token';
+    user.resetPasswordToken = resetPasswordToken;
+
+    user.save(function (saveErr) {
+      if (saveErr) {
+        return done(saveErr);
+      }
+      agent.post('/api/auth/signin')
+        .send(credentials)
+        .expect(200)
+        .end(function (signinErr, signinRes) {
+          // Handle signin error
+          if (signinErr) {
+            return done(signinErr);
+          }
+          var userUpdate = {
+            password: 'Aw3$0m3P@ssWord',
+            salt: 'newsaltphrase',
+            created: new Date(2000, 9, 9),
+            resetPasswordToken: 'tweeked-reset-token'
+          };
+
+          // Get own user details
+          agent.put('/api/users')
+            .send(userUpdate)
+            .expect(200)
+            .end(function (err, res) {
+              if (err) {
+                return done(err);
+              }
+
+              User.findById(user._id, function (dbErr, updatedUser) {
+                if (dbErr) {
+                  return done(dbErr);
+                }
+
+                updatedUser.password.should.be.equal(user.password);
+                updatedUser.salt.should.be.equal(user.salt);
+                updatedUser.created.getTime().should.be.equal(user.created.getTime());
+                updatedUser.resetPasswordToken.should.be.equal(resetPasswordToken);
+                done();
+              });
             });
         });
     });

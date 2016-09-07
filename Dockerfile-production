@@ -1,18 +1,17 @@
 # Build:
-# docker build -t meanjs/mean .
+# docker build -t meanjs/mean -f Dockerfile-production .
 #
 # Run:
 # docker run -it meanjs/mean
 #
 # Compose:
-# docker-compose up -d
+# docker-compose -f docker-compose-production.yml up -d
 
 FROM ubuntu:latest
 MAINTAINER MEAN.JS
 
 # Install Utilities
-RUN apt-get update -q
-RUN apt-get install -yqq wget aptitude htop vim git traceroute dnsutils curl ssh sudo tree tcpdump nano psmisc gcc make build-essential libfreetype6 libfontconfig libkrb5-dev
+RUN apt-get update -q && apt-get install -yqq aptitude git traceroute dnsutils tree tcpdump psmisc gcc make build-essential libfreetype6 libfontconfig libkrb5-dev curl sudo
 
 # Install gem sass for grunt-contrib-sass
 RUN apt-get install -y ruby
@@ -35,7 +34,7 @@ WORKDIR /opt/mean.js
 # when the local package.json file changes.
 # Install npm packages
 ADD package.json /opt/mean.js/package.json
-RUN npm install --quiet
+RUN npm install --quiet --production
 
 # Install bower packages
 ADD bower.json /opt/mean.js/bower.json
@@ -50,7 +49,7 @@ RUN npm cache clean
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Set development environment as default
-ENV NODE_ENV development
+ENV NODE_ENV production
 
 # Ports generic
 EXPOSE 80:80
@@ -59,11 +58,8 @@ EXPOSE 443:443
 # Port 3000 for MEAN.JS server
 EXPOSE 3000:3000
 
-# Port 5858 for node debug
-EXPOSE 5858:5858
-
 # Port 35729 for livereload
 EXPOSE 35729:35729
 
 # Run MEAN.JS server
-CMD ["npm", "start"]
+CMD ["npm","run-script","start:prod"]

@@ -1,5 +1,7 @@
 'use strict';
 
+/* eslint comma-dangle:[0, "only-multiline"] */
+
 module.exports = {
   client: {
     lib: {
@@ -9,16 +11,23 @@ module.exports = {
         'public/fonts/automaton-icons/fonts',
         'public/fonts/automaton-icons/styles.css',
         'public/lib/bootstrap/dist/css/bootstrap.css',
-        'public/lib/angular-xeditable/dist/css/xeditable.css'
+        'public/lib/angular-xeditable/dist/css/xeditable.css',
+        'public/lib/bootstrap/dist/css/bootstrap-theme.css',
+        'public/lib/ng-img-crop/compile/unminified/ng-img-crop.css'
+        // endbower
       ],
       js: [
         'public/lib/jquery/dist/jquery.js',
         'public/lib/jquery-ui/jquery-ui.js',
         'public/lib/jqueryui-touch-punch/jquery.ui.touch-punch.min.js',
         'public/lib/angular/angular.js',
-        'public/lib/angular-resource/angular-resource.js',
         'public/lib/angular-animate/angular-animate.js',
+        'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
+        'public/lib/ng-file-upload/ng-file-upload.js',
+        'public/lib/ng-img-crop/compile/unminified/ng-img-crop.js',
         'public/lib/angular-messages/angular-messages.js',
+        'public/lib/angular-mocks/angular-mocks.js',
+        'public/lib/angular-resource/angular-resource.js',
         'public/lib/angular-ui-router/release/angular-ui-router.js',
         'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
         'public/lib/angular-file-upload/dist/angular-file-upload.js',
@@ -29,6 +38,7 @@ module.exports = {
         'public/lib/cytoscape-cxtmenu/cytoscape-cxtmenu.js',
         'public/lib/angular-xeditable/dist/js/xeditable.js',
         'public/js/jsPDF/dist/jspdf.min.js'
+        // endbower
       ],
       tests: ['public/lib/angular-mocks/angular-mocks.js']
     },

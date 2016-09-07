@@ -44,17 +44,17 @@ describe('Automaton Model Unit Tests:', function () {
   describe('Method Save', function () {
     it('should be able to save without problems', function (done) {
       this.timeout(10000);
-      return automaton.save(function (err) {
+      automaton.save(function (err) {
         should.not.exist(err);
-        done();
+        return done();
       });
     });
     it('should be able to show an error when try to save without title', function (done) {
       automaton.title = '';
 
-      return automaton.save(function (err) {
+      automaton.save(function (err) {
         should.exist(err);
-        done();
+        return done();
       });
     });
   });

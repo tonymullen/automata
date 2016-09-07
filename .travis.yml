@@ -12,9 +12,6 @@ os:
 # NodeJS v4 requires gcc 4.8
 env:
   - NODE_ENV=travis CXX="g++-4.8" CC="gcc-4.8"
-matrix:
-  allow_failures:
-    - node_js: 6
 services:
   - mongodb
 # gcc 4.8 requires ubuntu-toolchain-r-test
@@ -37,8 +34,9 @@ before_install:
   - 'node_modules/protractor/bin/webdriver-manager start 2>&1 &'
   - sleep 3
 after_script:
-  - nsp audit-package
-  - grunt coverage
+  - nsp check
+  - gulp test:coverage
+  - node_modules/.bin/lcov-result-merger 'coverage/**/lcov.info' | node_modules/coveralls/bin/coveralls.js
 notifications:
   webhooks:
     urls:

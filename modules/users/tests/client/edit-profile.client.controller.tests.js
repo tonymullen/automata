@@ -1,16 +1,14 @@
-(function () {
+﻿(function () {
   'use strict';
 
-  describe('Automata Controller Tests', function () {
+  describe('Edit Profile Controller Tests', function () {
     // Initialize global variables
-    var AutomataController,
+    var EditProfileController,
       $scope,
       $httpBackend,
-      $state,
+      $location,
       Authentication,
-      AutomataService,
-      mockAutomaton;
-
+      UsersService;
 
     // The $resource service augments the response object with methods for updating and deleting the resource.
     // If we were to use the standard toEqual matcher, our tests would fail because the test values would not match
@@ -37,39 +35,58 @@
     // The injector ignores leading and trailing underscores here (i.e. _$httpBackend_).
     // This allows us to inject a service but then attach it to a variable
     // with the same name as the service.
-
-    beforeEach(inject(function ($controller, $rootScope, _$location_, _$stateParams_, _$httpBackend_, _$state_, _Authentication_, _AutomataService_) {
-
+    beforeEach(inject(function ($controller, $rootScope, _$location_, _$httpBackend_, _Authentication_, _UsersService_) {
       // Set a new global scope
       $scope = $rootScope.$new();
 
       // Point global variables to injected services
       $httpBackend = _$httpBackend_;
-      $state = _$state_;
+      $location = _$location_;
       Authentication = _Authentication_;
-      AutomataService = _AutomataService_;
-
-      // create mock automaton
-      mockAutomaton = new AutomataService({
-
-        _id: '525a8422f6d0f87f0e407a33',
-        title: 'An Automaton about MEAN',
-        content: 'MEAN rocks!'
-      });
+      UsersService = _UsersService_;
 
       // Mock logged in user
       Authentication.user = {
+        _id: '525a8422f6d0f87f0e407a33',
+        username: 'test',
         roles: ['user']
       };
 
-      // Initialize the Automata controller.
-      AutomataController = $controller('AutomataController as vm', {
-        $scope: $scope,
-        automatonResolve: {}
+      // Initialize the Articles controller.
+      EditProfileController = $controller('EditProfileController as vm', {
+        $scope: $scope
       });
-
-      // Spy on state go
-      spyOn($state, 'go');
     }));
+
+    describe('Update User Profile', function () {
+
+      it('should have user context', inject(function (UsersService) {
+        expect($scope.vm.user).toBe(Authentication.user);
+      }));
+
+      it('should update the user profile', inject(function (UsersService) {
+        // Set PUT response
+        $httpBackend.expectPUT(/api\/users/).respond();
+
+        // Run controller functionality
+        $scope.vm.updateUserProfile(true);
+        $httpBackend.flush();
+
+        expect($scope.vm.success).toBe(true);
+      }));
+
+      it('should set vm.error if error', inject(function (UsersService) {
+        var errorMessage = 'error';
+        $httpBackend.expectPUT(/api\/users/).respond(400, {
+          message: errorMessage
+        });
+
+        $scope.vm.updateUserProfile(true);
+        $httpBackend.flush();
+
+        expect($scope.vm.error).toBe(errorMessage);
+      }));
+    });
+
   });
 }());
