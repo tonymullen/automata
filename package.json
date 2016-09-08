@@ -54,6 +54,7 @@
     "grunt-cli": "~1.2.0",
     "gulp": "~3.9.1",
     "gulp-load-plugins": "~1.2.0",
+    "run-sequence": "~1.1.5",
     "helmet": "~2.1.2",
     "jasmine-core": "~2.4.1",
     "lodash": "~4.15.0",
@@ -137,7 +138,6 @@
     "load-grunt-tasks": "~3.4.1",
     "mock-fs": "~3.11.0",
     "node-inspector": "~0.12.7",
-    "run-sequence": "~1.1.5",
     "semver": "~5.3.0",
     "should": "~8.2.2",
     "supertest": "~1.2.0"
