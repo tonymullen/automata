@@ -12,7 +12,8 @@ module.exports = {
         // bower:css
         'public/lib/bootstrap/dist/css/bootstrap.min.css',
         'public/lib/bootstrap/dist/css/bootstrap-theme.min.css',
-        'public/lib/ng-img-crop/compile/minified/ng-img-crop.css'
+        'public/lib/ng-img-crop/compile/minified/ng-img-crop.css',
+        'public/lib/angular-xeditable/dist/css/xeditable.min.css',
         // endbower
       ],
       js: [
