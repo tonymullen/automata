@@ -16,8 +16,8 @@
   },
   "scripts": {
     "update": "npm update && npm prune && bower install --allow-root && bower prune --allow-root",
-    "start": "grunt",
-    "start:prod": "grunt prod",
+    "start": "gulp",
+    "start:prod": "gulp prod",
     "start:debug": "gulp debug",
     "gulp": "gulp",
     "lint": "gulp lint",
