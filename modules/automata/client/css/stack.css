@@ -24,6 +24,7 @@ div.stackWindowBody {
 
 .panel-heading.stack-window-heading {
   background-color: #080808;
+  background-image: -webkit-linear-gradient(top, #353535 0%, #080808 100%);
   background-image: linear-gradient(to bottom, #353535 0%, #080808 100%);
   border-color: #080808;
   padding: 0;

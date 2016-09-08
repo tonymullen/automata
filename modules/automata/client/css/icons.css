@@ -13,6 +13,10 @@ div.playIcons {
     font-size: 2.5em;
     width: 1px; } }
 
+span.playIconSpan::-moz-selection {
+  background: white;
+  background: rgba(255, 255, 255, 0); }
+
 span.playIconSpan::selection {
   background: white;
   background: rgba(255, 255, 255, 0); }
@@ -41,7 +45,6 @@ span.saveIcon:active {
   color: transparent;
   text-shadow: 0 2px 3px rgba(255, 255, 255, 0.5);
   -webkit-background-clip: text;
-  -moz-background-clip: text;
   background-clip: text; }
 
 span.playIcons > span:active {
@@ -49,5 +52,4 @@ span.playIcons > span:active {
   color: transparent;
   text-shadow: 0 2px 3px rgba(255, 255, 255, 0.5);
   -webkit-background-clip: text;
-  -moz-background-clip: text;
   background-clip: text; }

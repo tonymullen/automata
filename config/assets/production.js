@@ -12,16 +12,18 @@ module.exports = {
         // bower:css
         'public/lib/bootstrap/dist/css/bootstrap.min.css',
         'public/lib/bootstrap/dist/css/bootstrap-theme.min.css',
+        'public/lib/ng-img-crop/compile/minified/ng-img-crop.css'
         // endbower
       ],
       js: [
         'public/lib/jquery/dist/jquery.min.js',
         'public/lib/jquery-ui/jquery-ui.min.js',
         'public/lib/jqueryui-touch-punch/jquery.ui.touch-punch.min.js',
-        'public/lib/angular/angular.min.js',
+        'public/lib/angular/angular.js',
         'public/lib/angular-animate/angular-animate.min.js',
         'public/lib/angular-bootstrap/ui-bootstrap-tpls.min.js',
-        'public/lib/angular-file-upload/dist/angular-file-upload.min.js',
+        'public/lib/ng-file-upload/ng-file-upload.min.js',
+        'public/lib/ng-img-crop/compile/minified/ng-img-crop.js',
         'public/lib/owasp-password-strength-test/owasp-password-strength-test.js',
         'public/js/dist/cytoscape.min.js',
         'public/lib/cytoscape-edgehandles/cytoscape-edgehandles.js',

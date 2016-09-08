@@ -4,8 +4,9 @@
   var applicationModuleName = 'mean';
 
   var service = {
+    applicationEnvironment: window.env,
     applicationModuleName: applicationModuleName,
-    applicationModuleVendorDependencies: ['ngResource', 'ngAnimate', 'ngMessages', 'ui.router', 'ui.bootstrap', 'angularFileUpload'],
+    applicationModuleVendorDependencies: ['ngResource', 'ngAnimate', 'ngMessages', 'ui.router', 'ui.bootstrap', 'ngFileUpload', 'ngImgCrop'],
     registerModule: registerModule
   };
 
@@ -33,13 +34,22 @@
     .module(app.applicationModuleName)
     .config(bootstrapConfig);
 
-  function bootstrapConfig($locationProvider, $httpProvider) {
+  function bootstrapConfig($compileProvider, $locationProvider, $httpProvider) {
     $locationProvider.html5Mode(true).hashPrefix('!');
 
     $httpProvider.interceptors.push('authInterceptor');
+
+    // Disable debug data for production environment
+    // @link https://docs.angularjs.org/guide/production
+    // $compileProvider.debugInfoEnabled(app.applicationEnvironment !== 'production');
+    // Unfortunately, debug data must be enabled in order to access the scope of a
+    // DOM element, which is necessary to open the modal window from cytoscape
+    // edgehandles. Until a better solution exists, we have to leave debug info enabled.
+    // https://github.com/angular/angular.js/issues/9515
+    $compileProvider.debugInfoEnabled(true);
   }
 
-  bootstrapConfig.$inject = ['$locationProvider', '$httpProvider'];
+  bootstrapConfig.$inject = ['$compileProvider', '$locationProvider', '$httpProvider'];
 
   // Then define the init function for starting up the application
   angular.element(document).ready(init);
@@ -1030,9 +1040,9 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
     .module('automata.services')
     .factory('automatonGraph', automatonGraph);
 
-  automatonGraph.$inject = ['$q'];
+  automatonGraph.$inject = ['$q', 'AutomataService'];
 
-  function automatonGraph($q) {
+  function automatonGraph($q, AutomataService) {
 
     /*  use a factory instead of a directive,
     *   because cy.js is not just for visualisation;
@@ -1490,11 +1500,11 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
                     resetElementColors();
                     if (e === cy) {
                       var ind = cy.nodes('.submachine').length;
+                      var smlabel = 'M' + ind;
                       cy.add({
                         group: 'nodes',
-                        data: { label: 'M' + ind,
-                                weight: 75,
-                                submachine: true },
+                        data: { label: smlabel,
+                                weight: 75 },
                         classes: 'submachine enode',
                         position: { x: tapx, y: tapy }
                       });
@@ -1852,6 +1862,39 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
   angular.module('core')
     .directive('pageTitle', pageTitle);
 
+  pageTitle.$inject = ['$rootScope', '$interpolate', '$state'];
+
+  function pageTitle($rootScope, $interpolate, $state) {
+    var directive = {
+      restrict: 'A',
+      link: link
+    };
+
+    return directive;
+
+    function link(scope, element) {
+      $rootScope.$on('$stateChangeSuccess', listener);
+
+      function listener(event, toState) {
+        var applicationCoreTitle = 'MEAN.js',
+          separeteBy = ' - ';
+        if (toState.data && toState.data.pageTitle) {
+          var stateTitle = $interpolate(toState.data.pageTitle)($state.$current.locals.globals);
+          element.html(applicationCoreTitle + separeteBy + stateTitle);
+        } else {
+          element.html(applicationCoreTitle);
+        }
+      }
+    }
+  }
+}());
+
+(function () {
+  'use strict';
+
+  angular.module('core')
+    .directive('pageTitle', pageTitle);
+
   pageTitle.$inject = ['$rootScope', '$timeout', '$interpolate', '$state'];
 
   function pageTitle($rootScope, $timeout, $interpolate, $state) {
@@ -2027,7 +2070,7 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
       removeMenu: removeMenu,
       removeMenuItem: removeMenuItem,
       removeSubMenuItem: removeSubMenuItem,
-      validateMenuExistance: validateMenuExistance
+      validateMenuExistence: validateMenuExistence
     };
 
     init();
@@ -2054,7 +2097,7 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
       options = options || {};
 
       // Validate that the menu exists
-      service.validateMenuExistance(menuId);
+      service.validateMenuExistence(menuId);
 
       // Push new menu item
       service.menus[menuId].items.push({
@@ -2086,7 +2129,7 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
       options = options || {};
 
       // Validate that the menu exists
-      service.validateMenuExistance(menuId);
+      service.validateMenuExistence(menuId);
 
       // Search for menu item
       for (var itemIndex in service.menus[menuId].items) {
@@ -2095,6 +2138,7 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
           service.menus[menuId].items[itemIndex].items.push({
             title: options.title || '',
             state: options.state || '',
+            params: options.params || {},
             roles: ((options.roles === null || typeof options.roles === 'undefined') ? service.menus[menuId].items[itemIndex].roles : options.roles),
             position: options.position || 0,
             shouldRender: shouldRender
@@ -2109,7 +2153,7 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
     // Get the menu object by menu id
     function getMenu(menuId) {
       // Validate that the menu exists
-      service.validateMenuExistance(menuId);
+      service.validateMenuExistence(menuId);
 
       // Return the menu object
       return service.menus[menuId];
@@ -2148,7 +2192,7 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
     // Remove existing menu object by menu id
     function removeMenu(menuId) {
       // Validate that the menu exists
-      service.validateMenuExistance(menuId);
+      service.validateMenuExistence(menuId);
 
       delete service.menus[menuId];
     }
@@ -2156,7 +2200,7 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
     // Remove existing menu object by menu id
     function removeMenuItem(menuId, menuItemState) {
       // Validate that the menu exists
-      service.validateMenuExistance(menuId);
+      service.validateMenuExistence(menuId);
 
       // Search for menu item to remove
       for (var itemIndex in service.menus[menuId].items) {
@@ -2172,7 +2216,7 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
     // Remove existing menu object by menu id
     function removeSubMenuItem(menuId, submenuItemState) {
       // Validate that the menu exists
-      service.validateMenuExistance(menuId);
+      service.validateMenuExistence(menuId);
 
       // Search for menu item to remove
       for (var itemIndex in service.menus[menuId].items) {
@@ -2190,7 +2234,7 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
     }
 
     // Validate menu existance
-    function validateMenuExistance(menuId) {
+    function validateMenuExistence(menuId) {
       if (menuId && menuId.length) {
         if (service.menus[menuId]) {
           return true;
@@ -2752,82 +2796,52 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
     .module('users')
     .controller('ChangeProfilePictureController', ChangeProfilePictureController);
 
-  ChangeProfilePictureController.$inject = ['$scope', '$timeout', '$window', 'Authentication', 'FileUploader'];
+  ChangeProfilePictureController.$inject = ['$timeout', 'Authentication', 'Upload'];
 
-  function ChangeProfilePictureController($scope, $timeout, $window, Authentication, FileUploader) {
+  function ChangeProfilePictureController($timeout, Authentication, Upload) {
     var vm = this;
 
     vm.user = Authentication.user;
-    vm.imageURL = vm.user.profileImageURL;
-    vm.uploadProfilePicture = uploadProfilePicture;
+    vm.fileSelected = false;
 
-    vm.cancelUpload = cancelUpload;
-    // Create file uploader instance
-    vm.uploader = new FileUploader({
-      url: 'api/users/picture',
-      alias: 'newProfilePicture',
-      onAfterAddingFile: onAfterAddingFile,
-      onSuccessItem: onSuccessItem,
-      onErrorItem: onErrorItem
-    });
+    vm.upload = function (dataUrl, name) {
+      vm.success = vm.error = null;
 
-    // Set file uploader image filter
-    vm.uploader.filters.push({
-      name: 'imageFilter',
-      fn: function (item, options) {
-        var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
-        return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
-      }
-    });
-
-    // Called after the user selected a new picture file
-    function onAfterAddingFile(fileItem) {
-      if ($window.FileReader) {
-        var fileReader = new FileReader();
-        fileReader.readAsDataURL(fileItem._file);
-
-        fileReader.onload = function (fileReaderEvent) {
-          $timeout(function () {
-            vm.imageURL = fileReaderEvent.target.result;
-          }, 0);
-        };
-      }
-    }
+      Upload.upload({
+        url: 'api/users/picture',
+        data: {
+          newProfilePicture: Upload.dataUrltoBlob(dataUrl, name)
+        }
+      }).then(function (response) {
+        $timeout(function () {
+          onSuccessItem(response.data);
+        });
+      }, function (response) {
+        if (response.status > 0) onErrorItem(response.data);
+      }, function (evt) {
+        vm.progress = parseInt(100.0 * evt.loaded / evt.total, 10);
+      });
+    };
 
     // Called after the user has successfully uploaded a new picture
-    function onSuccessItem(fileItem, response, status, headers) {
+    function onSuccessItem(response) {
       // Show success message
       vm.success = true;
 
       // Populate user object
       vm.user = Authentication.user = response;
 
-      // Clear upload buttons
-      cancelUpload();
+      // Reset form
+      vm.fileSelected = false;
+      vm.progress = 0;
     }
 
     // Called after the user has failed to uploaded a new picture
-    function onErrorItem(fileItem, response, status, headers) {
-      // Clear upload buttons
-      cancelUpload();
+    function onErrorItem(response) {
+      vm.fileSelected = false;
 
       // Show error message
       vm.error = response.message;
-    }
-
-    // Change user profile picture
-    function uploadProfilePicture() {
-      // Clear messages
-      vm.success = vm.error = null;
-
-      // Start upload
-      vm.uploader.uploadAll();
-    }
-
-    // Cancel the upload process
-    function cancelUpload() {
-      vm.uploader.clearQueue();
-      vm.imageURL = vm.user.profileImageURL;
     }
   }
 }());
@@ -2890,7 +2904,7 @@ angular.module('windows', ['ngAnimate', 'itsADrag', 'resizeIt'])
 
     // Check if there are additional accounts
     function hasConnectedAdditionalSocialAccounts() {
-      return ($scope.user.additionalProvidersData && Object.keys($scope.user.additionalProvidersData).length);
+      return (vm.user.additionalProvidersData && Object.keys(vm.user.additionalProvidersData).length);
     }
 
     // Check if provider is already in use with current user

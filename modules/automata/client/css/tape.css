@@ -1,8 +1,6 @@
 .floating-window, div.tapeWindowBodyContent, div.tapeWindowBody, .floating-window > .panel {
   /* fix for sudden margins when using resizeable with bootstrap */
-  -webkit-box-sizing: content-box;
   /* Safari/Chrome, other WebKit */
-  -moz-box-sizing: content-box;
   /* Firefox, other Gecko */
   box-sizing: content-box;
   /* Opera/IE 8+ */
@@ -64,8 +62,6 @@ div.tapeWindowBody {
   max-height: 1000px;
   overflow: hidden;
   -webkit-transition: max-height .4s ease;
-  -moz-transition: max-height .4s ease;
-  -o-transition: height .4s ease;
   transition: max-height .4s ease; }
 
 .floating-window.minimize, .floating-window.minimize-add.minimize-add-active, .floating-window.minimize-remove {
@@ -76,6 +72,7 @@ div.tapeWindowBody {
 
 .panel-heading.tape-window-heading {
   background-color: #080808;
+  background-image: -webkit-linear-gradient(top, #353535 0%, #080808 100%);
   background-image: linear-gradient(to bottom, #353535 0%, #080808 100%);
   border-color: #080808;
   padding: 0;
@@ -140,6 +137,10 @@ tr.rw-head > td > div.rw-head-cell.inactive {
 
 tr.rw-head > td > div.rw-head-cell.active {
   background-color: black; }
+
+input.tape-cell::-moz-selection {
+  background: none;
+  /* WebKit/Blink Browsers */ }
 
 input.tape-cell::selection {
   background: none;

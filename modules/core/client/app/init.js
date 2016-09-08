@@ -17,7 +17,12 @@
 
     // Disable debug data for production environment
     // @link https://docs.angularjs.org/guide/production
-    $compileProvider.debugInfoEnabled(app.applicationEnvironment !== 'production');
+    // $compileProvider.debugInfoEnabled(app.applicationEnvironment !== 'production');
+    // Unfortunately, debug data must be enabled in order to access the scope of a
+    // DOM element, which is necessary to open the modal window from cytoscape
+    // edgehandles. Until a better solution exists, we have to leave debug info enabled.
+    // https://github.com/angular/angular.js/issues/9515
+    $compileProvider.debugInfoEnabled(true);
   }
 
   bootstrapConfig.$inject = ['$compileProvider', '$locationProvider', '$httpProvider'];
