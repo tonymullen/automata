@@ -433,7 +433,7 @@
               commands: [ // an array of commands to list in the menu or a function that returns the array
                 { // example command
                   // fillColor: 'rgba(100, 100, 100, 0.75)', // optional: custom background color for item
-                  content: '<span class="cxtmenutext noSelect">Add<br>node</span>', // html/text content to be displayed in the menu
+                  content: '<span class="cxtmenutext noSelect">Add<br>state</span>', // html/text content to be displayed in the menu
                   select: function(e) { // a function to execute when the command is selected
                     resetElementColors();
                     if (e === cy) {
