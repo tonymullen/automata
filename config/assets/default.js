@@ -13,7 +13,8 @@ module.exports = {
         'public/lib/bootstrap/dist/css/bootstrap.css',
         'public/lib/angular-xeditable/dist/css/xeditable.css',
         'public/lib/bootstrap/dist/css/bootstrap-theme.css',
-        'public/lib/ng-img-crop/compile/unminified/ng-img-crop.css'
+        'public/lib/ng-img-crop/compile/unminified/ng-img-crop.css',
+        'public/lib/angular-ui-notification/dist/angular-ui-notification.css'
         // endbower
       ],
       js: [
@@ -28,6 +29,7 @@ module.exports = {
         'public/lib/angular-messages/angular-messages.js',
         'public/lib/angular-mocks/angular-mocks.js',
         'public/lib/angular-resource/angular-resource.js',
+        'public/lib/angular-ui-notification/dist/angular-ui-notification.js',
         'public/lib/angular-ui-router/release/angular-ui-router.js',
         'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
         'public/lib/angular-file-upload/dist/angular-file-upload.js',
@@ -67,7 +69,6 @@ module.exports = {
     templates: ['build/templates.js']
   },
   server: {
-    gruntConfig: ['gruntfile.js'],
     gulpConfig: ['gulpfile.js'],
     allJS: ['server.js', 'config/**/*.js', 'modules/*/server/**/*.js'],
     models: 'modules/*/server/models/**/*.js',

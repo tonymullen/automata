@@ -10,8 +10,13 @@
     .module(app.applicationModuleName)
     .config(bootstrapConfig);
 
-  function bootstrapConfig($compileProvider, $locationProvider, $httpProvider) {
-    $locationProvider.html5Mode(true).hashPrefix('!');
+  bootstrapConfig.$inject = ['$compileProvider', '$locationProvider', '$httpProvider', '$logProvider'];
+
+  function bootstrapConfig($compileProvider, $locationProvider, $httpProvider, $logProvider) {
+    $locationProvider.html5Mode({
+      enabled: true,
+      requireBase: false
+    }).hashPrefix('!');
 
     $httpProvider.interceptors.push('authInterceptor');
 
@@ -25,7 +30,6 @@
     $compileProvider.debugInfoEnabled(true);
   }
 
-  bootstrapConfig.$inject = ['$compileProvider', '$locationProvider', '$httpProvider'];
 
   // Then define the init function for starting up the application
   angular.element(document).ready(init);

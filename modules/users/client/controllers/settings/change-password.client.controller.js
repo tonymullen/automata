@@ -5,9 +5,9 @@
     .module('users')
     .controller('ChangePasswordController', ChangePasswordController);
 
-  ChangePasswordController.$inject = ['$scope', '$http', 'Authentication', 'PasswordValidator'];
+  ChangePasswordController.$inject = ['$scope', '$http', 'Authentication', 'UsersService', 'PasswordValidator', 'Notification'];
 
-  function ChangePasswordController($scope, $http, Authentication, PasswordValidator) {
+  function ChangePasswordController($scope, $http, Authentication, UsersService, PasswordValidator, Notification) {
     var vm = this;
 
     vm.user = Authentication.user;
@@ -16,7 +16,6 @@
 
     // Change user password
     function changeUserPassword(isValid) {
-      vm.success = vm.error = null;
 
       if (!isValid) {
         $scope.$broadcast('show-errors-check-validity', 'vm.passwordForm');
@@ -24,14 +23,19 @@
         return false;
       }
 
-      $http.post('/api/users/password', vm.passwordDetails).success(function (response) {
-        // If successful show success message and clear form
-        $scope.$broadcast('show-errors-reset', 'vm.passwordForm');
-        vm.success = true;
-        vm.passwordDetails = null;
-      }).error(function (response) {
-        vm.error = response.message;
-      });
+      UsersService.changePassword(vm.passwordDetails)
+        .then(onChangePasswordSuccess)
+        .catch(onChangePasswordError);
+    }
+
+    function onChangePasswordSuccess(response) {
+      // If successful show success message and clear form
+      Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> Password Changed Successfully' });
+      vm.passwordDetails = null;
+    }
+
+    function onChangePasswordError(response) {
+      Notification.error({ message: response.data.message, title: '<i class="glyphicon glyphicon-remove"></i> Password change failed!' });
     }
   }
 }());

@@ -14,6 +14,7 @@ var semver = require('semver'),
 var app,
   agent,
   credentials,
+  credentialsEmail,
   user,
   _user,
   admin;
@@ -32,9 +33,15 @@ describe('User CRUD tests', function () {
   });
 
   beforeEach(function (done) {
-    // Create user credentials
+    // Create user credentials with username
     credentials = {
-      username: 'username',
+      usernameOrEmail: 'username',
+      password: 'M3@n.jsI$Aw3$0m3'
+    };
+
+    // Create user credentials with email
+    credentialsEmail = {
+      usernameOrEmail: 'test@test.com',
       password: 'M3@n.jsI$Aw3$0m3'
     };
 
@@ -44,7 +51,7 @@ describe('User CRUD tests', function () {
       lastName: 'Name',
       displayName: 'Full Name',
       email: 'test@test.com',
-      username: credentials.username,
+      username: credentials.usernameOrEmail,
       password: credentials.password,
       provider: 'local'
     };
@@ -83,9 +90,44 @@ describe('User CRUD tests', function () {
       });
   });
 
-  it('should be able to login successfully and logout successfully', function (done) {
+  it('should be able to login with username successfully and logout successfully', function (done) {
+    // Login with username
     agent.post('/api/auth/signin')
       .send(credentials)
+      .expect(200)
+      .end(function (signinErr, signinRes) {
+        // Handle signin error
+        if (signinErr) {
+          return done(signinErr);
+        }
+
+        // Logout
+        agent.get('/api/auth/signout')
+          .expect(302)
+          .end(function (signoutErr, signoutRes) {
+            if (signoutErr) {
+              return done(signoutErr);
+            }
+
+            signoutRes.redirect.should.equal(true);
+
+            // NodeJS v4 changed the status code representation so we must check
+            // before asserting, to be comptabile with all node versions.
+            if (semver.satisfies(process.versions.node, '>=4.0.0')) {
+              signoutRes.text.should.equal('Found. Redirecting to /');
+            } else {
+              signoutRes.text.should.equal('Moved Temporarily. Redirecting to /');
+            }
+
+            return done();
+          });
+      });
+  });
+
+  it('should be able to login with email successfully and logout successfully', function (done) {
+    // Login with username
+    agent.post('/api/auth/signin')
+      .send(credentialsEmail)
       .expect(200)
       .end(function (signinErr, signinRes) {
         // Handle signin error
@@ -260,7 +302,6 @@ describe('User CRUD tests', function () {
           }
 
           agent.delete('/api/users/' + user._id)
-            // .send(userUpdate)
             .expect(200)
             .end(function (userInfoErr, userInfoRes) {
               if (userInfoErr) {
@@ -310,7 +351,7 @@ describe('User CRUD tests', function () {
         .send({
           username: ''
         })
-        .expect(400)
+        .expect(422)
         .end(function (err, res) {
           // Handle error
           if (err) {
@@ -489,7 +530,7 @@ describe('User CRUD tests', function () {
             verifyPassword: '1234567890-ABC-123-Aa$',
             currentPassword: credentials.password
           })
-          .expect(400)
+          .expect(422)
           .end(function (err, res) {
             if (err) {
               return done(err);
@@ -518,7 +559,7 @@ describe('User CRUD tests', function () {
             verifyPassword: '1234567890Aa$',
             currentPassword: 'some_wrong_passwordAa$'
           })
-          .expect(400)
+          .expect(422)
           .end(function (err, res) {
             if (err) {
               return done(err);
@@ -547,7 +588,7 @@ describe('User CRUD tests', function () {
             verifyPassword: '',
             currentPassword: credentials.password
           })
-          .expect(400)
+          .expect(422)
           .end(function (err, res) {
             if (err) {
               return done(err);
@@ -559,7 +600,7 @@ describe('User CRUD tests', function () {
       });
   });
 
-  it('should not be able to change user own password if no new password is at all given', function (done) {
+  it('should not be able to change user own password if not signed in', function (done) {
 
     // Change password
     agent.post('/api/users/password')
@@ -568,7 +609,7 @@ describe('User CRUD tests', function () {
         verifyPassword: '1234567890Aa$',
         currentPassword: credentials.password
       })
-      .expect(400)
+      .expect(401)
       .end(function (err, res) {
         if (err) {
           return done(err);
@@ -712,11 +753,11 @@ describe('User CRUD tests', function () {
     _user2.email = 'user2_email@test.com';
 
     var credentials2 = {
-      username: 'username2',
+      usernameOrEmail: 'username2',
       password: 'M3@n.jsI$Aw3$0m3'
     };
 
-    _user2.username = credentials2.username;
+    _user2.username = credentials2.usernameOrEmail;
     _user2.password = credentials2.password;
 
     var user2 = new User(_user2);
@@ -741,7 +782,7 @@ describe('User CRUD tests', function () {
 
           agent.put('/api/users')
             .send(userUpdate)
-            .expect(400)
+            .expect(422)
             .end(function (userInfoErr, userInfoRes) {
               if (userInfoErr) {
                 return done(userInfoErr);
@@ -764,11 +805,11 @@ describe('User CRUD tests', function () {
     _user2.email = 'user2_email@test.com';
 
     var credentials2 = {
-      username: 'username2',
+      usernameOrEmail: 'username2',
       password: 'M3@n.jsI$Aw3$0m3'
     };
 
-    _user2.username = credentials2.username;
+    _user2.username = credentials2.usernameOrEmail;
     _user2.password = credentials2.password;
 
     var user2 = new User(_user2);
@@ -793,7 +834,7 @@ describe('User CRUD tests', function () {
 
           agent.put('/api/users')
             .send(userUpdate)
-            .expect(400)
+            .expect(422)
             .end(function (userInfoErr, userInfoRes) {
               if (userInfoErr) {
                 return done(userInfoErr);
@@ -870,7 +911,7 @@ describe('User CRUD tests', function () {
 
       agent.put('/api/users')
         .send(userUpdate)
-        .expect(400)
+        .expect(401)
         .end(function (userInfoErr, userInfoRes) {
           if (userInfoErr) {
             return done(userInfoErr);
@@ -888,7 +929,7 @@ describe('User CRUD tests', function () {
 
     agent.post('/api/users/picture')
       .send({})
-      .expect(400)
+      .expect(401)
       .end(function (userInfoErr, userInfoRes) {
         if (userInfoErr) {
           return done(userInfoErr);
@@ -913,7 +954,6 @@ describe('User CRUD tests', function () {
 
         agent.post('/api/users/picture')
           .attach('newProfilePicture', './modules/users/client/img/profile/default.png')
-          .send(credentials)
           .expect(200)
           .end(function (userInfoErr, userInfoRes) {
             // Handle change profile picture error
@@ -943,7 +983,7 @@ describe('User CRUD tests', function () {
         agent.post('/api/users/picture')
           .attach('fieldThatDoesntWork', './modules/users/client/img/profile/default.png')
           .send(credentials)
-          .expect(400)
+          .expect(422)
           .end(function (userInfoErr, userInfoRes) {
             done(userInfoErr);
           });

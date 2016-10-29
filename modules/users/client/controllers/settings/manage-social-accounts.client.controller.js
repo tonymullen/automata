@@ -5,15 +5,16 @@
     .module('users')
     .controller('SocialAccountsController', SocialAccountsController);
 
-  SocialAccountsController.$inject = ['$scope', '$http', 'Authentication'];
+  SocialAccountsController.$inject = ['$state', '$window', 'UsersService', 'Authentication', 'Notification'];
 
-  function SocialAccountsController($scope, $http, Authentication) {
+  function SocialAccountsController($state, $window, UsersService, Authentication, Notification) {
     var vm = this;
 
     vm.user = Authentication.user;
     vm.hasConnectedAdditionalSocialAccounts = hasConnectedAdditionalSocialAccounts;
     vm.isConnectedSocialAccount = isConnectedSocialAccount;
     vm.removeUserSocialAccount = removeUserSocialAccount;
+    vm.callOauthProvider = callOauthProvider;
 
     // Check if there are additional accounts
     function hasConnectedAdditionalSocialAccounts() {
@@ -27,19 +28,28 @@
 
     // Remove a user social account
     function removeUserSocialAccount(provider) {
-      vm.success = vm.error = null;
 
-      $http.delete('/api/users/accounts', {
-        params: {
-          provider: provider
-        }
-      }).success(function (response) {
-        // If successful show success message and clear form
-        vm.success = true;
-        vm.user = Authentication.user = response;
-      }).error(function (response) {
-        vm.error = response.message;
-      });
+      UsersService.removeSocialAccount(provider)
+        .then(onRemoveSocialAccountSuccess)
+        .catch(onRemoveSocialAccountError);
+    }
+
+    function onRemoveSocialAccountSuccess(response) {
+      // If successful show success message and clear form
+      Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> Removed successfully!' });
+      vm.user = Authentication.user = response;
+    }
+
+    function onRemoveSocialAccountError(response) {
+      Notification.error({ message: response.message, title: '<i class="glyphicon glyphicon-remove"></i> Remove failed!' });
+    }
+
+    // OAuth provider request
+    function callOauthProvider(url) {
+      url += '?redirect_to=' + encodeURIComponent($state.$current.url.prefix);
+
+      // Effectively call OAuth authentication route:
+      $window.location.href = url;
     }
   }
 }());

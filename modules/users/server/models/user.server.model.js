@@ -4,11 +4,16 @@
  * Module dependencies
  */
 var mongoose = require('mongoose'),
+  path = require('path'),
+  config = require(path.resolve('./config/config')),
   Schema = mongoose.Schema,
   crypto = require('crypto'),
   validator = require('validator'),
   generatePassword = require('generate-password'),
   owasp = require('owasp-password-strength-test');
+
+owasp.config(config.shared.owasp);
+
 
 /**
  * A Validation function for local strategy properties
@@ -22,6 +27,24 @@ var validateLocalStrategyProperty = function (property) {
  */
 var validateLocalStrategyEmail = function (email) {
   return ((this.provider !== 'local' && !this.updated) || validator.isEmail(email, { require_tld: false }));
+};
+
+/**
+ * A Validation function for username
+ * - at least 3 characters
+ * - only a-z0-9_-.
+ * - contain at least one alphanumeric character
+ * - not in list of illegal usernames
+ * - no consecutive dots: "." ok, ".." nope
+ * - not begin or end with "."
+ */
+
+var validateUsername = function(username) {
+  var usernameRegex = /^(?=[\w.-]+$)(?!.*[._-]{2})(?!\.)(?!.*\.$).{3,34}$/;
+  return (
+    this.provider !== 'local' ||
+    (username && usernameRegex.test(username) && config.illegalUsernames.indexOf(username) < 0)
+  );
 };
 
 /**
@@ -59,6 +82,7 @@ var UserSchema = new Schema({
     type: String,
     unique: 'Username already exists',
     required: 'Please fill in a username',
+    validate: [validateUsername, 'Please enter a valid username: 3+ characters long, non restricted word, characters "_-.", no consecutive dots, does not begin or end with dots, letters a-z and numbers 0-9.'],
     lowercase: true,
     trim: true
   },
