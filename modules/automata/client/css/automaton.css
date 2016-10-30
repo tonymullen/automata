@@ -6,24 +6,24 @@ div.cy * {
   -ms-user-select: none;
   user-select: none; }
 
-html, body {
-  width: 100%;
+body, html {
   height: 100%;
   margin: 0;
-  padding: 0;
   overflow-x: hidden;
-  position: fixed; }
+  padding: 0;
+  position: fixed;
+  width: 100%; }
 
 section.container.autedit {
-  width: 100vw;
   margin: 0;
-  padding: 0; }
+  padding: 0;
+  width: 100vw; }
 
 .noscroll {
-  position: fixed;
   height: calc(100vh - 50px);
-  width: 100%;
-  overflow: hidden; }
+  overflow: hidden;
+  position: fixed;
+  width: 100%; }
 
 body {
   font: 14px helvetica neue, helvetica, arial, sans-serif; }
@@ -32,13 +32,13 @@ header.navbar {
   margin-bottom: 0; }
 
 .cy {
-  height: 100%;
-  width: 100%;
-  position: absolute;
   background: url(/images/GySvQ50pctTrans.png);
   background-color: #EFEEE5;
+  height: 100%;
   left: 0;
-  top: 0; }
+  position: absolute;
+  top: 0;
+  width: 100%; }
 
 .cy > canvas::-moz-selection {
   background: white;
@@ -57,19 +57,19 @@ header.navbar {
   background: rgba(255, 255, 255, 0); }
 
 span.automaton_title {
-  z-index: 500;
-  position: absolute;
+  bottom: 20px;
   font-size: 2em;
   left: 20px;
-  bottom: 20px; }
+  position: absolute;
+  z-index: 500; }
 
 a.editable-click {
-  color: black;
-  border-bottom: dotted 2px black; }
+  border-bottom: dotted 2px black;
+  color: black; }
 
 a.editable-click:hover {
-  color: gray;
-  border-bottom: dotted 2px gray; }
+  border-bottom: dotted 2px gray;
+  color: gray; }
 
 /*
 #info {
@@ -107,11 +107,12 @@ th {
   /* iOS Safari */
   -webkit-user-select: none;
   /* Chrome/Safari/Opera */
+  user-select: none;
+  /* non-prefixed version, currently
+                                  not supported by any browser */
+  -khtml-user-select: none;
   /* Konqueror */
   -moz-user-select: none;
   /* Firefox */
   -ms-user-select: none;
-  /* IE/Edge */
-  user-select: none;
-  /* non-prefixed version, currently
-                                  not supported by any browser */ }
+  /* IE/Edge */ }

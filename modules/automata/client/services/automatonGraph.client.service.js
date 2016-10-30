@@ -441,7 +441,7 @@
                       cy.add({
                         group: 'nodes',
                         data: { label: ind,
-                                weight: 75 },
+                          weight: 75 },
                         classes: 'enode nnode',
                         position: { x: tapx, y: tapy }
                       });
@@ -470,7 +470,7 @@
                       cy.add({
                         group: 'nodes',
                         data: { label: smlabel,
-                                weight: 75 },
+                          weight: 75 },
                         classes: 'submachine enode',
                         position: { x: tapx, y: tapy }
                       });

@@ -6,10 +6,9 @@
     .controller('AutomataController', AutomataController);
 
   AutomataController.$inject =
-            ['$scope', '$state', '$window',
-            '$timeout', '$location', '$stateParams',
-            'Authentication', 'automatonResolve',
-            'automatonGraph', 'tape'];
+  ['$scope', '$state', '$window', '$timeout',
+    '$location', '$stateParams', 'Authentication',
+    'automatonResolve', 'automatonGraph', 'tape'];
 
   function AutomataController($scope, $state, $window,
           $timeout, $location, $stateParams,
