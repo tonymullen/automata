@@ -8,7 +8,7 @@
   AutomataService.$inject = ['$resource'];
 
   function AutomataService($resource) {
-    return $resource('api/automata/:automatonId', {
+    return $resource('/api/automata/:automatonId', {
       automatonId: '@_id'
     }, {
       update: {
