@@ -46,7 +46,7 @@ var AutomatonSchema = new Schema({
     contents: [String]
   },
   stack: [String],
-  eles: {
+  eles: { // 'elements'
     nodes: [
       {
         data: {

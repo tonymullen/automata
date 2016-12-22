@@ -265,7 +265,6 @@
               cy.panningEnabled(true);
             });
 
-
             function doTapHold(e) {
               var element = e.cyTarget;
               if (!(element.id() === 'start' || element.id() === '0')) {
@@ -456,7 +455,23 @@
                   // fillColor: 'rgba(100, 100, 100, 0.75)', // optional: custom background color for item
                   content: '<span class="cxtmenutext noSelect">Add<br>comment</span>', // html/text content to be displayed in the menu
                   select: function(e) { // a function to execute when the command is selected
-                    console.log('comment'); // `ele` holds the reference to the active element
+                    // TODO: to add a comment, we get the text from the user (can do this just by browser for now): node can have 1st few words
+                    // of text (or none at all) and when the user mouses over it they can see the full text (w/ username, timestamp, etc.)
+                    if (e === cy) {
+                      cy.add({
+                        group: 'nodes',
+                        data: {
+                          label: 'comment',
+                          weight: 25
+                        },
+                        classes: 'comment',
+                        position: { x: tapx, y: tapy }
+                      });
+                    }
+                    // necessary hack to ensure that newly created
+                    // nodes don't flicker. Toggles accept state on start state
+                    toggleAccept(cy.nodes().eq(1));
+                    toggleAccept(cy.nodes().eq(1));
                   }
                 },
                 { // example command

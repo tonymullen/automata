@@ -71,14 +71,11 @@
 
     vm.labels = { read: '', act: '' };
 
-    // TODO: Remove existing Automaton
-    /*
-    function remove() {
+    vm.remove = function() {
       if ($window.confirm('Are you sure you want to delete?')) {
         vm.automaton.$remove($state.go('automata.list'));
       }
-    }
-    */
+    };
 
     vm.fileExport = function(isValid) {
       vm.resetElementColors();

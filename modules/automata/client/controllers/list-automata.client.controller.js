@@ -13,4 +13,5 @@
     vm.automata = AutomataService.query();
     vm.demos = DemoService.query();
   }
+
 }());

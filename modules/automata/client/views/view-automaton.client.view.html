@@ -29,9 +29,16 @@
   <span class="saveIcon fileIcon glyphicon glyphicon-save-file" ng-click="vm.fileExport(true)"></span>
 </div>
 
+
+
 <span class="automaton_title" ng-if="!vm.automaton.demo && vm.authentication.user">
   <a href="#"  editable-text="vm.automaton.title" onaftersave="vm.save(true)">{{vm.automaton.title}}</a>
 </span>
+
+
+<div class="saveIcon fileIcon">
+  <span class="saveIcon fileIcon glyphicon glyphicon-trash" ng-click="vm.remove()"></span>
+</div>
 
 <span class="automaton_title" ng-if="vm.automaton.demo || !vm.authentication.user">
   {{vm.automaton.title}}

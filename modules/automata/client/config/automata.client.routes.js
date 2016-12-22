@@ -77,7 +77,8 @@
 //          roles: ['user', 'admin'],
           pageTitle: 'View Automaton'
         }
-      });
+      })
+      ;
   }
 
   getAutomaton.$inject = ['$stateParams', 'AutomataService'];

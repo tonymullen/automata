@@ -21,7 +21,8 @@ module.exports = function (app) {
   // Single automaton routes
   app.route('/api/automata/:automatonId').all(automataPolicy.isAllowed)
     .get(automata.read)
-    .put(automata.update);
+    .put(automata.update)
+    .delete(automata.delete);
 
   // Finish by binding the automaton middleware
   app.param('automatonId', automata.automatonByID);
