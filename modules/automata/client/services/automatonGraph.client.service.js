@@ -338,6 +338,9 @@
                 } else {
                   editSubmachine(node);
                 }
+                if(node.hasClass('comment')) {
+                  console.log(node.data().content);
+                }
               });
 
               this.on('doubleTap', function(e) {
@@ -457,12 +460,17 @@
                   select: function(e) { // a function to execute when the command is selected
                     // TODO: to add a comment, we get the text from the user (can do this just by browser for now): node can have 1st few words
                     // of text (or none at all) and when the user mouses over it they can see the full text (w/ username, timestamp, etc.)
+                    var comment = prompt('Please enter a comment', '');
+                    // TODO: determine visibility, shape of comment
+                    var partialComment = comment.substring(0, 4);
+                    if(comment.length > 5) partialComment += "...";
                     if (e === cy) {
                       cy.add({
                         group: 'nodes',
                         data: {
-                          label: 'comment',
-                          weight: 25
+                          label: partialComment,
+                          content: comment,
+                          weight: 75
                         },
                         classes: 'comment',
                         position: { x: tapx, y: tapy }

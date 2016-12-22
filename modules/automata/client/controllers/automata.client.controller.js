@@ -9,7 +9,8 @@
   ['$scope', '$state', '$window', '$timeout',
     '$location', '$stateParams', 'Authentication',
     'automatonResolve', 'automatonGraph', 'tape', 'Notification'];
-
+  // TODO: crashes when page is refreshed.
+  // TODO: default view of the graph should be the entire graph I think. This could be switchable.
   function AutomataController($scope, $state, $window,
           $timeout, $location, $stateParams,
           Authentication, automaton,
