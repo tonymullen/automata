@@ -8,12 +8,12 @@
   AutomataController.$inject =
   ['$scope', '$state', '$window', '$timeout',
     '$location', '$stateParams', 'Authentication',
-    'automatonResolve', 'automatonGraph', 'tape'];
+    'automatonResolve', 'automatonGraph', 'tape', 'Notification'];
 
   function AutomataController($scope, $state, $window,
           $timeout, $location, $stateParams,
           Authentication, automaton,
-          automatonGraph, tape) {
+          automatonGraph, tape, Notification) {
     var vm = this;
     vm.automaton = automaton;
     vm.authentication = Authentication;
@@ -74,6 +74,7 @@
     vm.remove = function() {
       if ($window.confirm('Are you sure you want to delete?')) {
         vm.automaton.$remove($state.go('automata.list'));
+        Notification.info({ message: 'Deleted ' + vm.automaton.title });
       }
     };
 
