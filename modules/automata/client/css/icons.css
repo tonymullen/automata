@@ -1,17 +1,20 @@
 div.playIcons {
-  position: relative;
-  z-index: 500;
   float: left;
   /*  font-family: automaton-icons; */
+  font-size: 2.75em;
   margin-top: 20px;
   margin-left: 20px;
-  font-size: 2.75em;
-  width: 139px; }
+  position: relative;
+  width: 139px;
+  z-index: 500;
+}
 
 @media (max-width: 600px) {
   div.playIcons {
     font-size: 2.5em;
-    width: 1px; } }
+    width: 1px;
+  }
+}
 
 span.playIconSpan::-moz-selection {
   background: white;

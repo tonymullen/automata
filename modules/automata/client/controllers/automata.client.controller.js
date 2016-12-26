@@ -10,7 +10,7 @@
     '$location', '$stateParams', 'Authentication',
     'automatonResolve', 'automatonGraph', 'tape', 'Notification'];
   // TODO: crashes when page is refreshed.
-  // TODO: default view of the graph should be the entire graph I think. This could be switchable.
+  // TODO: default view of the graph should be the entire graph (as opposed to the 0 node) I think. This could be switchable.
   function AutomataController($scope, $state, $window,
           $timeout, $location, $stateParams,
           Authentication, automaton,
@@ -73,7 +73,7 @@
     vm.labels = { read: '', act: '' };
 
     vm.remove = function() {
-      if ($window.confirm('Are you sure you want to delete?')) {
+      if ($window.confirm('Are you sure you want to delete ' + vm.automaton.title + '?')) {
         vm.automaton.$remove($state.go('automata.list'));
         Notification.info({ message: 'Deleted ' + vm.automaton.title });
       }

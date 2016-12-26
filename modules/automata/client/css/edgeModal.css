@@ -1,15 +1,18 @@
 input.edgeLabelSymbolInput {
   font-family: 'Francois One', sans-serif;
-  text-transform: uppercase;
-  text-align: center;
+  font-size: 4em;
+  height: 80px;
   margin: auto;
+  text-align: center;
+  text-transform: uppercase;
   padding: 0;
   width: 50px;
-  height: 80px;
-  font-size: 4em; }
+}
 
 table.edgeLabels {
-  margin: auto; }
+  margin: auto;
+}
 
 table.edgeLabels > tbody > tr > td {
-  padding: 0 15px 0 15px; }
+  padding: 0 15px 0 15px;
+}

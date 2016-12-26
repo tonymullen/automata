@@ -338,7 +338,7 @@
                 } else {
                   editSubmachine(node);
                 }
-                if(node.hasClass('comment')) {
+                if (node.hasClass('comment')) {
                   console.log(node.data().content);
                 }
               });
@@ -433,8 +433,7 @@
               menuRadius: 100, // the radius of the circular menu in pixels
               selector: 'core', // elements matching this Cytoscape.js selector will trigger cxtmenus
               commands: [ // an array of commands to list in the menu or a function that returns the array
-                { // example command
-                  // fillColor: 'rgba(100, 100, 100, 0.75)', // optional: custom background color for item
+                {
                   content: '<span class="cxtmenutext noSelect">Add<br>state</span>', // html/text content to be displayed in the menu
                   select: function(e) { // a function to execute when the command is selected
                     resetElementColors();
@@ -454,8 +453,7 @@
                     toggleAccept(cy.nodes().eq(1));
                   }
                 },
-                { // example command
-                  // fillColor: 'rgba(100, 100, 100, 0.75)', // optional: custom background color for item
+                {
                   content: '<span class="cxtmenutext noSelect">Add<br>comment</span>', // html/text content to be displayed in the menu
                   select: function(e) { // a function to execute when the command is selected
                     // TODO: to add a comment, we get the text from the user (can do this just by browser for now): node can have 1st few words
