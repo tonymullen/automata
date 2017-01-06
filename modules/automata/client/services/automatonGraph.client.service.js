@@ -461,7 +461,7 @@
                     var comment = prompt('Please enter a comment', '');
                     // TODO: determine visibility, shape of comment
                     var partialComment = comment.substring(0, 4);
-                    if(comment.length > 5) partialComment += "...";
+                    if (comment.length > 5) partialComment += "...";
                     if (e === cy) {
                       cy.add({
                         group: 'nodes',
