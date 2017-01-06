@@ -50,6 +50,10 @@
       }
     }
 
+    vm.resetAutomaton = function() {
+      vm.reset(cy,automaton);
+    }
+
     vm.playAutomaton = function(cy, automaton, speed) {
       if (stopPlay) {
         vm.reset(cy, automaton);

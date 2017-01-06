@@ -41,7 +41,7 @@ var AutomatonSchema = new Schema({
     ref: 'Automaton'
   }],
   determ: { type: Boolean, default: true },
-  tape: {
+  tape: { // TODO: be able to save multiple tapes
     position: Number,
     contents: [String]
   },
