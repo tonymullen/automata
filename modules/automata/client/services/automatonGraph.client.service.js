@@ -427,6 +427,7 @@
 
               }
             };
+            // TODO: upon page refresh this results in an error
             this.edgehandles(defaults);
 
             var menuDefaults = {

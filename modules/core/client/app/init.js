@@ -32,27 +32,30 @@
 
 
   // Then define the init function for starting up the application
-  angular.element(document).ready(init);
-
-  function init() {
-    // Fixing facebook bug with redirect
-    if (window.location.hash && window.location.hash === '#_=_') {
-      if (window.history && history.pushState) {
-        window.history.pushState('', document.title, window.location.pathname);
-      } else {
-        // Prevent scrolling by storing the page's current scroll offset
-        var scroll = {
-          top: document.body.scrollTop,
-          left: document.body.scrollLeft
-        };
-        window.location.hash = '';
-        // Restore the scroll offset, should be flicker free
-        document.body.scrollTop = scroll.top;
-        document.body.scrollLeft = scroll.left;
+  // TODO: upon refreshing the page in edit mode (which shouldn't have to be done but is a use case nonetheless)
+  // app attempts to bootstrap angular twice. App will still crash in this case due to an issue in automatonGraph.
+  // In the meantime, when refreshing the app just go back to the main page
+  if (angular.element(document).data().$injector === undefined) { // added this conditional to suppress re-bootstrap error
+    angular.element(document).ready(init);
+    function init() {
+      // Fixing facebook bug with redirect
+      if (window.location.hash && window.location.hash === '#_=_') {
+        if (window.history && history.pushState) {
+          window.history.pushState('', document.title, window.location.pathname);
+        } else {
+          // Prevent scrolling by storing the page's current scroll offset
+          var scroll = {
+            top: document.body.scrollTop,
+            left: document.body.scrollLeft
+          };
+          window.location.hash = '';
+          // Restore the scroll offset, should be flicker free
+          document.body.scrollTop = scroll.top;
+          document.body.scrollLeft = scroll.left;
+        }
       }
+      // Then init the app
+      angular.bootstrap(document, [app.applicationModuleName]);
     }
-
-    // Then init the app
-    angular.bootstrap(document, [app.applicationModuleName]);
   }
 }(ApplicationConfiguration));
