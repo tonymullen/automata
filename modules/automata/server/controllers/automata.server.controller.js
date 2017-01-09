@@ -48,6 +48,7 @@ exports.update = function (req, res) {
   automaton.title = req.body.title;
   automaton.eles = req.body.eles;
   automaton.tape = req.body.tape;
+  automaton.tapes = req.body.tapes;
   automaton.save(function (err) {
     if (err) {
       return res.status(400).send({

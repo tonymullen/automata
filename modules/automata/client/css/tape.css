@@ -59,7 +59,7 @@ div.tapeWindowBody {
 
 /** Window minimize and expansion transition **/
 .floating-window {
-  max-height: 1000px;
+  max-height: 1500px;
   overflow: hidden;
   -webkit-transition: max-height .4s ease;
   transition: max-height .4s ease; }

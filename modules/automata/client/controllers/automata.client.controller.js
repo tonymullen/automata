@@ -108,7 +108,42 @@
       });
       image.src = cy.png({ full: true, maxWidth: 1800 });
     };
+    var tapes = vm.automaton.tapes;
+    //
+    vm.saveTape = function() {
+      var index = tapes.indexOf(tape);
+      // if current tape not in tapes we push it, otherwise we update the contents
+      if (index === -1) {
+        var tapeName = prompt('Name of your tape, please', '');
+        tapes.push({
+          name: tapeName,
+    //      dateCreated: Date.now(), // TODO: use proper way of saving this in the database
+          contents: vm.automaton.tape.contents
+        });
+      } else {
+        tapes[index].contents = vm.automaton.tape.contents;
+      }
+      vm.save(true); // TODO: may not want to save entire automata (just the tape)
+      Notification.info({message: 'Saved tape'});
+    }
 
+    // load the selected tape into the deck
+    vm.loadTape = function() {
+      // TODO: set current tape to selectTape
+  //    vm.automaton.tape = vm.selectTape;
+  //    vm.reset();
+      console.log(vm.selectTape)
+      // TODO: move selectTape to tape
+      // var temp = vm.automaton.tapes[0];
+      // var index = vm.automaton.tapes.indexOf(vm.selectTape)
+      // vm.automaton.tapes[0] = vm.selectTape;
+      // vm.automaton.tapes[index] = temp
+    }
+
+    // tape select model
+    vm.selectTape = {
+      tape : vm.automaton.tape
+    }
 
     // Save Automaton
     function save(isValid) {
@@ -119,7 +154,6 @@
 
       vm.automaton.eles.nodes = cy.nodes().jsons();
       vm.automaton.eles.edges = cy.edges().jsons();
-
 
       // TODO: move create/update logic to service
 

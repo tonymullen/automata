@@ -20,8 +20,6 @@
 </div>
 
 
-
-
 <div class="saveIcon" ng-hide="vm.automaton.demo">
   <span class="saveIcon glyphicon glyphicon-cloud-upload" ng-click="vm.save(true)"  ng-show="vm.authentication.user;"></span>
   <span class="saveIcon logInToSave" ng-hide="vm.authentication.user;">Log in first to<br>enable saving</span>
@@ -47,29 +45,36 @@
 </span>
 
 
-
 <section>
 
-
-          <div style="height:300px; width:700px">
-              <div id="cy" class="cy"></div>
-            </div>
-
+  <div style="height:300px; width:700px">
+    <div id="cy" class="cy"></div>
+  </div>
+  <window>
+    <!-- TODO:ideally the buttons would be in the same window as the tape window but I don't see how to adjust its size so it's cramped when both are included-->
+    <button ng-click="vm.saveTape()">Save tape</button>
+    <button ng-click="vm.loadTape()">Load tape</button>
+    <select ng-model="vm.selectTape.tape" ng-options="tape.name as tape.name for tape in vm.automaton.tapes">
+<!--      <item > {{ myTape.name }} </item> -->
+    </select>
+  </window>
   <window id="tape">
     <table id="tape-table">
       <tr class="rw-head">
-        <td ng-repeat="item in vm.automaton.tape.contents track by $index" ng-click="vm.setTapePosition($index)">
+        <td ng-repeat="item in vm.automaton.tapes[0].contents track by $index" ng-click="vm.setTapePosition($index)">
           <div class="rw-head-cell" ng-class="{active: $index === vm.automaton.tape.position}"></div>
         </td>
       </tr>
       <tr class="tape-content">
-        <td ng-repeat="item in vm.automaton.tape.contents track by $index" ng-class="{active: $index === vm.automaton.tape.position}">
+        <td ng-repeat="item in vm.automaton.tapes[0].contents track by $index" ng-class="{active: $index === vm.automaton.tape.position}">
            <input class="{{'cell-'+$index}} tape-cell" type="text" name="input"
                   ng-model="item" maxlength="1" onfocus="this.select()"
                   ng-keyup="vm.focusNext($event, $index, vm.automaton)" ng-click="onTextClick($event)">
         </td>
       </tr>
     </table>
+
+
    </window>
 
 
@@ -82,6 +87,7 @@
      </tr>
    </table>
 </stack-window>
+
 
 <div ng-controller="AddEdgeModalController">
   <script type="text/ng-template" id="addEdgeModalContent.html">
