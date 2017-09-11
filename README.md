@@ -6,12 +6,18 @@ A live WIP is on [Heroku](https://tmfsa.herokuapp.com/). Click on "Automata" to 
 
 ### FSA demo
 
+Accepts sequences with an even number of As and an odd number of Bs, rejects all other sequences.
+
 ![fsa](/readme_images/fsa.png)
 
 ### Pushdown automaton demo
 
+Accepts sequences of N As followed by N Bs using a pushdown stack.
+
 ![pda](/readme_images/pda.png)
 
 ### Turing Machine demo
+
+Takes as input a sequence of N As and M Bs separated by a single empty space. Stops with the read head one space to the left of a sequence of N + M Cs. 
 
 ![tm](/readme_images/tm.png)
