@@ -10,8 +10,8 @@ A live WIP is on [Heroku](https://tmfsa.herokuapp.com/). Click on "Automata" to 
 
 ### Pushdown automaton demo
 
-![pda](/readme_images/fsa.png)
+![pda](/readme_images/pda.png)
 
 ### Turing Machine demo
 
-![tm](/readme_images/fsa.png)
+![tm](/readme_images/tm.png)
