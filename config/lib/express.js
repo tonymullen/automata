@@ -36,7 +36,7 @@ module.exports.initLocalVariables = function (app) {
   app.locals.facebookAppId = config.facebook.clientID;
   app.locals.twitterUsername = config.twitter.username;
   app.locals.jsFiles = config.files.client.js;
-  app.locals.cssFiles = config.files.client.css;
+  app.locals.cssFiles = config.files.client.css.map(x => x.match(/^http/)? x : '/' + x);
   app.locals.livereload = config.livereload;
   app.locals.logo = config.logo;
   app.locals.favicon = config.favicon;

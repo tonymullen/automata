@@ -46,7 +46,6 @@ var getGlobbedPaths = function (globPatterns, excludes) {
       output = _.union(output, files);
     }
   }
-
   return output;
 };
 
