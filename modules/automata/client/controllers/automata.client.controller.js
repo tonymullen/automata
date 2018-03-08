@@ -22,7 +22,7 @@
     vm.save = save;
 
     vm.automaton.machine = vm.automaton.machine || $state.current.data.type;
-    vm.automaton.title = vm.automaton.title || (function() {
+    vm.automaton.title = vm.automaton.title || (function () {
       if ($state.current.data.type === 'fsa') return 'Untitled Finite-State Automaton';
       else if ($state.current.data.type === 'pda') return 'Untitled Pushdown Automaton';
       else return 'Untitled Turing Machine';
@@ -49,7 +49,7 @@
       }
     }
 
-    vm.playAutomaton = function(cy, automaton, speed) {
+    vm.playAutomaton = function (cy, automaton, speed) {
       if (stopPlay) {
         vm.reset(cy, automaton);
         stopPlay = false;
@@ -80,11 +80,11 @@
     }
     */
 
-    vm.fileExport = function(isValid) {
+    vm.fileExport = function (isValid) {
       vm.resetElementColors();
       var image = document.createElement('img');
 
-      image.addEventListener('load', function() {
+      image.addEventListener('load', function () {
         var doc = new jsPDF(); // eslint-disable-line
 
         doc.setFontSize(18);
@@ -139,7 +139,7 @@
     // play is currently stopped. prevents play when
     // play is already in progress
 
-    vm.resetElementColors = function() {
+    vm.resetElementColors = function () {
       resetStack();
       cy.$('node').removeClass('running');
       cy.$('edge').removeClass('running');
@@ -152,26 +152,26 @@
       // angular.element(document.querySelector('.node')).removeClass('rejected');
     };
 
-    vm.setTapePosition = function(pos) {
+    vm.setTapePosition = function (pos) {
       stopPlay = true;
       vm.automaton.tape.position = pos;
       vm.resetElementColors();
     };
 
-    vm.reset = function(cy, automaton) {
+    vm.reset = function (cy, automaton) {
       stopPlay = true;
       vm.automaton.tape.position = 0;
       vm.resetElementColors();
     };
 
-    vm.doNextStepFSA = function(node, pos, cy, prevEdge, pause, t) {
+    vm.doNextStepFSA = function (node, pos, cy, prevEdge, pause, t) {
       if (!stopPlay) {
         if ((!!vm.automaton.tape.contents[pos])
           && (vm.automaton.tape.contents[pos] !== ' ')
           && (vm.automaton.tape.contents[pos].length > 0)) {
-          setTimeout(function() {
+          setTimeout(function () {
             var noOutgoing = true;
-            node.outgoers().forEach(function(edge) {
+            node.outgoers().forEach(function (edge) {
               if (edge.data().read === vm.automaton.tape.contents[pos]) {
                 noOutgoing = false;
                 edge.addClass('active');
@@ -202,7 +202,7 @@
             }
           }, pause);
         } else if (prevEdge) {
-          setTimeout(function() {
+          setTimeout(function () {
             stopPlay = true;
             prevEdge.removeClass('active');
             cy.$('node').removeClass('running');
@@ -221,17 +221,17 @@
       }
     };
 
-    vm.doNextStepPDA = function(node, pos, cy, prevEdge, pause, t) {
+    vm.doNextStepPDA = function (node, pos, cy, prevEdge, pause, t) {
       if (!stopPlay) {
         if ((!!vm.automaton.tape.contents[pos])
           && (vm.automaton.tape.contents[pos] !== ' ')
           && (vm.automaton.tape.contents[pos].length > 0)) { // if we're reading a character
-          setTimeout(function() {
+          setTimeout(function () {
             var action = null;
             var read = null;
             var read_stack = null;
             var noOutgoing = true;
-            node.outgoers().forEach(function(edge) {
+            node.outgoers().forEach(function (edge) {
               if (edge.data().read === '_') {
                 read = ' ';
               } else {
@@ -288,7 +288,7 @@
           }, pause);
         } else if (prevEdge) {
           stopPlay = true;
-          setTimeout(function() {
+          setTimeout(function () {
             prevEdge.removeClass('active');
             cy.$('node').removeClass('running');
             cy.$('edge').removeClass('running');
@@ -310,13 +310,13 @@
     };
 
 
-    vm.doNextStepTM = function(node, pos, cy, prevEdge, pause, t) {
+    vm.doNextStepTM = function (node, pos, cy, prevEdge, pause, t) {
       if (!stopPlay) {
-        $timeout(function() {
+        $timeout(function () {
           var noOutgoing = true;
           var action = null;
           var read = null;
-          node.outgoers().forEach(function(edge) {
+          node.outgoers().forEach(function (edge) {
             if (edge.data().read === '_') {
               read = ' ';
             } else {
@@ -376,7 +376,7 @@
 
     (function setUpGraph() {
       /* Set up Cytoscape graph */
-      automatonGraph(vm.automaton.eles, vm.automaton.machine).then(function(automatonCy) {
+      automatonGraph(vm.automaton.eles, vm.automaton.machine).then(function (automatonCy) {
         cy = automatonCy;
 
         vm.cyLoaded = true;

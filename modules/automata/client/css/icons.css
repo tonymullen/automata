@@ -1,12 +1,12 @@
 div.playIcons {
-  position: relative;
-  z-index: 500;
   float: left;
-  /*  font-family: automaton-icons; */
-  margin-top: 20px;
-  margin-left: 20px;
   font-size: 2.75em;
-  width: 139px; }
+  /*  font-family: automaton-icons; */
+  margin-left: 20px;
+  margin-top: 20px;
+  position: relative;
+  width: 139px;
+  z-index: 500; }
 
 @media (max-width: 600px) {
   div.playIcons {
@@ -22,17 +22,17 @@ span.playIconSpan::selection {
   background: rgba(255, 255, 255, 0); }
 
 span.saveIcon {
-  z-index: 500;
-  font-size: 2.5em; }
+  font-size: 2.5em;
+  z-index: 500; }
 
 div.saveIcon {
   float: right;
-  margin-top: 20px;
-  margin-right: 20px; }
+  margin-right: 20px;
+  margin-top: 20px; }
 
 span.saveIcon.logInToSave {
-  position: relative;
-  font-size: 1em; }
+  font-size: 1em;
+  position: relative; }
 
 span.saveIcon:hover {
   color: darkgray; }
@@ -41,15 +41,15 @@ span.playIcons > span:hover {
   color: darkgray; }
 
 span.saveIcon:active {
+  -webkit-background-clip: text;
+  background-clip: text; 
   background-color: #565656;
   color: transparent;
-  text-shadow: 0 2px 3px rgba(255, 255, 255, 0.5);
-  -webkit-background-clip: text;
-  background-clip: text; }
+  text-shadow: 0 2px 3px rgba(255, 255, 255, 0.5); }
 
 span.playIcons > span:active {
+  -webkit-background-clip: text; 
+  background-clip: text;
   background-color: #565656;
   color: transparent;
-  text-shadow: 0 2px 3px rgba(255, 255, 255, 0.5);
-  -webkit-background-clip: text;
-  background-clip: text; }
+  text-shadow: 0 2px 3px rgba(255, 255, 255, 0.5); }

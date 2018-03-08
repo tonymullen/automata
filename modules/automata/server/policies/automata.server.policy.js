@@ -20,12 +20,6 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/automata/:automatonId',
       permissions: '*'
-    }, {
-      resources: '/api/demos',
-      permissions: '*'
-    }, {
-      resources: '/api/demos/:automatonId',
-      permissions: '*'
     }]
   }, {
     roles: ['user'],
@@ -35,12 +29,6 @@ exports.invokeRolesPolicies = function () {
     }, {
       resources: '/api/automata/:automatonId',
       permissions: ['get', 'post', 'put']
-    }, {
-      resources: '/api/demos',
-      permissions: ['get']
-    }, {
-      resources: '/api/demos/:automatonId',
-      permissions: ['get']
     }]
   }, {
     roles: ['guest'],
@@ -49,12 +37,6 @@ exports.invokeRolesPolicies = function () {
       permissions: ['get']
     }, {
       resources: '/api/automata/:automatonId',
-      permissions: ['get']
-    }, {
-      resources: '/api/demos',
-      permissions: ['get']
-    }, {
-      resources: '/api/demos/:automatonId',
       permissions: ['get']
     }]
   }]);

@@ -10,6 +10,7 @@ module.exports = {
         'public/fonts/automaton-icons/fonts',
         'public/fonts/automaton-icons/styles.css',
         // bower:css
+        'public/lib/angular-ui-notification/dist/angular-ui-notification.min.css',
         'public/lib/bootstrap/dist/css/bootstrap.min.css',
         'public/lib/bootstrap/dist/css/bootstrap-theme.min.css',
         'public/lib/ng-img-crop/compile/minified/ng-img-crop.css',
@@ -26,7 +27,6 @@ module.exports = {
         'public/lib/angular-bootstrap/ui-bootstrap-tpls.min.js',
         'public/lib/ng-file-upload/ng-file-upload.min.js',
         'public/lib/ng-img-crop/compile/minified/ng-img-crop.js',
-        'public/lib/owasp-password-strength-test/owasp-password-strength-test.js',
         'public/js/dist/cytoscape.min.js',
         'public/lib/cytoscape-edgehandles/cytoscape-edgehandles.js',
         'public/lib/ng-context-menu/dist/ng-context-menu.min.js',

@@ -6,9 +6,9 @@
     .module('automata.services')
     .factory('automatonGraph', automatonGraph);
 
-  automatonGraph.$inject = ['$q', 'AutomataService'];
+  automatonGraph.$inject = ['$q'];
 
-  function automatonGraph($q, AutomataService) {
+  function automatonGraph($q) {
 
     /*  use a factory instead of a directive,
     *   because cy.js is not just for visualisation;
@@ -28,10 +28,10 @@
       angular.element(document.querySelector('.tape-content')).removeClass('rejected');
     }
 
-    var automatonGraph = function(eles, machine) {
+    var automatonGraph = function (eles, machine) {
       var deferred = $q.defer();
 
-      $(function() { // on dom ready
+      $(function () { // on dom ready
         cy = cytoscape({
           container: $('#cy')[0],
           boxSelectionEnabled: false,
@@ -164,7 +164,7 @@
                     'target-arrow-color': 'LimeGreen'
                   }),
           elements: eles,
-          ready: function() {
+          ready: function () {
             deferred.resolve(this);
             var clickstart;
             var clickstop = 0;
@@ -173,7 +173,7 @@
             var tapx;
             var tapy;
 
-            this.on('vmousedown', function(e) {
+            this.on('vmousedown', function (e) {
               // for node placment with context menu
               clickstart = e.timeStamp;
               tapx = e.cyPosition.x;
@@ -188,7 +188,7 @@
                 cy.remove('.toDelete');
                 var deleted = element.data('label');
                 if (del && element.isNode() && element.hasClass('nnode')) {
-                  cy.nodes('.nnode').forEach(function(n) {
+                  cy.nodes('.nnode').forEach(function (n) {
                     if (n.data('label') && n.data('label') > deleted) {
                       var newLabel = n.data('label') - 1;
                       n.data('label', newLabel);
@@ -196,7 +196,7 @@
                   });
                 }
                 if (del && element.isNode() && element.hasClass('submachine')) {
-                  cy.nodes('.submachine').forEach(function(n) {
+                  cy.nodes('.submachine').forEach(function (n) {
                     if (n.data('label') &&
                       Number(n.data('label').replace('M', '')) > Number(deleted.replace('M', ''))) {
                       var newLabel = 'M' + String(Number(n.data('label').replace('M', '')) - 1);
@@ -210,23 +210,23 @@
               del = false;
             }
 
-            this.on('vmouseup', 'node', function(e) {
+            this.on('vmouseup', 'node', function (e) {
               doMouseUp(e);
             });
 
-            this.on('vmouseup', 'edge', function(e) {
+            this.on('vmouseup', 'edge', function (e) {
               doMouseUp(e);
             });
 
             var edgedrag = false;
             var draggedEdge;
-            this.on('vmousedown', 'edge', function(e) {
+            this.on('vmousedown', 'edge', function (e) {
               cy.panningEnabled(false);
               draggedEdge = e.cyTarget;
               edgedrag = true;
             });
 
-            this.on('vmousemove', function(e) {
+            this.on('vmousemove', function (e) {
               if (edgedrag) {
                 var dx = e.cyPosition.x - draggedEdge.source().position().x;
                 var dy = e.cyPosition.y - draggedEdge.source().position().y;
@@ -260,7 +260,7 @@
               }
             });
 
-            this.on('vmouseup', function(e) {
+            this.on('vmouseup', function (e) {
               edgedrag = false;
               cy.panningEnabled(true);
             });
@@ -274,22 +274,22 @@
               }
             }
 
-            this.on('drag', 'node', function(e) {
+            this.on('drag', 'node', function (e) {
               var node = e.cyTarget;
               node.removeClass('toDelete');
             });
 
-            this.on('taphold', 'node', function(e) {
+            this.on('taphold', 'node', function (e) {
               doTapHold(e);
             });
 
-            this.on('taphold', 'edge', function(e) {
+            this.on('taphold', 'edge', function (e) {
               doTapHold(e);
             });
 
             var tappedBefore;
             var tappedTimeout;
-            this.on('tap', 'node', function(e) {
+            this.on('tap', 'node', function (e) {
               var node = e.cyTarget;
               if (tappedTimeout && tappedBefore) {
                 clearTimeout(tappedTimeout);
@@ -298,7 +298,7 @@
                 node.trigger('doubleTap');
                 tappedBefore = null;
               } else {
-                tappedTimeout = setTimeout(function() {
+                tappedTimeout = setTimeout(function () {
                   tappedBefore = null;
                 }, 300);
                 tappedBefore = node;
@@ -332,7 +332,7 @@
             }
 
             if (machine !== 'tm') { // accept states only for FSAs and PDAs
-              this.on('click', 'node', function(e) {
+              this.on('click', 'node', function (e) {
                 var node = e.cyTarget;
                 if (!node.hasClass('submachine')) {
                   toggleAccept(node);
@@ -341,7 +341,7 @@
                 }
               });
 
-              this.on('doubleTap', function(e) {
+              this.on('doubleTap', function (e) {
                 var node = e.cyTarget;
                 if (!node.hasClass('submachine')) {
                   toggleAccept(node);
@@ -352,13 +352,13 @@
               });
             }
 
-            this.on('cxttap', 'node', function(e) {
+            this.on('cxttap', 'node', function (e) {
               var node = e.cyTarget;
               node.removeClass('toDelete');
               del = false;
             });
 
-            this.on('drag', '#0', function(e) {
+            this.on('drag', '#0', function (e) {
               cy.$('#start').position({
                 x: cy.$('#0').position('x') - (e.cyTarget.data().accept ? 34 : 32),
                 y: cy.$('#0').position('y')
@@ -372,7 +372,7 @@
               y: this.$('#0').position('y')
             });
 
-            this.on('mouseout', 'node', function() {
+            this.on('mouseout', 'node', function () {
               // ugly hack to force edghandles to
               // disappear through re-rendering
               cy.panBy({ x: 0, y: 0 });
@@ -390,36 +390,36 @@
               cxt: false, // whether cxt events trigger edgehandles (useful on touch)
               enabled: true, // whether to start the plugin in the enabled state
               toggleOffOnLeave: true, // whether an edge is cancelled by leaving a node (true), or whether you need to go over again to cancel (false; allows multiple edges in one pass)
-              edgeType: function(sourceNode, targetNode) {
+              edgeType: function (sourceNode, targetNode) {
                 // can return 'flat' for flat edges between nodes or 'node' for intermediate node between them
                 // returning null/undefined means an edge can't be added between the two nodes
                 return 'flat';
               },
-              loopAllowed: function(node) {
+              loopAllowed: function (node) {
                 // for the specified node, return whether edges from itself to itself are allowed
                 return true;
               },
               nodeLoopOffset: -50, // offset for edgeType: 'node' loops
-              nodeParams: function(sourceNode, targetNode) {
+              nodeParams: function (sourceNode, targetNode) {
                 // for edges between the specified source and target
                 // return element object to be passed to cy.add() for intermediary node
                 return {};
               },
-              edgeParams: function(sourceNode, targetNode, i) {
+              edgeParams: function (sourceNode, targetNode, i) {
                 // for edges between the specified source and target
                 // return element object to be passed to cy.add() for edge
                 // NB: i indicates edge index in case of edgeType: 'node'
                 return {};
               },
-              start: function(sourceNode) {
+              start: function (sourceNode) {
                 // fired when edgehandles interaction starts (drag on handle)
               },
-              complete: function(sourceNode, targetNodes, addedEntities) {
+              complete: function (sourceNode, targetNodes, addedEntities) {
                 resetElementColors();
                 addedEntities[0].data({ 'direction': '-90deg', 'sweep': '1rad' });
                 angular.element('[ng-controller=AddEdgeModalController]').scope().open('sm', addedEntities);
               },
-              stop: function(sourceNode) {
+              stop: function (sourceNode) {
                 // fired when edgehandles interaction is stopped
                 // (either complete with added edges or incomplete)
 
@@ -434,7 +434,7 @@
                 { // example command
                   // fillColor: 'rgba(100, 100, 100, 0.75)', // optional: custom background color for item
                   content: '<span class="cxtmenutext noSelect">Add<br>state</span>', // html/text content to be displayed in the menu
-                  select: function(e) { // a function to execute when the command is selected
+                  select: function (e) { // a function to execute when the command is selected
                     resetElementColors();
                     if (e === cy) {
                       var ind = cy.nodes('.nnode').length;
@@ -455,14 +455,14 @@
                 { // example command
                   // fillColor: 'rgba(100, 100, 100, 0.75)', // optional: custom background color for item
                   content: '<span class="cxtmenutext noSelect">Add<br>comment</span>', // html/text content to be displayed in the menu
-                  select: function(e) { // a function to execute when the command is selected
+                  select: function (e) { // a function to execute when the command is selected
                     console.log('comment'); // `ele` holds the reference to the active element
                   }
                 },
                 { // example command
                   // fillColor: 'rgba(100, 100, 100, 0.75)', // optional: custom background color for item
                   content: '<span class="cxtmenutext noSelect">Add<br>submachine</span>', // html/text content to be displayed in the menu
-                  select: function(e) { // a function to execute when the command is selected
+                  select: function (e) { // a function to execute when the command is selected
                     resetElementColors();
                     if (e === cy) {
                       var ind = cy.nodes('.submachine').length;
@@ -481,7 +481,7 @@
                     toggleAccept(cy.nodes().eq(1));
                   }
                 }
-              ], // function( ele ){ return [  ] }, // example function for commands
+              ], // function ( ele ){ return [  ] }, // example function for commands
               fillColor: 'rgba(0, 0, 0, 0.75)', // the background colour of the menu
               activeFillColor: 'rgba(167, 164, 138, 0.50)', // the colour used to indicate the selected command
               activePadding: 20, // additional size in pixels for the active command

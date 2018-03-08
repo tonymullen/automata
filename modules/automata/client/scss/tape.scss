@@ -1,11 +1,11 @@
 .floating-window, div.tapeWindowBodyContent, div.tapeWindowBody, .floating-window > .panel  { /* fix for sudden margins when using resizeable with bootstrap */
-  -webkit-box-sizing: content-box; /* Safari/Chrome, other WebKit */
 	-moz-box-sizing: content-box;    /* Firefox, other Gecko */
+  -webkit-box-sizing: content-box; /* Safari/Chrome, other WebKit */
 	box-sizing: content-box;         /* Opera/IE 8+ */
   /*height: 100px;*/
-  z-index: 50;
   left: 50px;
   top: 120px;
+  z-index: 50;
 }
 
 /*
@@ -51,10 +51,10 @@ accordion .panel-heading a { cursor: pointer; }
 
 /** Scroll window content when necessary **/
 div.tapeWindowBodyContent {
-  overflow-y: hidden;
+  border: solid 1.5px lightGray;
   height: 70px;
   margin: 5px 5px 2px 5px;
-  border: solid 1.5px lightGray;
+  overflow-y: hidden;
  }
 
 div.tapeWindowBody {
@@ -65,9 +65,9 @@ div.tapeWindowBody {
 .floating-window {
   max-height: 1000px;
   overflow: hidden;
-  -webkit-transition: max-height .4s ease;
   -moz-transition: max-height .4s ease;
   -o-transition: height .4s ease;
+  -webkit-transition: max-height .4s ease;
   transition: max-height .4s ease;
 }
 
@@ -82,15 +82,19 @@ div.tapeWindowBody {
 .panel-heading.tape-window-heading {
     background-color: #080808;
     background-image: linear-gradient(to bottom, #353535 0%, #080808 100%);
+    background-image: -moz-linear-gradient(top, #353535 0%, #080808 100%);
+    background-image: -webkit-linear-gradient(top, #353535 0%, #080808 100%);
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#353535), color-stop(100%,#080808)); /* Chrome,Safari4+ */
+    background-image: -o-linear-gradient(top, #353535 0%, #080808 100%);
     border-color: #080808;
-    padding: 0;
     height: 24px;
+    padding: 0;
 }
 
 .panel.tape-window {
-    border-color: #080808;
     background-color: rgb(255,255,255);
     background-color: rgba(255,255,255,0.5);
+    border-color: #080808;
 }
 
 tr.tape-content > td{
@@ -102,12 +106,12 @@ tr.tape-content > td{
 tr.tape-content > td > input.tape-cell{
   border: none;
   color: black;
-  padding: 0;
   font-family: 'Francois One', sans-serif;
   font-size: 2em;
-  text-transform: uppercase;
-  text-align: center;
   height:40px;
+  padding: 0;
+  text-align: center;
+  text-transform: uppercase;
   width:30px;
 }
 
@@ -139,8 +143,8 @@ tr.tape-content > td.active > input.tape-cell:focus{
 }
 
 input:focus {
-    outline: none;
-    background-color: lightgray;
+  background-color: lightgray;
+  outline: none;
 }
 
 tr.rw-head > td{

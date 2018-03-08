@@ -77,31 +77,31 @@ exports.delete = function (req, res) {
 };
 
 /**
- * List of Automata
+ * List of Automata by user
  */
 exports.list = function (req, res) {
-  Automaton.find().where('user').eq(req.user._id).sort('-created').populate('user', 'displayName').exec(function (err, automata) {
+  var automata = [];
+  Automaton.find().where('demo').eq(true).sort('-created').populate('user', 'displayName').exec(function (err, demos) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
       });
     } else {
-      res.json(automata);
-    }
-  });
-};
-
-/**
- * List of Demos
- */
-exports.demos = function (req, res) {
-  Automaton.find().where('demo').eq(true).sort('-created').populate('user', 'displayName').exec(function (err, automata) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(automata);
+      automata = automata.concat(demos);
+      if (req.user) {
+        Automaton.find().where('user').eq(req.user._id).sort('-created').populate('user', 'displayName').exec(function (err, auts) {
+          if (err) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(err)
+            });
+          } else {
+            automata = automata.concat(auts);
+            res.json(automata);
+          }
+        });
+      } else {
+        res.json(automata);
+      }
     }
   });
 };

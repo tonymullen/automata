@@ -14,9 +14,6 @@ module.exports = function (app) {
     .get(automata.list)
     .post(automata.create);
 
-  // Demos
-  app.route('/api/demos').all(automataPolicy.isAllowed)
-    .get(automata.demos);
 
   // Single automaton routes
   app.route('/api/automata/:automatonId').all(automataPolicy.isAllowed)

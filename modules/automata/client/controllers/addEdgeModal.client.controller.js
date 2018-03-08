@@ -48,7 +48,7 @@ angular.module('automata').controller('AddEdgeModalInstanceCtrl', ['$scope', '$u
     if (determ) { // ensures only available out symbols
       if (machine !== 'pda') {
         var fromNode = $scope.addedEntities.source();
-        fromNode.outgoers().forEach(function(el) {
+        fromNode.outgoers().forEach(function (el) {
           if (el.isEdge() && el.data().read) {
             for (var i = 0; i < $scope.read_alph.length; i++) {
               if (el.data().read === $scope.read_alph[i]) {

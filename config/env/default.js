@@ -3,7 +3,7 @@
 module.exports = {
   app: {
     title: 'Automata',
-    description: 'Yet another automaton aimulator',
+    description: 'Yet another automaton simulator',
     keywords: 'mongodb, express, angularjs, node.js, mongoose, passport',
     googleAnalyticsTrackingID: process.env.GOOGLE_ANALYTICS_TRACKING_ID || 'GOOGLE_ANALYTICS_TRACKING_ID'
   },
@@ -42,12 +42,25 @@ module.exports = {
   },
   logo: 'modules/core/client/img/brand/logo.png',
   favicon: 'modules/core/client/img/brand/favicon.ico',
-  illegalUsernames: ['administrator', 'password', 'admin', 'user', 'unknown', 'anonymous', 'null', 'undefined', 'api'],
+  illegalUsernames: ['meanjs', 'administrator', 'password', 'admin', 'user',
+    'unknown', 'anonymous', 'null', 'undefined', 'api'
+  ],
+  aws: {
+    s3: {
+      accessKeyId: process.env.S3_ACCESS_KEY_ID,
+      secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+      bucket: process.env.S3_BUCKET
+    }
+  },
   uploads: {
-    profileUpload: {
-      dest: './modules/users/client/img/profile/uploads/', // Profile upload destination path
-      limits: {
-        fileSize: 1 * 1024 * 1024 // Max file size in bytes (1 MB)
+    // Storage can be 'local' or 's3'
+    storage: process.env.UPLOADS_STORAGE || 'local',
+    profile: {
+      image: {
+        dest: './modules/users/client/img/profile/uploads/',
+        limits: {
+          fileSize: 1 * 1024 * 1024 // Max file size in bytes (1 MB)
+        }
       }
     }
   },

@@ -27,18 +27,21 @@ describe('Automaton Model Unit Tests:', function () {
       displayName: 'Full Name',
       email: 'test@test.com',
       username: 'username',
-      password: 'M3@n.jsI$Aw3$0m3'
+      password: 'M3@n.jsI$Aw3$0m3',
+      provider: 'local'
     });
 
-    user.save(function () {
-      automaton = new Automaton({
-        title: 'Automaton Title',
-        content: 'Automaton Content',
-        user: user
-      });
+    user.save()
+      .then(function () {
+        automaton = new Automaton({
+          title: 'Automaton Title',
+          content: 'Automaton Content',
+          user: user
+        });
 
-      done();
-    });
+        done();
+      })
+      .catch(done);
   });
 
   describe('Method Save', function () {
@@ -60,8 +63,9 @@ describe('Automaton Model Unit Tests:', function () {
   });
 
   afterEach(function (done) {
-    Automaton.remove().exec(function () {
-      User.remove().exec(done);
-    });
+    Automaton.remove().exec()
+      .then(User.remove().exec())
+      .then(done())
+      .catch(done);
   });
 });
