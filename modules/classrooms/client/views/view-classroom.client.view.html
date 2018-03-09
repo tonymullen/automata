@@ -1,0 +1,26 @@
+<section>
+  <div class="page-header">
+    <h1 ng-bind="vm.classroom.name"></h1>
+  </div>
+  <div class="pull-right"
+       ng-show="vm.classroom.isCurrentUserOwner">
+    <a class="btn btn-primary"
+       ui-sref="classrooms.edit({ classroomId: vm.classroom._id })">
+      <i class="glyphicon glyphicon-edit"></i>
+    </a>
+    <a class="btn btn-primary" ng-click="vm.remove()">
+      <i class="glyphicon glyphicon-trash"></i>
+    </a>
+  </div>
+  <small>
+    <em class="text-muted">
+      Posted on
+      <span ng-bind="vm.classroom.created | date:'mediumDate'"></span>
+      by
+      <span ng-if="vm.classroom.user"
+            ng-bind="vm.classroom.user.displayName"></span>
+      <span ng-if="!vm.classroom.user">Deleted User</span>
+    </em>
+  </small>
+  <p class="lead" ng-bind="vm.classroom.content"></p>
+</section>
