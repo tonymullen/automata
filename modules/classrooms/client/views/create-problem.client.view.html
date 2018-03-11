@@ -1,0 +1,61 @@
+<div ng-controller="AddEdgeModalController">
+  <script type="text/ng-template" id="addEdgeModalContent.html">
+  <div class="modal-body">
+     <form name="edgeModal" role="form">
+     <table class="edgeLabels">
+     <tr>
+     <td>
+      <div class="form-group">
+      <label for="read">Read symbol</label>
+      <form name="readForm">
+        <select name="read" id="read" ng-model="labels.read" class="form-control edgeLabelSymbolInput" >
+        <option ng-repeat="symbol in read_alph" value="{{ symbol }}">{{ symbol }}</option>
+      </select>
+      </form>
+      </div>
+      </td>
+      <td ng-if="'pda' === machine">
+      <div class="form-group" ng-if="'pda' === machine">
+        <label for="read_stack">Read stack</label>
+        <form name="readStackForm">
+          <select name="read_stack" id="read_stack" ng-model="labels.read_stack" class="form-control edgeLabelSymbolInput" >
+          <option ng-repeat="symbol in read_stack_alph" value="{{ symbol }}">{{ symbol }}</option>
+        </select>
+        </form>
+      </div>
+    </td>
+
+    <td ng-if="'pda' === machine">
+      <div class="form-group">
+        <label for="stack_action">Stack action</label>
+        <form name="stackActionForm">
+          <select name="stack_action" id="stack_action" ng-model="labels.act" class="form-control edgeLabelSymbolInput" >
+          <option ng-repeat="symbol in stack_act_alph" value="{{ symbol }}">{{ symbol }}</option>
+        </select>
+        </form>
+      </div>
+    </td>
+
+    <td ng-if="'tm' === machine">
+      <div class="form-group">
+        <label for="action">Action</label>
+        <form name="actionForm">
+          <select name="action" id="action" ng-model="labels.act" class="form-control edgeLabelSymbolInput" >
+          <option ng-repeat="symbol in act_alph" value="{{ symbol }}">{{ symbol }}</option>
+        </select>
+        </form>
+      </div>
+      </td>
+      </tr>
+      </table>
+
+      </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
+            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+    </form>
+
+    </script>
+
+</div>

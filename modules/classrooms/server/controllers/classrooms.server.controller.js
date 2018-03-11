@@ -12,7 +12,6 @@ var path = require('path'),
  * Create a Classroom
  */
 exports.create = function (req, res) {
-  console.log('Boom');
   var classroom = new Classroom(req.body);
   classroom.user = req.user;
 
@@ -47,7 +46,7 @@ exports.read = function (req, res) {
 exports.update = function (req, res) {
   var classroom = req.classroom;
 
-  classroom.title = req.body.title;
+  classroom.name = req.body.name;
   classroom.content = req.body.content;
 
   classroom.save(function (err) {

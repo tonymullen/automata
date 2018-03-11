@@ -1,9 +1,12 @@
-<section>
+<section class="container">
   <div class="page-header">
     <h1 ng-bind="vm.classroom.name"></h1>
   </div>
   <div class="pull-right"
        ng-show="vm.classroom.isCurrentUserOwner">
+    <a class="btn btn-primary" ng-click="vm.createProblem()">
+      <i class="glyphicon glyphicon-plus"></i>
+    </a>     
     <a class="btn btn-primary"
        ui-sref="classrooms.edit({ classroomId: vm.classroom._id })">
       <i class="glyphicon glyphicon-edit"></i>
@@ -12,6 +15,8 @@
       <i class="glyphicon glyphicon-trash"></i>
     </a>
   </div>
+  
+  
   <small>
     <em class="text-muted">
       Posted on

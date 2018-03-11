@@ -6,9 +6,9 @@
     .module('classrooms')
     .controller('ClassroomsController', ClassroomsController);
 
-  ClassroomsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'classroomResolve', 'Notification'];
+  ClassroomsController.$inject = ['$scope', '$state', '$window', 'Authentication', 'classroomResolve', 'Notification', '$uibModal'];
 
-  function ClassroomsController($scope, $state, $window, Authentication, classroom, Notification) {
+  function ClassroomsController($scope, $state, $window, Authentication, classroom, Notification, $uibModal) {
     var vm = this;
 
     vm.authentication = Authentication;
@@ -16,6 +16,8 @@
     vm.form = {};
     vm.remove = remove;
     vm.save = save;
+    vm.createProblem = createProblem;
+
 
     // Remove existing Classroom
     function remove() {
@@ -42,12 +44,35 @@
         $state.go('classrooms.view', {
           classroomId: res._id
         });
-        Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> Classroom created successfully!' });
+        Notification.success({ message: '<i class="glyphicon glyphicon-ok"></i> Classroom saved successfully!' });
       }
 
       function errorCallback(res) {
         Notification.error({ message: res.data.message, title: '<i class="glyphicon glyphicon-remove"></i> Classroom save error!' });
       }
     }
+
+    function createProblem() {
+      vm.popupProblemForm();
+    }
+
+    vm.popupProblemForm = function () {
+      console.log('Create Problem');
+      var modalInstance = $uibModal.open({
+        templateUrl: 'create-problem.client.view.html',
+        controller: 'createProblemModalCtrl as vm'// ,
+        // resolve: {
+        //   locationData: function() {
+        //     return {
+        //       locationid : vm.locationid,
+        //       locationName : vm.data.location.name
+        //     }
+        //   }
+        // }
+      });
+      modalInstance.result.then(function (data) {
+        vm.classroom.problems.push(data);
+      });
+    };
   }
 }());
