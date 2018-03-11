@@ -20,6 +20,9 @@
     vm.error = null;
     // vm.remove = remove;
     vm.save = save;
+    if (vm.automaton.machine === 'pda') {
+      resetStack();
+    }
 
     vm.automaton.machine = vm.automaton.machine || $state.current.data.type;
     vm.automaton.title = vm.automaton.title || (function () {
