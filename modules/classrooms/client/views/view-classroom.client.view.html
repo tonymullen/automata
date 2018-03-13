@@ -27,5 +27,9 @@
       <span ng-if="!vm.classroom.user">Deleted User</span>
     </em>
   </small>
+    <div ng-repeat="problem in vm.classroom.problems">
+      {{problem.name}}
+    </div> 
   <p class="lead" ng-bind="vm.classroom.content"></p>
+ 
 </section>

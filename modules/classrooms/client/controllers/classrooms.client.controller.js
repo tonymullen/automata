@@ -53,26 +53,32 @@
     }
 
     function createProblem() {
-      vm.popupProblemForm();
+      var problem = {
+        name: 'Untitled Problem',
+        description: '',
+        tests: []
+      }
+      vm.classroom.problems.push(problem)
+      console.log(vm.classroom);
     }
 
-    vm.popupProblemForm = function () {
-      console.log('Create Problem');
-      var modalInstance = $uibModal.open({
-        templateUrl: 'create-problem.client.view.html',
-        controller: 'createProblemModalCtrl as vm'// ,
-        // resolve: {
-        //   locationData: function() {
-        //     return {
-        //       locationid : vm.locationid,
-        //       locationName : vm.data.location.name
-        //     }
-        //   }
-        // }
-      });
-      modalInstance.result.then(function (data) {
-        vm.classroom.problems.push(data);
-      });
-    };
+    // vm.popupProblemForm = function () {
+    //   console.log('Create Problem');
+    //   var modalInstance = $uibModal.open({
+    //     templateUrl: '/modules/classrooms/client/views/create-problem.client.view.html',
+    //     controller: 'CreateProblemModalCtrl as vm'// ,
+    //     // resolve: {
+    //     //   locationData: function() {
+    //     //     return {
+    //     //       locationid : vm.locationid,
+    //     //       locationName : vm.data.location.name
+    //     //     }
+    //     //   }
+    //     // }
+    //   });
+    //   modalInstance.result.then(function (data) {
+    //     vm.classroom.problems.push(data);
+    //   });
+    // };
   }
 }());

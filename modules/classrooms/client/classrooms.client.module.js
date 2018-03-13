@@ -1,5 +1,5 @@
 (function (app) {
   'use strict';
 
-  app.registerModule('classrooms');
+  app.registerModule('classrooms', ['ui.bootstrap']);
 }(ApplicationConfiguration));
