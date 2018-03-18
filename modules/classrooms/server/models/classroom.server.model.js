@@ -81,7 +81,8 @@ var ClassroomSchema = new Schema({
   problems: [{
     type: Schema.ObjectId,
     ref: 'Problem'
-  }]
+  }],
+  entryCode: String
 });
 
 mongoose.model('Test', TestSchema);

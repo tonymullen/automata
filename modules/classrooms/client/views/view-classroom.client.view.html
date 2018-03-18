@@ -1,6 +1,7 @@
 <section class="container">
   <div class="page-header">
     <h1 ng-bind="vm.classroom.name"></h1>
+    <small>Entry code: {{vm.classroom.entryCode}}</small>
   </div>
   <div class="pull-right"
        ng-show="vm.classroom.isCurrentUserOwner">
@@ -17,16 +18,13 @@
   </div>
   
   
-  <small>
-    <em class="text-muted">
-      Posted on
-      <span ng-bind="vm.classroom.created | date:'mediumDate'"></span>
-      by
-      <span ng-if="vm.classroom.user"
-            ng-bind="vm.classroom.user.displayName"></span>
-      <span ng-if="!vm.classroom.user">Deleted User</span>
-    </em>
-  </small>
+  <div ng-hide="vm.classroom.students.length > 0">
+    No students have registered for this classroom. 
+  </div>
+  <div ng-show="vm.classroom.students" ng-repeat="problem in vm.classroom.students">
+    Here's a student.
+  </div>
+  
   
   <!--
     <div ng-repeat="problem in vm.classroom.problems">
@@ -44,7 +42,14 @@
 
     <div id="collapseOne" class="panel-collapse in collapse show" aria-labelledby="headingOne" role="tabpanel">
       <div class="panel-body card-body">
-        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 
+        3 wolf moon officia aute, non cupidatat skateboard dolor brunch. 
+        Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua 
+        put a bird on it squid single-origin coffee nulla assumenda shoreditch et. 
+        Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt 
+        sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat 
+        craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably
+         haven't heard of them accusamus labore sustainable VHS.
       </div>
     </div>
   </div>

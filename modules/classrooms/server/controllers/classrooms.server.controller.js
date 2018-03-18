@@ -14,6 +14,7 @@ var path = require('path'),
 exports.create = function (req, res) {
   var classroom = new Classroom(req.body);
   classroom.user = req.user;
+  classroom.entryCode = makeEntryCode();
 
   classroom.save(function (err) {
     if (err) {
@@ -25,6 +26,16 @@ exports.create = function (req, res) {
     }
   });
 };
+
+function makeEntryCode() {
+  var code = "";
+  var alphanum= "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  for (var i = 0; i < 8; i++) {
+    code += alphanum.charAt(Math.floor(Math.random() * alphanum.length));
+  }
+  return code;
+}
 
 /**
  * Show the current Classroom
