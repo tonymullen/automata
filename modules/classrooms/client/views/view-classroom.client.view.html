@@ -1,25 +1,23 @@
 <section class="container">
   <div class="page-header">
+    
+    <div class="pull-right"
+         ng-show="vm.classroom.isCurrentUserOwner">
+      <a class="btn btn-primary"
+         ui-sref="classrooms.edit({ classroomId: vm.classroom._id })">
+        <i class="glyphicon glyphicon-edit"></i>
+      </a>
+      <a class="btn btn-primary" ng-click="vm.remove()">
+        <i class="glyphicon glyphicon-trash"></i>
+      </a>
+    </div>
+    
     <h1 ng-bind="vm.classroom.name"></h1>
     <small>Entry code: {{vm.classroom.entryCode}}</small>
   </div>
-  <div class="pull-right"
-       ng-show="vm.classroom.isCurrentUserOwner">
-    <a class="btn btn-primary" ng-click="vm.createProblem()">
-      <i class="glyphicon glyphicon-plus"></i>
-    </a>     
-    <a class="btn btn-primary"
-       ui-sref="classrooms.edit({ classroomId: vm.classroom._id })">
-      <i class="glyphicon glyphicon-edit"></i>
-    </a>
-    <a class="btn btn-primary" ng-click="vm.remove()">
-      <i class="glyphicon glyphicon-trash"></i>
-    </a>
-  </div>
-  
-  
+    
   <div ng-hide="vm.classroom.students.length > 0">
-    No students have registered for this classroom. 
+    No students are registered in this classroom. 
   </div>
   <div ng-show="vm.classroom.students" ng-repeat="problem in vm.classroom.students">
     Here's a student.
@@ -29,6 +27,16 @@
   <!--
     <div ng-repeat="problem in vm.classroom.problems">
     -->
+  <div>
+  <div class="pull-right"
+       ng-show="vm.classroom.isCurrentUserOwner">
+    <a class="btn btn-primary" ng-click="vm.createProblem()">
+      <i class="glyphicon glyphicon-plus"></i>
+    </a>     
+  </div>
+    <h2>Problems</h2>
+  </div>
+  
   <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
     
   <div  ng-repeat="problem in vm.classroom.problems" class="panel panel-default">
@@ -42,6 +50,8 @@
 
     <div id="collapseOne" class="panel-collapse in collapse show" aria-labelledby="headingOne" role="tabpanel">
       <div class="panel-body card-body">
+        <div>
+           <h3>Description</h3>
         Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 
         3 wolf moon officia aute, non cupidatat skateboard dolor brunch. 
         Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua 
@@ -50,7 +60,13 @@
         sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat 
         craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably
          haven't heard of them accusamus labore sustainable VHS.
+       </div>
+         <div>
+           <h3>Tests</h3>
+           Blahblah
+         </div>
       </div>
+      
     </div>
   </div>
   

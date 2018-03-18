@@ -57,8 +57,8 @@
         name: 'Untitled Problem',
         description: '',
         tests: []
-      }
-      vm.classroom.problems.push(problem)
+      };
+      vm.classroom.problems.push(problem);
       console.log(vm.classroom);
     }
 

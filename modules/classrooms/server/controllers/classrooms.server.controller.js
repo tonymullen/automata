@@ -28,8 +28,8 @@ exports.create = function (req, res) {
 };
 
 function makeEntryCode() {
-  var code = "";
-  var alphanum= "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  var code = '';
+  var alphanum = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
   for (var i = 0; i < 8; i++) {
     code += alphanum.charAt(Math.floor(Math.random() * alphanum.length));
@@ -44,8 +44,6 @@ exports.read = function (req, res) {
   // convert mongoose document to JSON
   var classroom = req.classroom ? req.classroom.toJSON() : {};
 
-  // Add a custom field to the Article, for determining if the current User is the "owner".
-  // NOTE: This field is NOT persisted to the database, since it doesn't exist in the Article model.
   classroom.isCurrentUserOwner = req.user && classroom.user && classroom.user._id.toString() === req.user._id.toString();
 
   res.json(classroom);
