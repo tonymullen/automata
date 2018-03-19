@@ -18,6 +18,7 @@ module.exports = {
         'public/lib/jquery/dist/jquery.js',
         'public/lib/jquery-ui/jquery-ui.js',
         'public/lib/jqueryui-touch-punch/jquery.ui.touch-punch.min.js',
+        'public/lib/bootstrap/dist/js/bootstrap.js',
         'public/lib/angular/angular.js',
         'public/lib/angular-animate/angular-animate.js',
         'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',

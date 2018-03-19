@@ -38,20 +38,30 @@
   </div>
   
   <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-    
+
   <div  ng-repeat="problem in vm.classroom.problems" class="panel panel-default">
-    <div class="panel-heading" role="tab" id="headingOne">
-      <h5 class="mb-0 panel-title">
-        <a class="btn btn-link" role="button" data-parent="#accordion" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-          {{problem.name}}
+    <div class="panel-heading problem" role="tab" id="heading{{ $index }}">
+
+        <div class="pull-right"
+             ng-show="vm.classroom.isCurrentUserOwner">
+          <a class="btn btn-primary" ui-sref="classrooms.editProblem({ classroomId: vm.classroom._id })">
+            <i class="glyphicon glyphicon-edit"></i>
+          </a>     
+        </div>
+        
+      <h4 class="panel-title problem">
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ $index }}" aria-expanded="false" aria-controls="collapse{{ $index }}">
+          <!--{{problem.name}}-->
+          Badoongeyface
         </a>
-      </h5>
+      </h4>
     </div>
 
-    <div id="collapseOne" class="panel-collapse in collapse show" aria-labelledby="headingOne" role="tabpanel">
-      <div class="panel-body card-body">
+    <div id="collapse{{ $index }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading{{ $index }}">
+      <div class="panel-body">
         <div>
-           <h3>Description</h3>
+        <h4>Description</h4>
+        
         Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 
         3 wolf moon officia aute, non cupidatat skateboard dolor brunch. 
         Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua 
@@ -60,13 +70,19 @@
         sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat 
         craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably
          haven't heard of them accusamus labore sustainable VHS.
-       </div>
-         <div>
-           <h3>Tests</h3>
-           Blahblah
-         </div>
       </div>
-      
+      <div>
+        
+          <div class="pull-right"
+               ng-show="vm.classroom.isCurrentUserOwner">
+            <a class="btn btn-primary" ng-click="vm.createTest()">
+              <i class="glyphicon glyphicon-plus"></i>
+            </a>     
+          </div>
+        <h4>Tests</h4>
+        
+        Some stuff
+    </div>
     </div>
   </div>
   
