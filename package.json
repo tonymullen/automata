@@ -11,7 +11,7 @@
     "url": "https://github.com/meanjs/mean.git"
   },
   "engines": {
-    "node": ">=6.10.0",
+    "node": "7.10.0",
     "npm": ">=3.10.8"
   },
   "scripts": {
@@ -47,7 +47,7 @@
     "compression": "^1.7.1",
     "connect-flash": "~0.1.1",
     "connect-mongo": "~1.3.2",
-    "cookie-parser": "~1.4.1",    
+    "cookie-parser": "~1.4.1",
     "del": "~3.0.0",
     "eslint-config-airbnb": "~6.0.2",
     "express": "^4.16.0",
